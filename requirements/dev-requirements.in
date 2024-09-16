@@ -1,0 +1,5 @@
+-c requirements.in
+
+pytest
+pre-commit
+ruff
