@@ -1,6 +1,4 @@
-===============================
-local-plans-explorer
-===============================
+## Local plans explorer
 
 
 #### Prerequisites
