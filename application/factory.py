@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
 from flask import Flask, render_template
+from flask.cli import load_dotenv
 
-# from application.extensions import (
-#     #add as needed
-# )
+from application.models import *  # noqa
+
+load_dotenv()
 
 
 def create_app(config_filename):
@@ -12,6 +13,7 @@ def create_app(config_filename):
     app.config.from_object(config_filename)
     register_errorhandlers(app)
     register_blueprints(app)
+    register_extensions(app)
     return app
 
 
@@ -33,4 +35,7 @@ def register_blueprints(app):
 
 
 def register_extensions(app):
-    pass
+    from application.extensions import db, migrate
+
+    db.init_app(app)
+    migrate.init_app(app, db)
