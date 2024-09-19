@@ -1,0 +1,15 @@
+reference,name,description,documentation-url,organisation,organisation-name,period-start-date,period-end-date,adoption-date
+give a ref,"given the plan a name, e.g. Adur local plan 2024",if there is a short description add here ,,list out the organisation references. Likely to be one. Will be more for joint plans. Separate by ;,,,,if easy to find date adopted add here
+adur-lp-2017,Adur Local Plan 2017,,https://www.adur-worthing.gov.uk/adur-local-plan/,local-authority:ADU,,2017,2032,2017-12-14
+ambervalley-lp-2022,Amber Valley Local Plan 2022,,Local Plan 2022 - 2040 (ambervalley.gov.uk),local-authority:AMB,,2022,2040,
+arun-lp-2011,Arun Local Plan 2011,,Our Local Plan | Arun District Council,local-authority:ARU,,2011,2031,2018-07-18
+ashfield-lp-2002,Ashfield Local Plan 2002,,https://www.ashfield.gov.uk/planning-building-control/local-plan/current-development-plan/,local-authority:ASH,,2002,,2002-11-22
+ashford-lp-2019,Ashford Local Plan 2019,,https://www.ashford.gov.uk/planning-and-development/planning-policy/adopted-development-plan-documents/adopted-local-plan-to-2030/,local-authority:ASF,,2019,2030,2019-02
+barbergh-lp-2021,Babergh Local Plan 2021,,https://www.babergh.gov.uk/joint-local-plan?p_l_back_url=%2Fsearch%3Fq%3DLocal%2BPlans,local-authority-BAB,,2023,2037,2023-11-20
+barnsleymet-lp-2019,Barnsleys Met Local Plan 2019,,https://www.barnsley.gov.uk/services/planning-and-buildings/local-planning-and-development/our-local-plan/barnsleys-local-plan/,local-authority:BNS,,,,2019-01-03
+basildon-lp-1998,Basildon Local Plan 1998,,Adopted Local Plan - Basildon,local-authority:BAI,,2011,2029,2016-05
+basingstoke-lp-2011,Basingstoke Local Plan 2011,,Adopted Local Plan 2011-2029 (basingstoke.gov.uk),local-authority: BAN,,,,
+wyre-lp-2016,Wyre Forest Local Plan 2016,,https://www.wyreforestdc.gov.uk/planning-and-buildings/planning-policy/wyre-forest-district-local-plan-2016-2036/,local-authority:WYE,,2016,2036,2022-04-26
+wyrebo-lp-2011,Wyre Local Plan 2011,,Wyre Local Plan (2011-2031) (incorporating partial update of 2022) – Wyre Council,local-authority:WYR,,2011,2031,
+wychavon-lp-,Wychavon Local Plan ,,,local-authority:WYC,,,,
+worthing-lp,,,,,,,,
