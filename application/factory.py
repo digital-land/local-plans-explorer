@@ -14,6 +14,8 @@ def create_app(config_filename):
     register_errorhandlers(app)
     register_blueprints(app)
     register_extensions(app)
+    register_templates(app)
+    register_context_processors(app)
     return app
 
 
@@ -29,9 +31,9 @@ def register_errorhandlers(app):
 
 
 def register_blueprints(app):
-    from application.frontend.views import frontend
+    from application.main.views import main
 
-    app.register_blueprint(frontend)
+    app.register_blueprint(main)
 
 
 def register_extensions(app):
@@ -39,3 +41,34 @@ def register_extensions(app):
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+
+def register_templates(app):
+    """
+    Register templates from packages
+    """
+    from jinja2 import ChoiceLoader, PackageLoader, PrefixLoader
+
+    multi_loader = ChoiceLoader(
+        [
+            app.jinja_loader,
+            PrefixLoader(
+                {
+                    "govuk_frontend_jinja": PackageLoader("govuk_frontend_jinja"),
+                    "digital-land-frontend": PackageLoader("digital_land_frontend"),
+                }
+            ),
+        ]
+    )
+    app.jinja_loader = multi_loader
+
+
+def register_context_processors(app):
+    """
+    Add template context variables and functions
+    """
+
+    def base_context_processor():
+        return {"assetPath": "/static"}
+
+    app.context_processor(base_context_processor)
