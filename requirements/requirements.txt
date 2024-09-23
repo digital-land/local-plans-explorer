@@ -8,6 +8,10 @@ alembic==1.13.2
     # via flask-migrate
 blinker==1.8.2
     # via flask
+certifi==2024.8.30
+    # via requests
+charset-normalizer==3.3.2
+    # via requests
 click==8.1.7
     # via flask
 digital-land-frontend @ git+https://github.com/digital-land/digital-land-frontend.git
@@ -27,6 +31,8 @@ govuk-frontend-jinja==3.3.0
     # via digital-land-frontend
 gunicorn==23.0.0
     # via -r requirements/requirements.in
+idna==3.10
+    # via requests
 itsdangerous==2.2.0
     # via flask
 jinja2==3.1.4
@@ -46,6 +52,8 @@ psycopg2-binary==2.9.9
     # via -r requirements/requirements.in
 python-dotenv==1.0.1
     # via -r requirements/requirements.in
+requests==2.32.3
+    # via -r requirements/requirements.in
 sqlalchemy==2.0.34
     # via
     #   alembic
@@ -54,6 +62,8 @@ typing-extensions==4.12.2
     # via
     #   alembic
     #   sqlalchemy
+urllib3==2.2.3
+    # via requests
 validators==0.34.0
     # via digital-land-frontend
 werkzeug==3.0.4

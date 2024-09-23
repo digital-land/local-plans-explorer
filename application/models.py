@@ -71,6 +71,7 @@ class LocalPlanBoundary(BaseModel):
         "Organisation",
         secondary=boundary_organisation,
         lazy="subquery",
+        back_populates="local_plan_boundaries",
     )
 
     local_plans: Mapped[List["LocalPlan"]] = relationship(
@@ -98,7 +99,10 @@ class LocalPlan(BaseModel):
     )
 
     organisations = db.relationship(
-        "Organisation", secondary=plan_organisation, lazy="subquery"
+        "Organisation",
+        secondary=plan_organisation,
+        lazy="subquery",
+        back_populates="local_plans",
     )
 
 
@@ -116,8 +120,9 @@ class LocalPlanDocument(BaseModel):
 
     organisations = db.relationship(
         "Organisation",
-        secondary=boundary_organisation,
+        secondary=document_organisation,
         lazy="subquery",
+        back_populates="local_plan_documents",
     )
 
 
@@ -132,6 +137,23 @@ class Organisation(DateModel):
     geojson: Mapped[Optional[dict]] = mapped_column(JSONB)
     point: Mapped[Optional[str]] = mapped_column(Text)
 
-    organisations = db.relationship(
-        "Organisation", secondary=document_organisation, lazy="subquery"
+    local_plan_documents = db.relationship(
+        "LocalPlanDocument",
+        secondary=document_organisation,
+        lazy="subquery",
+        back_populates="organisations",
+    )
+
+    local_plans = db.relationship(
+        "LocalPlan",
+        secondary=plan_organisation,
+        lazy="subquery",
+        back_populates="organisations",
+    )
+
+    local_plan_boundaries = db.relationship(
+        "LocalPlanBoundary",
+        secondary=boundary_organisation,
+        lazy="subquery",
+        back_populates="organisations",
     )

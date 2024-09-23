@@ -16,6 +16,7 @@ def create_app(config_filename):
     register_extensions(app)
     register_templates(app)
     register_context_processors(app)
+    register_commands(app)
     return app
 
 
@@ -72,3 +73,9 @@ def register_context_processors(app):
         return {"assetPath": "/static"}
 
     app.context_processor(base_context_processor)
+
+
+def register_commands(app):
+    from application.commands import data_cli
+
+    app.cli.add_command(data_cli)
