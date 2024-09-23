@@ -99,7 +99,7 @@ def upgrade():
         sa.PrimaryKeyConstraint("reference"),
     )
     op.create_table(
-        "plan_organisation",
+        "local_plan_organisation",
         sa.Column("local_plan", sa.Text(), nullable=False),
         sa.Column("organisation", sa.Text(), nullable=False),
         sa.ForeignKeyConstraint(

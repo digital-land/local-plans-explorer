@@ -25,8 +25,8 @@ class DateModel(db.Model):
     end_date: Mapped[Optional[datetime.date]] = mapped_column(Date)
 
 
-plan_organisation = db.Table(
-    "plan_organisation",
+local_plan_organisation = db.Table(
+    "local_plan_organisation",
     db.Column("local_plan", Text, ForeignKey("local_plan.reference"), primary_key=True),
     db.Column(
         "organisation", Text, ForeignKey("organisation.organisation"), primary_key=True
@@ -112,7 +112,7 @@ class LocalPlan(BaseModel):
 
     organisations = db.relationship(
         "Organisation",
-        secondary=plan_organisation,
+        secondary=local_plan_organisation,
         lazy="subquery",
         back_populates="local_plans",
     )
@@ -158,7 +158,7 @@ class Organisation(DateModel):
 
     local_plans = db.relationship(
         "LocalPlan",
-        secondary=plan_organisation,
+        secondary=local_plan_organisation,
         lazy="subquery",
         back_populates="organisations",
     )
