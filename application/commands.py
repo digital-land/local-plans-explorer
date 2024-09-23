@@ -1,9 +1,13 @@
+import csv
+import os
+from pathlib import Path
+
 import requests
 from flask.cli import AppGroup
 from sqlalchemy.inspection import inspect
 
 from application.extensions import db
-from application.models import Organisation
+from application.models import LocalPlan, Organisation
 
 data_cli = AppGroup("data")
 
@@ -41,3 +45,32 @@ def load_orgs():
         except Exception as e:
             print(e)
             continue
+
+
+@data_cli.command("load-plans")
+def load_plans():
+    current_file_path = Path(__file__).resolve()
+    data_directory = os.path.join(current_file_path.parent.parent, "data")
+    file_path = os.path.join(data_directory, "local-plan.csv")
+
+    with open(file_path, mode="r") as file:
+        reader = csv.DictReader(file)
+        columns = set([column.name for column in inspect(LocalPlan).c])
+
+        for row in reader:
+            try:
+                plan = LocalPlan.query.get(row["reference"])
+                if plan is None:
+                    plan = LocalPlan()
+                    for key, value in row.items():
+                        if key in columns:
+                            setattr(plan, key, value if value else None)
+                    db.session.add(plan)
+                else:
+                    for key, value in row.items():
+                        if key in columns:
+                            setattr(plan, key, value if value else None)
+                db.session.commit()
+            except Exception as e:
+                print(f"Error processing row {row['reference']}: {e}")
+                db.session.rollback()

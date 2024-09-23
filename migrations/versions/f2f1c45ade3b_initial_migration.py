@@ -65,7 +65,7 @@ def upgrade():
         sa.Column("period_end_date", sa.Integer(), nullable=True),
         sa.Column("documentation_url", sa.Text(), nullable=True),
         sa.Column("adopted_date", sa.Text(), nullable=True),
-        sa.Column("local_plan_boundary", sa.Text(), nullable=False),
+        sa.Column("local_plan_boundary", sa.Text(), nullable=True),
         sa.Column("reference", sa.Text(), nullable=False),
         sa.Column("name", sa.Text(), nullable=True),
         sa.Column("description", sa.Text(), nullable=True),

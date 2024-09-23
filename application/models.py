@@ -1,11 +1,18 @@
 import datetime
+from enum import Enum
 from typing import List, Optional
 
 from sqlalchemy import Date, ForeignKey, Integer, Text
-from sqlalchemy.dialects.postgresql import ARRAY, JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from application.extensions import db
+
+
+class PublicationStatus(Enum):
+    DRAFT = "Draft"
+    READY_FOR_PUBLICATION = "Ready for publication"
+    PUBLISHED = "Published"
 
 
 class DateModel(db.Model):
@@ -87,9 +94,14 @@ class LocalPlan(BaseModel):
     documentation_url: Mapped[Optional[str]] = mapped_column(Text)
     adopted_date: Mapped[Optional[str]] = mapped_column(Text)
 
-    local_plan_boundary: Mapped[str] = mapped_column(
+    local_plan_boundary: Mapped[Optional[str]] = mapped_column(
         ForeignKey("local_plan_boundary.reference")
     )
+
+    publication_status: Mapped[PublicationStatus] = mapped_column(
+        ENUM(PublicationStatus), default=PublicationStatus.DRAFT
+    )
+
     local_plan_boundary_obj: Mapped["LocalPlanBoundary"] = relationship(
         back_populates="local_plans"
     )
