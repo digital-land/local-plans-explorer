@@ -74,7 +74,7 @@ def load_plans():
                 organisations = row.get("organisations")
                 for org in organisations.split(";") if organisations else []:
                     organisation = Organisation.query.get(org)
-                    if organisation:
+                    if organisation is not None:
                         plan.organisations.append(organisation)
                 db.session.commit()
             except Exception as e:
