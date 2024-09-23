@@ -23,9 +23,33 @@
 {% block content %}
 <div class='govuk-grid-row'>
   <div class='govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop'>
-    <h1 class='govuk-heading-xl'>Index</h1>
     <p class='govuk-body'>Welcome to the local plans explorer. This is a proof of concept service that allows you to check and modify collected local plans data.</p>
     <p class='govuk-body'>This experimental service could be withdrawn or unavailable without notice.</p>
   </div>
 </div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <ol class="govuk-list govuk-list--number">
+      <li>We will use this data to seed a dataset of local plans on the <a href="https://www.planning.data.gov.uk/" class="govuk-link">planning data platform</a></li>
+      <li>We will continue to develop a data standard based on what we learn from this exercise</li>
+    </ol>
+
+    <h2 class="govuk-heading-l">Get started</h2>
+
+    {% if config['AUTHENTICATION_ON'] and session["user"] %}
+      <a href="#" class="govuk-button govuk-button--secondary">
+        <span class="govuk-!-margin-right-1">✚ </span>Review new local plan records</a>
+      <p class="govuk-body">or</p>
+    {% else %}
+      <a href="#" class="govuk-button">Sign in to review local plan data</a>
+    {% endif %}
+    <p class="govuk-body">
+      <a href="{{ url_for('organisation.organisations') }}" class="govuk-link">Find by organisation</a>
+    </p>
+
+  </div>
+</div>
+
+<hr class="govuk-section-break--l">
 {% endblock %}

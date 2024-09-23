@@ -70,6 +70,12 @@ def load_plans():
                     for key, value in row.items():
                         if key in columns:
                             setattr(plan, key, value if value else None)
+
+                organisations = row.get("organisations")
+                for org in organisations.split(";") if organisations else []:
+                    organisation = Organisation.query.get(org)
+                    if organisation:
+                        plan.organisations.append(organisation)
                 db.session.commit()
             except Exception as e:
                 print(f"Error processing row {row['reference']}: {e}")

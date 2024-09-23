@@ -32,9 +32,11 @@ def register_errorhandlers(app):
 
 
 def register_blueprints(app):
-    from application.main.views import main
+    from application.blueprints.main.views import main
+    from application.blueprints.organisation.views import organisation
 
     app.register_blueprint(main)
+    app.register_blueprint(organisation)
 
 
 def register_extensions(app):
