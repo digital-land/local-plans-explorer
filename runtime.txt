@@ -1,1 +1,1 @@
-https://github.com/digital-land/local-plans-explorer
+python-3.10.15
