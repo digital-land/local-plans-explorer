@@ -1,0 +1,19 @@
+{% extends 'layouts/base.html' %}
+
+{% block beforeContent %}
+{{ super() }}
+<a href="{{ url_for('organisation.organisations') }}" class="govuk-back-link">Back to organisations</a>
+{% endblock beforeContent %}
+
+{% block content %}
+
+  <span class="govuk-caption-l">Organisation</span>
+  <h1 class="govuk-heading-l">{{organisation.name}}</h1>
+  <p class="govuk-body-m"><a href="{{organisation.website}}">Website</a></p>
+  <h2 class="govuk-heading-l">Local plans</h2>
+
+  {% for local_plan in organisation.local_plans %}
+    <h2 class="govuk-heading-s">{{ local_plan.name }}</h2>
+  {% endfor %}
+
+{% endblock content %}

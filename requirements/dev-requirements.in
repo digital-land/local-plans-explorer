@@ -2,4 +2,4 @@
 
 pytest
 pre-commit
-ruff
+black

@@ -1,11 +1,18 @@
 import datetime
+from enum import Enum
 from typing import List, Optional
 
 from sqlalchemy import Date, ForeignKey, Integer, Text
-from sqlalchemy.dialects.postgresql import ARRAY, JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from application.extensions import db
+
+
+class PublicationStatus(Enum):
+    DRAFT = "Draft"
+    READY_FOR_PUBLICATION = "Ready for publication"
+    PUBLISHED = "Published"
 
 
 class DateModel(db.Model):
@@ -18,8 +25,8 @@ class DateModel(db.Model):
     end_date: Mapped[Optional[datetime.date]] = mapped_column(Date)
 
 
-plan_organisation = db.Table(
-    "plan_organisation",
+local_plan_organisation = db.Table(
+    "local_plan_organisation",
     db.Column("local_plan", Text, ForeignKey("local_plan.reference"), primary_key=True),
     db.Column(
         "organisation", Text, ForeignKey("organisation.organisation"), primary_key=True
@@ -71,6 +78,7 @@ class LocalPlanBoundary(BaseModel):
         "Organisation",
         secondary=boundary_organisation,
         lazy="subquery",
+        back_populates="local_plan_boundaries",
     )
 
     local_plans: Mapped[List["LocalPlan"]] = relationship(
@@ -86,9 +94,14 @@ class LocalPlan(BaseModel):
     documentation_url: Mapped[Optional[str]] = mapped_column(Text)
     adopted_date: Mapped[Optional[str]] = mapped_column(Text)
 
-    local_plan_boundary: Mapped[str] = mapped_column(
+    local_plan_boundary: Mapped[Optional[str]] = mapped_column(
         ForeignKey("local_plan_boundary.reference")
     )
+
+    publication_status: Mapped[PublicationStatus] = mapped_column(
+        ENUM(PublicationStatus), default=PublicationStatus.DRAFT
+    )
+
     local_plan_boundary_obj: Mapped["LocalPlanBoundary"] = relationship(
         back_populates="local_plans"
     )
@@ -98,26 +111,29 @@ class LocalPlan(BaseModel):
     )
 
     organisations = db.relationship(
-        "Organisation", secondary=plan_organisation, lazy="subquery"
+        "Organisation",
+        secondary=local_plan_organisation,
+        lazy="subquery",
+        back_populates="local_plans",
     )
 
 
 class LocalPlanDocument(BaseModel):
     __tablename__ = "local_plan_document"
 
-    plan_boundary_type: Mapped[Optional[str]] = mapped_column(Text)
-    geometry: Mapped[Optional[str]] = mapped_column(Text)
     documentation_url: Mapped[Optional[str]] = mapped_column(Text)
     document_url: Mapped[Optional[str]] = mapped_column(Text)
     document_types: Mapped[Optional[list]] = mapped_column(ARRAY(Text))
 
     local_plan: Mapped[str] = mapped_column(ForeignKey("local_plan.reference"))
     local_plan_obj: Mapped["LocalPlan"] = relationship(back_populates="documents")
+    inlcude_in_dataset: Mapped[Optional[bool]] = mapped_column(Text, default=False)
 
     organisations = db.relationship(
         "Organisation",
-        secondary=boundary_organisation,
+        secondary=document_organisation,
         lazy="subquery",
+        back_populates="local_plan_documents",
     )
 
 
@@ -132,6 +148,23 @@ class Organisation(DateModel):
     geojson: Mapped[Optional[dict]] = mapped_column(JSONB)
     point: Mapped[Optional[str]] = mapped_column(Text)
 
-    organisations = db.relationship(
-        "Organisation", secondary=document_organisation, lazy="subquery"
+    local_plan_documents = db.relationship(
+        "LocalPlanDocument",
+        secondary=document_organisation,
+        lazy="subquery",
+        back_populates="organisations",
+    )
+
+    local_plans = db.relationship(
+        "LocalPlan",
+        secondary=local_plan_organisation,
+        lazy="subquery",
+        back_populates="organisations",
+    )
+
+    local_plan_boundaries = db.relationship(
+        "LocalPlanBoundary",
+        secondary=boundary_organisation,
+        lazy="subquery",
+        back_populates="organisations",
     )

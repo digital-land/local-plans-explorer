@@ -1,0 +1,113 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+
+
+  <span class="govuk-caption-xl">Local plans</span>
+  <h1 class="govuk-heading-xl">Find a plan by organisation</h1>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+    <form class="govuk-form" data-module="dl-list-filter-form">
+      <div class="govuk-form-group">
+        <label for="organisation" class="govuk-label">Planning authority</label>
+        <div class="govuk-hint">For example, Yorkshire or Lichfield</div>
+        <input type="text" class="govuk-input" name="organisation">
+      </div>
+      <div class="app-hide-if-js">
+        <p class="govuk-body"><a href="https://digital-land.github.io/organisation/" class="govuk-link">Find authority reference</a></p>
+        <div class="govuk-form-group">
+          <button class="govuk-button">Find</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <!-- <div class="govuk-grid-column-one-quarter">
+    <form class="govuk-form">
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+            <h1 class="govuk-fieldset__heading">
+              Filter planning authorities
+            </h1>
+          </legend>
+
+          <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="planningAuthorityFilter" name="planningAuthorityFilter" type="radio" value="all" {% if planning_authority_filter is none or planning_authority_filter == 'all'%}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="planningAuthorityFilter">
+                All
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="planningAuthorityFilter-2" name="planningAuthorityFilter" type="radio" value="with" {% if planning_authority_filter == 'with'%}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="planningAuthorityFilter-2">
+                With adopted plan
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="planningAuthorityFilter-3" name="planningAuthorityFilter" type="radio" value="without" {% if planning_authority_filter == 'without'%}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="planningAuthorityFilter-3">
+                Without adopted plan
+              </label>
+            </div>
+          </div>
+        </fieldset>
+        <div class="govuk-form-group">
+          <button class="govuk-button govuk-button--secondary" data-module="govuk-button">
+            Filter
+          </button>
+        </div>
+      </div>
+    </form>
+  </div> -->
+  <div class="govuk-grid-column-three-quarters">
+    <div class="app-list__wrapper dl-list-filter__count govuk-!-margin-top-6">
+
+      <div class="govuk-body dl-list-filter__count__wrapper">Showing
+        <p class="govuk-visually-hidden">
+          <span class="js-accessible-list-filter__count">{{ organisations|length }}</span>
+          of {{ organisations|length }}
+        </p>
+        <span class="js-list-filter__count" aria-hidden="true">{{ organisations|length }}</span>
+       planning authorities</div>
+
+      <dl class="govuk-summary-list app-summary-list govuk-!-margin-bottom-0" data-filter="list">
+      {% for organisation in organisations %}
+
+        <div class="govuk-summary-list__row app-summary-list__row" data-filter="item">
+          <dt class="govuk-summary-list__key app-summary-list__key">
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0"><a href="{{ url_for('organisation.get_organisation', reference=organisation.organisation)}}" class="govuk-link govuk-link--text-colour">{{ organisation.name }}</a></h3>
+            <span class="app-code govuk-hint app-code--block app-code--s govuk-!-margin-bottom-0">{{ organisation.organisation }}</span>
+          </dt>
+          <dd class="govuk-summary-list__value app-summary-list__value">
+            {% if organisation.local_plans | length > 0 %}
+            <ul class="govuk-list govuk-!-margin-bottom-3">
+              {% for plan in organisation.local_plans %}
+                <li><a href="{{ url_for('local_plan.get_local_plan', reference=plan.reference) }}" class="govuk-link">{{ plan.name }}</a> <span class="govuk-hint">({{plan.reference}})</span></li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            <!-- <a href="#" class="govuk-button govuk-button--secondary app-button--s">Add plan</a> -->
+          </dd>
+        </div>
+
+      {% endfor %}
+      </dl>
+    </div>
+
+    <p class="dl-list-filter__no-filter-match">No planning authority matches that search term.</p>
+
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block pageScripts %}
+<script>
+  var $formToFilterList = document.querySelector('[data-module="dl-list-filter-form"]');
+</script>
+{% endblock pageScripts %}

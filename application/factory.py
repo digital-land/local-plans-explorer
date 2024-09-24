@@ -14,6 +14,9 @@ def create_app(config_filename):
     register_errorhandlers(app)
     register_blueprints(app)
     register_extensions(app)
+    register_templates(app)
+    register_context_processors(app)
+    register_commands(app)
     return app
 
 
@@ -29,9 +32,15 @@ def register_errorhandlers(app):
 
 
 def register_blueprints(app):
-    from application.frontend.views import frontend
+    from application.blueprints.document.views import document
+    from application.blueprints.local_plan.views import local_plan
+    from application.blueprints.main.views import main
+    from application.blueprints.organisation.views import organisation
 
-    app.register_blueprint(frontend)
+    app.register_blueprint(main)
+    app.register_blueprint(organisation)
+    app.register_blueprint(local_plan)
+    app.register_blueprint(document)
 
 
 def register_extensions(app):
@@ -39,3 +48,40 @@ def register_extensions(app):
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+
+def register_templates(app):
+    """
+    Register templates from packages
+    """
+    from jinja2 import ChoiceLoader, PackageLoader, PrefixLoader
+
+    multi_loader = ChoiceLoader(
+        [
+            app.jinja_loader,
+            PrefixLoader(
+                {
+                    "govuk_frontend_jinja": PackageLoader("govuk_frontend_jinja"),
+                    "digital-land-frontend": PackageLoader("digital_land_frontend"),
+                }
+            ),
+        ]
+    )
+    app.jinja_loader = multi_loader
+
+
+def register_context_processors(app):
+    """
+    Add template context variables and functions
+    """
+
+    def base_context_processor():
+        return {"assetPath": "/static"}
+
+    app.context_processor(base_context_processor)
+
+
+def register_commands(app):
+    from application.commands import data_cli
+
+    app.cli.add_command(data_cli)
