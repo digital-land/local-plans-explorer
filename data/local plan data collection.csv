@@ -1,0 +1,107 @@
+reference,name,description,documentation-url,organisation,organisation-name,period-start-date,period-end-date,adoption-date
+give a ref,"given the plan a name, e.g. Adur local plan 2024",if there is a short description add here ,,list out the organisation references. Likely to be one. Will be more for joint plans. Separate by ;,,,,if easy to find date adopted add here
+adu-lp-2017,Adur District Council Local Plan 2017,,https://www.adur-worthing.gov.uk/adur-local-plan/,ADU,Adur District Council,2017,2032,2017-12-14
+amb-lp-2022,Amber Valley Borough Council Local Plan 2022,,https://www.ambervalley.gov.uk/planning/planning-policy/local-plan/,AMB,Amber Valley Borough Council,2022,2040,
+aru-lp-2011,Arun District Council Local Plan 2011,,https://www.arun.gov.uk/adopted-local-plan/,ARU,Arun District Council,2011,2031,2018-07-18
+ash-lp-2002,Ashfield District Council Local Plan 2002,,https://www.ashfield.gov.uk/planning-building-control/local-plan/current-development-plan/,ASH,Ashfield District Council,2002,,2002-11-22
+asf-lp-2019,Ashford Borough Council Local Plan 2019,,https://www.ashford.gov.uk/planning-and-development/planning-policy/adopted-development-plan-documents/adopted-local-plan-to-2030/,ASF,Ashford Borough Council,2019,2030,2019-02-01
+bab-lp-2023,Babergh District Council Local Plan 2023,,https://www.babergh.gov.uk/joint-local-plan?p_l_back_url=%2Fsearch%3Fq%3DLocal%2BPlans,BAB,Babergh District Council,2023,2037,2023-11-20
+bai-lp-2011,Basildon Borough Council Local Plan 2011,,https://www.basildon.gov.uk/adoptedplan,BAI,Basildon Borough Council,2011,2029,2016-05-01
+wye-lp-2016,Wyre Forest District Council Local Plan 2016,,https://www.wyreforestdc.gov.uk/planning-and-buildings/planning-policy/wyre-forest-district-local-plan-2016-2036/,WYE,Wyre Forest District Council,2016,2036,2022-04-26
+wyr-lp-2011,Wyre Borough Council Local Plan 2011,,https://www.wyre.gov.uk/planning-policy/local-plan-partial-review-2011-2031-1/8,WYR,Wyre Borough Council,2011,2031,
+wot-lp-2020,Worthing Borough Council Local Plan 2020,,https://www.adur-worthing.gov.uk/worthing-local-plan-2023/,WOT,Worthing Borough Council,2020,2036,2023-03-28
+wor-lp-2022,Worcestershire County Council Local Plan 2022,,https://www.worcestershire.gov.uk/council-services/planning-and-developments/planning-policy-and-strategy/local-development-scheme,WOR,Worcestershire County Council,2022,2025,2022-07-01
+woc-lp-2023,Worcester City Council Local Plan 2023,,https://www.worcester.gov.uk/planning/planning-policy/local-development-framework,WOC,Worcester City Council,2023,2026,2023-09-26
+wok-lp-2010,Wokingham Borough Council Local Plan 2010,,https://www.wokingham.gov.uk/planning-policy/adopted-development-plan/local-plans,WOK,Wokingham Borough Council,2010,2026,2010-01-29
+woi-lp-2012,Woking Borough Council Local Plan 2012,,https://www.woking2027.info/developmentplan,WOI,Woking Borough Council,2012,2027,2012-10-25
+utt-lp-2021,Uttlesford District Council Local Plan 2021,,https://www.uttlesford.gov.uk/reg-19-consultation,UTT,Uttlesford District Council,2021,2041,
+bae-lp-2020,Bassetlaw District Council Local Plan 2020,,https://www.bassetlaw.gov.uk/planning-and-building/bassetlaw-local-plan-2020-2038/bassetlaw-local-plan-2020-2038/,BAE,Bassetlaw District Council,2020,2038,2024-05-29
+bdf-lp-2018,Bedford Borough Council Local Plan 2018,,https://www.bedford.gov.uk/planning-and-building-control/planning-policy/local-plan-2030/local-plan-2030-overview,BDF,Bedford Borough Council,2018,2030,2020-01-15
+bla-lp-2019,Blaby District Council Local Plan 2019,,https://www.blaby.gov.uk/planning-and-building/local-plan/local-plan-delivery-dpd/,BLA,Blaby District Council,2019,,2019-02-04
+bbd-lp-2021,Blackburn with Darwen Borough Council Local Plan 2021,,Local Plan 2021 to 2037 | Blackburn with Darwen Borough Council,BBD,Blackburn with Darwen Borough Council,2021,2037,2024-01-25
+bos-lp-2022,Bolsover District Council Local Plan 2022,,https://www.bolsover.gov.uk/index.php?option=com_content&view=category&id=233,BOS,Bolsover District Council,2022,2025,2022-02-25
+bol-lp-2011,Bolton Metropolitan Borough Council Local Plan 2011,,https://www.bolton.gov.uk/planning-policy-strategy/core-strategy/1,BOL,Bolton Metropolitan Borough Council,2011,2026,2011-02-02
+kin-lp-2005,Borough Council of Kings Lynn and West Norfolk Local Plan 2005,,https://www.west-norfolk.gov.uk/info/20219/core_strategy/112/core_strategy_explained,KIN,Borough Council of Kings Lynn and West Norfolk,2005,2026,2011-07-28
+bot-lp-2011,Boston Borough Council Local Plan 2011,,https://southeastlincslocalplan.org/article/20102/Adopted-Plan,BOT,Boston Borough Council,2011,2036,2019-03-08
+brc-lp-2024,Bracknell Forest Council Local Plan 2024,,https://www.bracknell-forest.gov.uk/planning-and-building-control/planning/planning-policy/development-plan/bracknell-forest-local-plan/about-bracknell-forest-local-plan,BRC,Bracknell Forest Council,2024,2037,2024-03-19
+bra-lp-2014,Braintree District Council Local Plan 2014,,https://www.braintree.gov.uk/planning-building-control/local-plan-2033/2,BRA,Braintree District Council,2014,2033,2022-07-25
+pte-lp-2019,Peterborough City Council Local Plan 2019,,https://www.peterborough.gov.uk/council/planning-and-development/planning-policies/local-development-plan,PTE,Peterborough City Council,2019,2036,2019-07-24
+ply-lp-2019,Plymouth City Council Local Plan 2019,,https://www.plymouth.gov.uk/adopted-plymouth-and-south-west-devon-joint-local-plan,PLY,Plymouth City Council,2019,2034,2019-03-26
+por-lp-2012,Portsmouth City Council Local Plan 2012,,https://www.portsmouth.gov.uk/services/development-and-planning/planning-policy/the-portsmouth-plan-adopted-2012/,POR,Portsmouth City Council,2012,2027,2012-07-21
+pre-lp-2012,Preston City Council Local Plan 2012,,https://www.preston.gov.uk/article/1050/Preston-s-Local-Plan,PRE,Preston City Council,2012,2026,2015-07-02
+cld-lp-2018,Calderdale Metropolitan Borough Council Local Plan 2018,,https://new.calderdale.gov.uk/planning-and-building-control/planning-policy/local-plan,CLD,Calderdale Metropolitan Borough Council,2018,2033,2023-03-22
+cab-lp-2018,Cambridge City Council Local Plan 2018,,https://www.cambridge.gov.uk/local-plan-2018,CAB,Cambridge City Council,2018,2031,2018-10-18
+cam-lp-2018,Cambridgeshire County Council Local Plan 2018,,https://consultations.greatercambridgeplanning.org/greater-cambridge-local-plan-preferred-options/about-plan,CAM,Cambridgeshire County Council,2018,2041,
+can-lp-2006,Cannock Chase District Council Local Plan 2006,,https://www.cannockchasedc.gov.uk/residents/planning-and-building-control/planning-policy/cannock-chase-local-plan,CAN,Cannock Chase District Council,2006,2028,2014-06-11
+cas-lp-1998,Castle Point Borough Council Local Plan 1998,,https://www.castlepoint.gov.uk/adopted-local-plan/,CAS,Castle Point Borough Council,1998,,2007-09-27
+cbf-lp-2015,Central Bedfordshire Council Local Plan 2015,,https://www.centralbedfordshire.gov.uk/info/153/central_bedfordshire_local_plan_2015_to_2035/1034/adopted_local_plan,CBF,Central Bedfordshire Council,2015,2035,2021-07-01
+cha-lp-2021,Charnwood Borough Council Local Plan 2021,,https://www.charnwood.gov.uk/pages/charnwood_local_plan_2021_37,CHA,Charnwood Borough Council,2021,2037,
+chl-lp-2013,Chelmsford City Council Local Plan 2013,,https://www.chelmsford.gov.uk/planning-and-building-control/planning-policy-and-local-plan/adopted-local-plan/,CHL,Chelmsford City Council,2013,2036,2020-05-27
+cht-lp-2011,Cheltenham Borough Council Local Plan 2011,,https://www.cheltenham.gov.uk/info/46/planning_policy/1034/the_cheltenham_plan,CHT,Cheltenham Borough Council,2011,2031,2020-07-20
+chr-lp-2011,Cherwell District Council Local Plan 2011,,https://www.cherwell.gov.uk/info/83/local-plans/376/adopted-cherwell-local-plan-2011-2031-part-1,CHR,Cherwell District Council,2011,2031,2015-07-20
+che-lp-2010,Cheshire East Council Local Plan 2010,,https://www.cheshireeast.gov.uk/planning/spatial-planning/cheshire_east_local_plan/cheshire_east_local_plan.aspx,CHE,Cheshire East Council,2010,2030,2017-07-27
+chs-lp-2018,Chesterfield Borough Council Local Plan 2018,,https://www.chesterfield.gov.uk/planning-and-building-control/planning-policy-and-the-local-plan/development-plan-the-local-plan/,CHS,Chesterfield Borough Council,2018,2035,2020-07-15
+chi-lp-2021,Chichester District Council Local Plan 2021,,https://www.chichester.gov.uk/article/35375/Chichester-Local-Plan-2021-2039,CHI,Chichester District Council,2021,2039,
+cho-lp-2012,Chorley Borough Council Local Plan 2012,,https://chorley.gov.uk/planning-policy/local-plan,CHO,Chorley Borough Council,2012,2026,2015-07-21
+brd-lp-2020,City of Bradford Metropolitan District Council Local Plan 2020,,https://www.bradford.gov.uk/planning-and-building-control/planning-policy/bradford-district-local-plan/?Folder=Reg18\Consultation,BRD,City of Bradford Metropolitan District Council,2020,2038,
+lic-lp-2017,City of Lincoln Council Local Plan 2017,,https://www.lincoln.gov.uk/planning/new-local-plan-policies/1,LIC,City of Lincoln Council,2017,2040,2023-04-13
+wsm-lp-2019,City of Westminster Local Plan 2019,,https://www.westminster.gov.uk/planning-building-control-and-environmental-regulations/planning-policy/westminsters-planning-policies,WSM,City of Westminster,2019,2040,2021-04-21
+col-lp-2017,Colchester Borough Council Local Plan 2017,,https://www.colchester.gov.uk/local-plan/,COL,Colchester Borough Council,2017,2033,2021-02-02
+con-lp-2010,Cornwall Council Local Plan 2010,,https://www.cornwall.gov.uk/planning-and-building-control/planning-policy/adopted-plans/,CON,Cornwall Council,2010,2030,2016-11-01
+cot-lp-2011,Cotswold District Council Local Plan 2011,,https://www.cotswold.gov.uk/planning-and-building/planning-policy/local-plan-2011-to-2031/,COT,Cotswold District Council,2011,2031,2018-08-03
+ios-lp-2015,Council of the Isles of Scilly Local Plan 2015,,https://www.scilly.gov.uk/planning/planning-policy/local-plan-2015-2030,IOS,Council of the Isles of Scilly,2015,2030,2021-03-25
+cov-lp-2011,Coventry City Council Local Plan 2011,,https://www.coventry.gov.uk/planning-policy/coventry-local-plan-2011-2031,COV,Coventry City Council,2011,2031,2017-12-06
+crw-lp-2015,Crawley Borough Council Local Plan 2015,,https://crawley.gov.uk/planning/planning-policy/local-plan,CRW,Crawley Borough Council,2015,2030,2015-12-16
+cua-lp-2025,,,https://www.cumberland.gov.uk/planning-and-building-control/planning-policy/local-plan,CUA,,2025,2045,
+dal-lp-2016,Darlington Borough Council Local Plan 2016,,https://www.darlington.gov.uk/environment-and-planning/planning/planning-and-environmental-policy/adopted-local-plan-2016-2036/,DAL,Darlington Borough Council,2016,2036,2022-02-17
+der-lp-2006,Derby City Council Local Plan 2006,,https://www.derby.gov.uk/environment-and-planning/planning/local-plan/,DER,Derby City Council,2006,2028,2017-01-25
+deb-lp-2013,Derbyshire Dales District Council Local Plan 2013,,https://www.derbyshiredales.gov.uk/planning/planning-policy-and-local-plan/local-plan,DEB,Derbyshire Dales District Council,2013,2033,2017-12-07
+dnc-lp-2015,Doncaster Metropolitan Borough Council Local Plan 2015,,https://www.doncaster.gov.uk/services/planning/local-plan,DNC,Doncaster Metropolitan Borough Council,2015,2035,2021-09-23
+kir-lp-2013,Kirklees Council Local Plan 2013,,https://www.kirklees.gov.uk/beta/planning-policy/local-plan.aspx,KIR,Kirklees Council,2013,2031,2019-02-27
+kwl-lp-2006,Knowsley Metropolitan Borough Council Local Plan 2006,,https://www.knowsley.gov.uk/planning-and-development/planning-policy/introduction-local-plan,KWL,Knowsley Metropolitan Borough Council,2006,2028,2016-01-06
+eca-lp-2013,East Cambridgeshire District Council Local Plan 2013,,https://www.eastcambs.gov.uk/local-development-framework/east-cambridgeshire-local-plan-2015-amended-2023,ECA,East Cambridgeshire District Council,2013,2031,2023-10-19
+ede-lp-2013,East Devon District Council Local Plan 2013,,https://eastdevon.gov.uk/planning/planning-policy/local-plan-2013-2031/,EDE,East Devon District Council,2013,2031,2016-01-18
+eha-lp-2011,East Hampshire District Council Local Plan 2011,,https://www.easthants.gov.uk/planning-services/planning-policy/local-plan/adopted-local-plan,EHA,East Hampshire District Council,2011,2028,2014-05-08
+ehe-lp-2011,East Hertfordshire District Council Local Plan 2011,,https://www.eastherts.gov.uk/planning-and-building/planning-policy/east-herts-district-plan-2018,EHE,East Hertfordshire District Council,2011,2033,2018-10-23
+eli-lp-2018,East Lindsey District Council Local Plan 2018,,https://www.e-lindsey.gov.uk/article/8934/Adopted-Local-Plan-2018,ELI,East Lindsey District Council,2018,2031,2018-07-18
+ery-lp-2012,East Riding of Yorkshire Council Local Plan 2012,,https://www.eastriding.gov.uk/planning-permission-and-building-control/planning-policy-and-the-local-plan/east-riding-local-plan/,ERY,East Riding of Yorkshire Council,2012,2029,2016-04-06
+est-lp-2012,East Staffordshire Borough Council Local Plan 2012,,https://www.eaststaffsbc.gov.uk/planning/planning-policy/local-plan-2012-2031,EST,East Staffordshire Borough Council,2012,2031,2015-10-15
+eas-lp-2001,Eastbourne Borough Council Local Plan 2001,,https://www.lewes-eastbourne.gov.uk/article/1942/Eastbourne-Local-Plan-2019-2039,EAS,Eastbourne Borough Council,2001,2011,2003-09-01
+eat-lp-2016,Eastleigh Borough Council Local Plan 2016,,https://www.eastleigh.gov.uk/planning-and-building/planning-policy-and-implementation/local-plan/local-plan-adoption,EAT,Eastleigh Borough Council,2016,2036,2022-04-25
+elm-lp-2011,Elmbridge Borough Council Local Plan 2011,,https://www.elmbridge.gov.uk/planning/new-local-plan/about-local-plans,ELM,Elmbridge Borough Council,2011,2026,2011-07-20
+epp-lp-2011,Epping Forest District Council Local Plan 2011,,https://www.eppingforestdc.gov.uk/planning-and-building/planning-policy/adopted-local-plan-march-2023/,EPP,Epping Forest District Council,2011,2033,2023-03-06
+ess-lp-2021,Essex County Council Local Plan 2021,,,ESS,Essex County Council,2021,2025,
+fen-lp-2011,Fenland District Council Local Plan 2011,,https://www.fenland.gov.uk/developmentplan,FEN,Fenland District Council,2011,2031,2014-05-08
+she-lp-2006,Folkestone and Hythe District Council Local Plan 2006,,https://www.folkestone-hythe.gov.uk/planning-policy/adopted-development-plan,SHE,Folkestone and Hythe District Council,2006,2026,2020-09-16
+fyl-lp-2011,Fylde Borough Council Local Plan 2011,,https://new.fylde.gov.uk/resident/planning/planning-policy-local-plan/adopted-fylde-local-plan-to-2032-incorporating-partial-review/,FYL,Fylde Borough Council,2011,2032,2021-12-06
+gat-lp-2010,Gateshead Metropolitan Borough Council Local Plan 2010,,https://www.gateshead.gov.uk/article/3251/Core-Strategy-and-Urban-Core-Plan-for-Gateshead-and-Newcastle-2010-2030,GAT,Gateshead Metropolitan Borough Council,2010,2030,2015-03-26
+ged-lp-2011,Gedling Borough Council Local Plan 2011,,https://www.gedling.gov.uk/resident/planningandbuildingcontrol/planningpolicy/localplanningdocument/localplanningdocumentprogress/,GED,Gedling Borough Council,2011,2028,2014-09-10
+glo-lp-2011,Gloucester City Council Local Plan 2011,,https://www.gloucester.gov.uk/planning-development/planning-policy/adopted-development-plan/,GLO,Gloucester City Council,2011,2031,2023-01-01
+gos-lp-2011,Gosport Borough Council Local Plan 2011,,https://www.gosport.gov.uk/article/1226/Gosport-Borough-Local-Plan-2011-2029,GOS,Gosport Borough Council,2011,2029,2015-10-14
+gra-lp-2011,Gravesham Borough Council Local Plan 2011,,https://www.gravesham.gov.uk/local-plan-policy/local-plan,GRA,Gravesham Borough Council,2011,2028,2014-09-01
+gry-lp-2013,Great Yarmouth Borough Council Local Plan 2013,,https://www.great-yarmouth.gov.uk/article/2489/Current-Local-Plan,GRY,Great Yarmouth Borough Council,2013,2030,2015-12-21
+gla-lp-2019,Greater London Authority Local Plan 2019,,https://www.london.gov.uk/programmes-strategies/planning/london-plan/new-london-plan/london-plan-2021,GLA,Greater London Authority,2019,2041,
+gmca-lp-2022,Greater Manchester Combined Authority Local Plan 2022,,https://www.greatermanchester-ca.gov.uk/what-we-do/planning-and-housing/places-for-everyone,GMCA,Greater Manchester Combined Authority,2022,2039,2024-03-21
+grt-lp-2015,Guildford Borough Council Local Plan 2015,,https://www.guildford.gov.uk/guildfordlocalplan,GRT,Guildford Borough Council,2015,2034,2024-02-21
+slf-lp-2023,Salford City Council Local Plan 2023,,https://www.salford.gov.uk/planning-building-and-regeneration/planning-policies/local-planning-policy/salfords-development-plan/salford-local-plan/part-one-salford-local-plan/salford-local-plan-adoption-2023/,SLF,Salford City Council,2023,,2023-01-18
+saw-lp-2026,Sandwell Metropolitan Borough Council Local Plan 2026,,https://www.sandwell.gov.uk/planning/sandwell-local-plan,SAW,Sandwell Metropolitan Borough Council,2026,2041,
+sft-lp-2015,Sefton Metropolitan Borough Council Local Plan 2015,,https://www.sefton.gov.uk/planning-building-control/planning-policy-including-local-plan-and-neighbourhood-planning/local-plan/,SFT,Sefton Metropolitan Borough Council,2015,2030,2017-04-20
+sev-lp-2015,Sevenoaks District Council Local Plan 2015,,,SEV,Sevenoaks District Council,2015,2035,2011-02-22
+shr-lp-2016,Shropshire Council Local Plan 2016,,https://www.shropshire.gov.uk/planning-policy/local-planning/local-plan-review/draft-shropshire-local-plan-2016-2038-examination/examination-library/core-submission-documents/,SHR,Shropshire Council,2016,2038,
+slg-lp-2006,Slough Borough Council Local Plan 2006,,,SLG,Slough Borough Council,2006,2026,2008-12-16
+sua-lp-2020,,,https://www.somerset.gov.uk/planning-buildings-and-land/somerset-local-plan/,SUA,,2020,2040,
+sde-lp-2011,South Derbyshire District Council Local Plan 2011,,https://www.southderbyshire.gov.uk/our-services/planning-and-building-control/planning/planning-policy/local-plan/adopted-local-plan,SDE,South Derbyshire District Council,2011,2028,2016-06-13
+sgc-lp-2006,South Gloucestershire Council Local Plan 2006,,https://beta.southglos.gov.uk/core-strategy-2006-2027/,SGC,South Gloucestershire Council,2006,2027,2013-12-11
+sha-lp-2019,South Hams District Council Local Plan 2019,,https://www.southhams.gov.uk/your-council/council-plans-policies-and-reports/policies/planning-policies/plymouth-and-south-west,SHA,South Hams District Council,2019,2039,2019-03-26
+sho-lp-2011,South Holland District Council Local Plan 2011,,https://southeastlincslocalplan.org/article/20102/Adopted-Plan,SHO,South Holland District Council,2011,2036,2019-03-08
+ske-lp-2011,South Kesteven District Council Local Plan 2011,,https://www.southkesteven.gov.uk/planning-building-control/planning-policy-local-plans/local-plan-review,SKE,South Kesteven District Council,2011,2036,
+sri-lp-2015,South Ribble Borough Council Local Plan 2015,,https://southribble.gov.uk/planning-building-control/south-ribble-local-plan-2015,SRI,South Ribble Borough Council,2015,,2015-07-22
+sst-lp-2012,South Staffordshire Council Local Plan 2012,,https://www.sstaffs.gov.uk/planning/planning-policy/local-plan-review,SST,South Staffordshire Council,2012,,
+sty-lp-2023,South Tyneside Council Local Plan 2023,,https://www.southtyneside.gov.uk/article/11433/Key-documents,STY,South Tyneside Council,2023,2040,
+spe-lp-2022,Spelthorne Borough Council Local Plan 2022,,https://www.spelthorne.gov.uk/localplan,SPE,Spelthorne Borough Council,2022,2037,
+sal-lp-1994,St Albans City and District Council Local Plan 1994,,https://www.stalbans.gov.uk/current-local-plan,SAL,St Albans City and District Council,1994,,
+sta-lp-2020,Stafford Borough Council Local Plan 2020,,https://www.staffordbc.gov.uk/local-plan,STA,Stafford Borough Council,2020,2040,
+stf-lp-2014,Staffordshire Moorlands District Council Local Plan 2014,,https://www.staffsmoorlands.gov.uk/localplan,STF,Staffordshire Moorlands District Council,2014,2033,2020-09-09
+stv-lp-2011,Stevenage Borough Council Local Plan 2011,,https://www.stevenage.gov.uk/planning-and-building-control/planning-policy/local-plan/stevenage-borough-local-plan,STV,Stevenage Borough Council,2011,2031,2019-05-22
+str-lp-2011,Stratford-on-Avon District Council Local Plan 2011,,https://www.stratford.gov.uk/planning-building/core-strategy.cfm,STR,Stratford-on-Avon District Council,2011,2031,2016-07-11
+snd-lp-2024,Sunderland City Council Local Plan 2024,,https://www.sunderland.gov.uk/article/28664/Local-Plan-Evidence,SND,Sunderland City Council,2024,2035,
