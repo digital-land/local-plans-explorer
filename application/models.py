@@ -121,8 +121,6 @@ class LocalPlan(BaseModel):
 class LocalPlanDocument(BaseModel):
     __tablename__ = "local_plan_document"
 
-    plan_boundary_type: Mapped[Optional[str]] = mapped_column(Text)
-    geometry: Mapped[Optional[str]] = mapped_column(Text)
     documentation_url: Mapped[Optional[str]] = mapped_column(Text)
     document_url: Mapped[Optional[str]] = mapped_column(Text)
     document_types: Mapped[Optional[list]] = mapped_column(ARRAY(Text))

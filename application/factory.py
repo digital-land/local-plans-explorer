@@ -32,6 +32,7 @@ def register_errorhandlers(app):
 
 
 def register_blueprints(app):
+    from application.blueprints.document.views import document
     from application.blueprints.local_plan.views import local_plan
     from application.blueprints.main.views import main
     from application.blueprints.organisation.views import organisation
@@ -39,6 +40,7 @@ def register_blueprints(app):
     app.register_blueprint(main)
     app.register_blueprint(organisation)
     app.register_blueprint(local_plan)
+    app.register_blueprint(document)
 
 
 def register_extensions(app):

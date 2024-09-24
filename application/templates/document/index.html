@@ -1,0 +1,11 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+
+<h1 class="govuk-heading-l">Local plan documents</h1>
+
+{% for document in local_plan.documents %}
+    <h2 class="govuk-heading-s">{{ document.name }}</h2>
+{% endfor %}
+
+{% endblock %}

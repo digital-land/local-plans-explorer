@@ -67,8 +67,6 @@ def upgrade():
     sa.PrimaryKeyConstraint('reference')
     )
     op.create_table('local_plan_document',
-    sa.Column('plan_boundary_type', sa.Text(), nullable=True),
-    sa.Column('geometry', sa.Text(), nullable=True),
     sa.Column('documentation_url', sa.Text(), nullable=True),
     sa.Column('document_url', sa.Text(), nullable=True),
     sa.Column('document_types', postgresql.ARRAY(sa.Text()), nullable=True),

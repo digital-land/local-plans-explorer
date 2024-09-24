@@ -7,3 +7,4 @@ Flask-SQLAlchemy
 Flask-Migrate
 requests
 alembic-postgresql-enum
+Flask-WTF

@@ -25,12 +25,15 @@ flask==3.0.3
     #   -r requirements/requirements.in
     #   flask-migrate
     #   flask-sqlalchemy
+    #   flask-wtf
 flask-migrate==4.0.7
     # via -r requirements/requirements.in
 flask-sqlalchemy==3.1.1
     # via
     #   -r requirements/requirements.in
     #   flask-migrate
+flask-wtf==1.2.1
+    # via -r requirements/requirements.in
 govuk-frontend-jinja==3.3.0
     # via digital-land-frontend
 gunicorn==23.0.0
@@ -38,7 +41,9 @@ gunicorn==23.0.0
 idna==3.10
     # via requests
 itsdangerous==2.2.0
-    # via flask
+    # via
+    #   flask
+    #   flask-wtf
 jinja2==3.1.4
     # via
     #   flask
@@ -50,6 +55,7 @@ markupsafe==2.1.5
     #   jinja2
     #   mako
     #   werkzeug
+    #   wtforms
 packaging==24.1
     # via gunicorn
 psycopg2-binary==2.9.9
@@ -73,3 +79,5 @@ validators==0.34.0
     # via digital-land-frontend
 werkzeug==3.0.4
     # via flask
+wtforms==3.1.2
+    # via flask-wtf
