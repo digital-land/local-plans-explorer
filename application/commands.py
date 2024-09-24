@@ -7,7 +7,7 @@ from flask.cli import AppGroup
 from sqlalchemy.inspection import inspect
 
 from application.extensions import db
-from application.models import LocalPlan, Organisation
+from application.models import LocalPlan, Organisation, local_plan_organisation
 
 data_cli = AppGroup("data")
 
@@ -82,3 +82,11 @@ def load_plans():
             except Exception as e:
                 print(f"Error processing row {row['reference']}: {e}")
                 db.session.rollback()
+
+
+@data_cli.command("drop-plans")
+def drop_plans():
+    db.session.query(local_plan_organisation).delete()
+    db.session.commit()
+    LocalPlan.query.delete()
+    db.session.commit()
