@@ -129,6 +129,7 @@ class LocalPlanDocument(BaseModel):
 
     local_plan: Mapped[str] = mapped_column(ForeignKey("local_plan.reference"))
     local_plan_obj: Mapped["LocalPlan"] = relationship(back_populates="documents")
+    inlcude_in_dataset: Mapped[Optional[bool]] = mapped_column(Text, default=False)
 
     organisations = db.relationship(
         "Organisation",

@@ -63,13 +63,15 @@ def load_plans():
                 if plan is None:
                     plan = LocalPlan()
                     for key, value in row.items():
-                        if key in columns:
-                            setattr(plan, key, value if value else None)
+                        k = key.lower().replace("-", "_")
+                        if k in columns:
+                            setattr(plan, k, value if value else None)
                     db.session.add(plan)
                 else:
                     for key, value in row.items():
-                        if key in columns:
-                            setattr(plan, key, value if value else None)
+                        k = key.lower().replace("-", "_")
+                        if k in columns:
+                            setattr(plan, k, value if value else None)
 
                 organisations = row.get("organisations")
                 for org in organisations.split(";") if organisations else []:
