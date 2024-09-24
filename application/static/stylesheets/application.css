@@ -10955,4 +10955,16 @@ p + .govuk-heading-s,
   border-color: var(--department-colour);
 }
 
+.js-hidden {
+  display: none !important;
+}
+
+.app-hidden {
+  display: none;
+}
+
+.js-enabled .app-hide-if-js {
+  display: none;
+}
+
 /*# sourceMappingURL=application.css.map */
