@@ -4,7 +4,7 @@
 {% block content %}
 
 <span class="govuk-caption-l">Local plan</span>
-  <h1 class="govuk-heading-l">{{local_plan.name}}</h1>
+  <h1 class="govuk-heading-l">{{plan.name}}</h1>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -14,24 +14,24 @@
             Local plan
           </h2>
           <div class="app-summary-card__actions">
-            <a href="#" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
+            <a href="{{ url_for('local_plan.edit', reference=plan.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
           </div>
         </header>
         <div class="app-summary-card__body">
           <dl class="govuk-summary-list govuk-!-margin-bottom-0">
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Reference</dt>
-              <dd class="govuk-summary-list__value">{{ local_plan.reference }}</dd>
+              <dd class="govuk-summary-list__value">{{ plan.reference }}</dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Name</dt>
-              <dd class="govuk-summary-list__value">{{ local_plan.name }}</dd>
+              <dd class="govuk-summary-list__value">{{ plan.name }}</dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Organisation</dt>
               <dd class="govuk-summary-list__value">
                 <ul class="govuk-list">
-                {% for org in local_plan.organisations %}
+                {% for org in plan.organisations %}
                   <li>{{ org.name }}</li>
                 {% endfor %}
                 </ul>
@@ -39,19 +39,19 @@
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Documentation URL</dt>
-              <dd class="govuk-summary-list__value"><a href="{{ local_plan.documentation_url }}" class="govuk-link">{{ local_plan.documentation_url }}</a></dd>
+              <dd class="govuk-summary-list__value"><a href="{{ plan.documentation_url }}" class="govuk-link">{{ plan.documentation_url }}</a></dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Period</dt>
-              <dd class="govuk-summary-list__value">{{ local_plan.period_start_date }} - {{ local_plan.period_end_date }}</dd>
+              <dd class="govuk-summary-list__value">{{ plan.period_start_date }} - {{ plan.period_end_date }}</dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Adopted date</dt>
-              <dd class="govuk-summary-list__value">{{ local_plan.adopted_date if local_plan.adopted_date }}</dd>
+              <dd class="govuk-summary-list__value">{{ plan.adopted_date if plan.adopted_date }}</dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Description</dt>
-              <dd class="govuk-summary-list__value">{{ local_plan.description if local_plan.description }}</dd>
+              <dd class="govuk-summary-list__value">{{ plan.description if plan.description }}</dd>
             </div>
           </dl>
         </div>
@@ -64,7 +64,7 @@
             Plan boundary
           </h2>
           <div class="app-summary-card__actions">
-            {%- if local_plan.local_plan_boundary_obj %}
+            {%- if plan.local_plan_boundary_obj %}
             <a href="#" class="govuk-link">Edit<span class="govuk-visually-hidden"> boundary</span></a>
             {% else %}
             <a href="#" class="govuk-link">Add<span class="govuk-visually-hidden"> boundary</span></a>
@@ -72,7 +72,7 @@
           </div>
         </header>
         <div class="app-summary-card__body">
-        {%- if local_plan.local_plan_boundary_obj %}
+        {%- if plan.local_plan_boundary_obj %}
           <!-- put map here -->
         {%- else %}
           <p class="govuk-hint govuk-!-margin-bottom-0">No boundary recorded for this plan</p>
@@ -93,7 +93,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <ul class="govuk-list app-document-list">
-        {% for document in local_plan.documents %}
+        {% for document in plan.documents %}
           {%- if document.end_date is none %}
           <li class="app-document-list__item">
             <div class="app-document-list__item__content">

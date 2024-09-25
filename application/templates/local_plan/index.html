@@ -4,8 +4,8 @@
 
 <h1 class="govuk-heading-l">Local plans</h1>
 
-{% for local_plan in local_plans %}
-    <h2 class="govuk-heading-s">{{ local_plan.name }}</h2>
+{% for plan in plans %}
+    <h2 class="govuk-heading-s">{{ plan.name }}</h2>
 {% endfor %}
 
 {% endblock %}

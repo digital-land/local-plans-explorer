@@ -1,31 +1,15 @@
 // import all digital land and GOVUK Frontend scss
-$app-images-path: "/static/images/";
-$govuk-global-styles: true;
-$govuk-new-link-styles: true;
-
 @import "digital-land-frontend/dl-frontend";
 
-
-// local settings
-@import "settings/all";
-
-// 3rd party components
-@import "components/moj-timeline";
-
-// components
-@import "components/applied-filters";
-@import "components/content-list";
-@import "components/dataset-card";
-@import "components/masthead";
-@import "components/govuk-button--link";
-@import "components/question-set";
-@import "components/report-bar";
-@import "components/subnavigation";
-@import "components/stats";
-@import "components/header";
+// app specific component scss
 @import "components/summary-card";
+@import "components/register-table";
+@import "components/new-register-record";
+@import "components/multi-select";
+@import "components/progress-banner";
+@import "components/table";
+@import "components/button";
 @import "components/summary-list";
-
 
 .js-hidden {
   display: none !important;
@@ -38,5 +22,86 @@ $govuk-new-link-styles: true;
 .js-enabled {
   .app-hide-if-js {
     display: none
+  }
+}
+
+.app-heading--divided {
+  border-bottom: 4px solid $govuk-brand-colour;
+  padding-bottom: 5px;
+}
+
+// Typography tweaks
+
+.app-govuk-text {
+  @include govuk-font(19);
+}
+
+.app-plan-reference {
+  color: $govuk-secondary-text-colour;
+}
+
+.app-link--destructive {
+  color: darken(govuk-colour("red"), 20) !important;
+}
+
+// Styles for timetable
+
+.app-timetable {
+  .govuk-table__header,
+  .govuk-table__cell {
+    vertical-align: middle
+  }
+}
+
+.app-cell--meta {
+  @include govuk-font(16);
+  background-color: govuk-colour("light-grey");
+  padding-left: 15px;
+  border-left: 1px solid  govuk-colour("mid-grey");
+
+  & ~ .app-cell--meta {
+    padding-left: 0;
+    border-left: none;
+  }
+
+  & ~ .app-cell--actions {
+    padding-left: 15px;
+    border-left: 1px solid  govuk-colour("mid-grey");
+  }
+}
+
+// styles for document list
+.app-document-list {
+  & > .app-document-list__item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+
+  .app-document-list__item__actions {
+    align-self: center;
+  }
+}
+
+.app-code {
+  &--inline {
+    display: inline-block;
+  }
+  &--block {
+    display: block;
+  }
+  &--s {
+    font-size: 0.75em;
+  }
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace !important;
+}
+
+.app-warning {
+  background: govuk-tint(govuk-colour("yellow"), 75);
+  margin: -10px;
+  padding: 10px;
+
+  & *:last-child {
+    margin-bottom: 0;
   }
 }

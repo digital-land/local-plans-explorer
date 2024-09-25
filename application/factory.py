@@ -17,6 +17,7 @@ def create_app(config_filename):
     register_templates(app)
     register_context_processors(app)
     register_commands(app)
+    register_filters(app)
     return app
 
 
@@ -85,3 +86,9 @@ def register_commands(app):
     from application.commands import data_cli
 
     app.cli.add_command(data_cli)
+
+
+def register_filters(app):
+    from application.filters import get_date_part
+
+    app.add_template_filter(get_date_part, name="date_part")
