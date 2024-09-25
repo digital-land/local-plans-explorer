@@ -26,7 +26,10 @@ def get_plan(reference):
 @local_plan.route("/add")
 def add():
     form = LocalPlanForm()
-    form.organisations.choices = [(" ", " ")] + get_planning_organisations()
+    organisation_choices = [
+        (org.organisation, org.name) for org in get_planning_organisations()
+    ]
+    form.organisations.choices = [(" ", " ")] + organisation_choices
 
     if form.validate_on_submit():
         reference = slugify(form.name.data)
@@ -59,7 +62,10 @@ def edit(reference):
     if not form.organisations.data:
         form.organisations.data = organisation__string
 
-    form.organisations.choices = get_planning_organisations()
+    organisation_choices = [
+        (org.organisation, org.name) for org in get_planning_organisations()
+    ]
+    form.organisations.choices = organisation_choices
 
     if form.validate_on_submit():
         plan = _populate_plan(form, plan)

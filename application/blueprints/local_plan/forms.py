@@ -5,7 +5,7 @@ from wtforms.validators import URL, DataRequired, Optional, Regexp
 
 class LocalPlanForm(FlaskForm):
     name = StringField("Name of plan", validators=[DataRequired()])
-    organisations = StringField("Organisations", validators=[DataRequired()])
+    organisations = StringField("Organisation", validators=[DataRequired()])
     period_start_date = StringField(
         "Plan start date",
         validators=[Optional()],
