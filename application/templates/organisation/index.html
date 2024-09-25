@@ -1,7 +1,7 @@
 {% extends 'layouts/base.html' %}
 
-{% block content %}
 
+{% block content %}
 
   <span class="govuk-caption-xl">Local plans</span>
   <h1 class="govuk-heading-xl">Find a plan by organisation</h1>
@@ -87,7 +87,7 @@
             {% if organisation.local_plans | length > 0 %}
             <ul class="govuk-list govuk-!-margin-bottom-3">
               {% for plan in organisation.local_plans %}
-                <li><a href="{{ url_for('local_plan.get_local_plan', reference=plan.reference) }}" class="govuk-link">{{ plan.name }}</a> <span class="govuk-hint">({{plan.reference}})</span></li>
+                <li><a href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}" class="govuk-link">{{ plan.name }}</a> <span class="govuk-hint">({{plan.reference}})</span></li>
               {% endfor %}
             </ul>
             {% endif %}
