@@ -18,7 +18,7 @@
 
         {% for field in form %}
         {# the fields listed are either not shown or handled individually #}
-        {%- if field.name not in ['status'] %}
+        {%- if field.name not in ['status', 'csrf_token'] %}
           {%- if field.name == 'organisations' %}
             <div class="app-organisation-select" data-module="multi-select">
               <div class="govuk-form-group" data-multi-select="form-group">
@@ -61,14 +61,14 @@
               </legend>
               <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
 
-              {% for choice in form.status.choices %}
+              <!-- {# {% for choice in form.status.choices %}
                 <div class="govuk-radios__item">
                   <input class="govuk-radios__input" id="{{ choice[0] }}" name="status" type="radio" value="{{ choice[0] }}" {% if choice[0] == document.status.name %} checked{% endif %}>
                   <label class="govuk-label govuk-radios__label" for="{{ choice[0] }}">
                     {{ choice[1] }}
                   </label>
-              </div>
-              {% endfor %}
+                </div>
+              {% endfor %} #} -->
               </div>
             </fieldset>
           </div>

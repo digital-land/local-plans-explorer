@@ -11,7 +11,7 @@
       {{ form.hidden_tag() }}
       {% for field in form %}
         {# the fields listed are either not shown or handled individually #}
-        {% if field.name not in ['status'] %}
+        {% if field.name not in ['status', 'csrf_token', 'include_in_dataset'] %}
           {%- if field.name == 'organisations' %}
           <div class="app-organisation-select" data-module="multi-select">
             <div class="govuk-form-group" data-multi-select="form-group">

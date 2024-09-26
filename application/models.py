@@ -16,6 +16,12 @@ class Status(Enum):
     PUBLISHED = "Published"
 
 
+class DocumentType(Enum):
+    LOCAL_PLAN = "Local plan"
+    SITE_ALLOCATION = "Site allocation"
+    CORE_STRATEGY = "Core strategy"
+
+
 class DateModel(db.Model):
     __abstract__ = True
 

@@ -29,4 +29,4 @@ class LocalPlanForm(FlaskForm):
     adopted_date_month = StringField("Adopted date month", validators=[Optional()])
     adopted_date_day = StringField("Adopted date day", validators=[Optional()])
 
-    status = RadioField("Status", validators=[DataRequired()])
+    status = RadioField("Status", validators=[Optional()])

@@ -3,7 +3,7 @@ from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
 from application.extensions import db
-from application.models import LocalPlan, LocalPlanDocument, Status
+from application.models import LocalPlan, LocalPlanDocument
 from application.utils import (
     get_planning_organisations,
     populate_object,
@@ -28,6 +28,9 @@ def add(local_plan_reference):
         (org.organisation, org.name) for org in get_planning_organisations()
     ]
     form.organisations.choices = [(" ", " ")] + organisation_choices
+    # form.document_types.choices = [
+    #     (dt.name, dt.value) for dt in DocumentType
+    # ]
 
     if form.validate_on_submit():
         reference = slugify(form.name.data)
@@ -38,7 +41,8 @@ def add(local_plan_reference):
             documentation_url=form.documentation_url.data,
             document_url=form.document_url.data,
         )
-        set_organisations(doc, form.organisations.data)
+        if form.organisations.data:
+            set_organisations(doc, form.organisations.data)
         plan.documents.append(doc)
         db.session.add(plan)
         db.session.commit()
@@ -86,7 +90,10 @@ def edit(local_plan_reference, reference):
     ]
 
     form.organisations.choices = organisation_choices
-    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
+    # form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
+    # form.document_types.choices = [
+    #     (dt.name, dt.value) for dt in DocumentType
+    # ]
 
     if form.validate_on_submit():
         document = populate_object(form, doc)
