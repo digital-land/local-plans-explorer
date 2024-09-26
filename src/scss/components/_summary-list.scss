@@ -25,4 +25,10 @@
     right: govuk-spacing(3);
     //transform: translate(0, -50%);
   }
+
+  li span {
+    float: right;
+    margin-right: govuk-spacing(3);
+  }
+
 }

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField
+from wtforms import RadioField, StringField, TextAreaField
 from wtforms.validators import URL, DataRequired, Optional, Regexp
 
 
@@ -28,3 +28,5 @@ class LocalPlanForm(FlaskForm):
     adopted_date_year = StringField("Adopted date year", validators=[Optional()])
     adopted_date_month = StringField("Adopted date month", validators=[Optional()])
     adopted_date_day = StringField("Adopted date day", validators=[Optional()])
+
+    status = RadioField("Status", validators=[DataRequired()])

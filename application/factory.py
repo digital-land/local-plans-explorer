@@ -89,6 +89,7 @@ def register_commands(app):
 
 
 def register_filters(app):
-    from application.filters import get_date_part
+    from application.filters import get_date_part, get_status_colour
 
     app.add_template_filter(get_date_part, name="date_part")
+    app.add_template_filter(get_status_colour, name="status_colour")

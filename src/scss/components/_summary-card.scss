@@ -57,6 +57,14 @@
     }
   }
 
+  .app-summary-card__footer p {
+    display: inline-block;
+  }
+
+  .app-summary-card__footer span {
+    float: right;
+  }
+
   .app-summary-card__actions-list-item:first-child {
     margin-left: 0;
   }

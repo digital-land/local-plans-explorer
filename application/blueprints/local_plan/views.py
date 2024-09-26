@@ -3,7 +3,7 @@ from flask import Blueprint, abort, redirect, render_template, url_for
 
 from application.blueprints.local_plan.forms import LocalPlanForm
 from application.extensions import db
-from application.models import LocalPlan, Organisation
+from application.models import LocalPlan, Organisation, Status
 from application.utils import get_planning_organisations
 
 local_plan = Blueprint("local_plan", __name__, url_prefix="/local-plan")
@@ -66,6 +66,8 @@ def edit(reference):
         (org.organisation, org.name) for org in get_planning_organisations()
     ]
     form.organisations.choices = organisation_choices
+
+    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
 
     if form.validate_on_submit():
         plan = _populate_plan(form, plan)

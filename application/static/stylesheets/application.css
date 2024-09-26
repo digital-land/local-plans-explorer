@@ -10024,6 +10024,12 @@
     text-align: right;
   }
 }
+.app-summary-card .app-summary-card__footer p {
+  display: inline-block;
+}
+.app-summary-card .app-summary-card__footer span {
+  float: right;
+}
 .app-summary-card .app-summary-card__actions-list-item:first-child {
   margin-left: 0;
 }
@@ -10491,6 +10497,10 @@
   position: absolute;
   top: 15px;
   right: 15px;
+}
+.app-summary-list li span {
+  float: right;
+  margin-right: 15px;
 }
 
 .js-hidden {
