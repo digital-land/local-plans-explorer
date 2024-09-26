@@ -1,5 +1,5 @@
-import slugify
 from flask import Blueprint, abort, redirect, render_template, url_for
+from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
 from application.extensions import db
@@ -34,7 +34,7 @@ def add(local_plan_reference):
             documentation_url=form.documentation_url.data,
             document_url=form.document_url.data,
         )
-        doc.organisations = set_organisations(doc, form.organisations.data)
+        set_organisations(doc, form.organisations.data)
         plan.documents.append(doc)
         db.session.add(plan)
         db.session.commit()
