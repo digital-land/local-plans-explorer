@@ -116,6 +116,6 @@
     </div>
   </div>
 
-  <a href="#" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> add document</a>
+  <a href="{{ url_for('document.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> add document</a>
 
 {% endblock content %}
