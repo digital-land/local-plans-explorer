@@ -9,9 +9,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from application.extensions import db
 
 
-class PublicationStatus(Enum):
-    DRAFT = "Draft"
-    READY_FOR_PUBLICATION = "Ready for publication"
+class Status(Enum):
+    FOR_REVIEW = "For review"
+    FOR_PUBLICATION = "For publication"
+    NOT_FOR_PUBLICATION = "Not for publication"
     PUBLISHED = "Published"
 
 
@@ -98,9 +99,7 @@ class LocalPlan(BaseModel):
         ForeignKey("local_plan_boundary.reference")
     )
 
-    publication_status: Mapped[PublicationStatus] = mapped_column(
-        ENUM(PublicationStatus), default=PublicationStatus.DRAFT
-    )
+    status: Mapped[Status] = mapped_column(ENUM(Status), default=Status.FOR_REVIEW)
 
     local_plan_boundary_obj: Mapped["LocalPlanBoundary"] = relationship(
         back_populates="local_plans"
@@ -135,6 +134,8 @@ class LocalPlanDocument(BaseModel):
         lazy="subquery",
         back_populates="local_plan_documents",
     )
+
+    status: Mapped[Status] = mapped_column(ENUM(Status), default=Status.FOR_REVIEW)
 
 
 class Organisation(DateModel):
