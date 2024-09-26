@@ -79,7 +79,16 @@
   }
 
   .app-document-list__item__actions {
-    align-self: center;
+    align-self: baseline;
+    margin-right: govuk-spacing(2);
+  }
+
+  .app-document-list__item__content a {
+    display: inline-block;
+  }
+
+  .app-document-list__item__content span {
+    float: right;
   }
 }
 

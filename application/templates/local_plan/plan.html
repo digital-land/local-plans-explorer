@@ -3,9 +3,8 @@
 
 {% block content %}
 
-<span class="govuk-caption-l">Local plan</span>
+  <span class="govuk-caption-l">Local plan</span>
   <h1 class="govuk-heading-l">{{plan.name}}</h1>
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <section class="app-summary-card">
@@ -60,7 +59,74 @@
           <span class="govuk-tag govuk-tag--{{plan.status | status_colour }}">{{plan.status.value}}</span>
         </div>
       </section>
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 id="documents" class="govuk-heading-m">Plan documents</h2>
+      <p class="govuk-body">Record any plan documents. These can be documents that contain relevant policies, documents outlining activities or publication notices.</p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% for document in plan.documents %}
+        <section class="app-summary-card">
+          <header class="app-summary-card__header">
+            <h2 class="app-summary-card__title">
+              Document
+            </h2>
+            <div class="app-summary-card__actions">
+              <a href="{{ url_for('document.edit', local_plan_reference=plan.reference, reference=document.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> document</span></a>
+            </div>
+          </header>
+          <div class="app-summary-card__body">
+            <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Reference</dt>
+                <dd class="govuk-summary-list__value">{{ document.reference }}</dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Name</dt>
+                <dd class="govuk-summary-list__value">{{ document.name }}</dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Organisation</dt>
+                <dd class="govuk-summary-list__value">
+                  <ul class="govuk-list">
+                  {% for org in document.organisations %}
+                    <li>{{ org.name }}</li>
+                  {% endfor %}
+                  </ul>
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Documentation URL</dt>
+                <dd class="govuk-summary-list__value"><a href="{{ document.documentation_url }}" class="govuk-link">{{ document.documentation_url }}</a></dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Document URL</dt>
+                <dd class="govuk-summary-list__value"><a href="{{ document.document_url }}" class="govuk-link">{{ document.document_url }}</a></dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Description</dt>
+                <dd class="govuk-summary-list__value">{{ plan.description if plan.description }}</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="app-summary-card__footer">
+            <p class="govuk-body">Status</p>
+            <span class="govuk-tag govuk-tag--{{document.status | status_colour }}">{{document.status.value}}</span>
+          </div>
+        </section>
+      {% endfor %}
+      <a href="{{ url_for('document.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> add document</a>
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    </div>
+  </div>
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <section class="app-summary-card govuk-!-margin-top-6">
         <header class="app-summary-card__header">
@@ -87,35 +153,6 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h2 id="documents" class="govuk-heading-m">Plan documents</h2>
-      <p class="govuk-body">Record any plan documents. These can be documents that contain relevant policies, documents outlining activities or publication notices.</p>
-    </div>
-  </div>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <ul class="govuk-list app-document-list">
-        {% for document in plan.documents %}
-          {%- if document.end_date is none %}
-          <li class="app-document-list__item">
-            <div class="app-document-list__item__content">
-              <a href="{{ document.document_url }}" class="govuk-link">{{ document.name }}</a>
-              <br />
-              <span class="govuk-!-font-size-14"><a href="{{ document.documentation_url }}" class="govuk-link">View documentation page</a></span>
-            </div>
-            <div class="app-document-list__item__actions">
-              <a href="#" class="govuk-!-font-size-14 govuk-link app-link--destructive">Edit</a>
-              <a href="#" class="govuk-!-font-size-14 govuk-link app-link--destructive">Delete</a>
-            </div>
-          </li>
-          {% endif -%}
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-
-  <a href="{{ url_for('document.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> add document</a>
 
 {% endblock content %}

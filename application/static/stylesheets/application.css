@@ -9900,6 +9900,7 @@
 
 .app-summary-card {
   border: 1px solid #b1b4b6;
+  margin-bottom: 15px;
   /* Card header */
   /* Card body */
 }
@@ -10606,7 +10607,14 @@
   margin-bottom: 15px;
 }
 .app-document-list .app-document-list__item__actions {
-  align-self: center;
+  align-self: baseline;
+  margin-right: 10px;
+}
+.app-document-list .app-document-list__item__content a {
+  display: inline-block;
+}
+.app-document-list .app-document-list__item__content span {
+  float: right;
 }
 
 .app-code {

@@ -3,8 +3,12 @@ from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
 from application.extensions import db
-from application.models import LocalPlan, LocalPlanDocument
-from application.utils import get_planning_organisations, set_organisations
+from application.models import LocalPlan, LocalPlanDocument, Status
+from application.utils import (
+    get_planning_organisations,
+    populate_object,
+    set_organisations,
+)
 
 document = Blueprint(
     "document",
@@ -60,9 +64,34 @@ def get_document(local_plan_reference, reference):
     return render_template("document/document.html", plan=plan, local_plan_document=doc)
 
 
-@document.route("/<string:reference>/edit")
-def edit(local_plan_reference):
-    lp = LocalPlan.query.get(local_plan_reference)
-    if lp is None:
+@document.route("/<string:reference>/edit", methods=["GET", "POST"])
+def edit(local_plan_reference, reference):
+    plan = LocalPlan.query.get(local_plan_reference)
+    if plan is None:
         return abort(404)
-    return render_template("document/add.html", local_plan=lp)
+    doc = LocalPlanDocument.query.get(reference)
+    if doc is None:
+        return abort(404)
+
+    organisation__string = ";".join([org.organisation for org in doc.organisations])
+
+    del doc.organisations
+    form = DocumentForm(obj=doc)
+
+    if not form.organisations.data:
+        form.organisations.data = organisation__string
+
+    organisation_choices = [
+        (org.organisation, org.name) for org in get_planning_organisations()
+    ]
+
+    form.organisations.choices = organisation_choices
+    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
+
+    if form.validate_on_submit():
+        document = populate_object(form, doc)
+        db.session.add(document)
+        db.session.commit()
+        return redirect(url_for("local_plan.get_plan", reference=plan.reference))
+
+    return render_template("document/edit.html", plan=plan, document=doc, form=form)
