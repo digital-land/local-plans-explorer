@@ -9,11 +9,11 @@ function MultiSelect ($module) {
 MultiSelect.prototype.init = function (params) {
   this.setupOptions(params)
   // get the original form field that needs to be kept updated
-  this.$formGroup = this.$module.querySelector('[data-mulit-select="form-group"]')
+  this.$formGroup = this.$module.querySelector('[data-multi-select="form-group"]')
   this.$input = this.$formGroup.querySelector('input')
 
   // get the options from a hidden select element
-  this.$hiddenSelect = this.$module.querySelector('[data-mulit-select="select"]')
+  this.$hiddenSelect = this.$module.querySelector('[data-multi-select="select"]')
   this.selectOptions = utils.getSelectOptions(this.$hiddenSelect)
   this.selectOptionLabels = this.selectOptions.map(($option) => $option[0])
 

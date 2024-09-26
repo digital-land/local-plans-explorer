@@ -51,3 +51,18 @@ def get_adopted_local_plans():
         .filter(LocalPlan.adopted_date.isnot(None))
         .all()
     )
+
+
+def set_organisations(obj, org_str):
+    previous_orgs = [organisation.organisation for organisation in obj.organisations]
+    orgs = org_str.split(";")
+    # add any new organisations
+    for oid in orgs:
+        org = Organisation.query.get(oid)
+        obj.organisations.append(org)
+        if oid in previous_orgs:
+            previous_orgs.remove(oid)
+    # remove old organisations
+    for oid in previous_orgs:
+        org = Organisation.query.get(oid)
+        obj.organisations.remove(org)
