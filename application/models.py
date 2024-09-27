@@ -160,9 +160,10 @@ class Organisation(DateModel):
     local_authority_type: Mapped[Optional[str]] = mapped_column(Text)
     name: Mapped[Optional[dict]] = mapped_column(Text)
     official_name: Mapped[Optional[dict]] = mapped_column(Text)
-    geometry: Mapped[Optional[dict]] = mapped_column(Text)
+    geometry: Mapped[Optional[str]] = mapped_column(Text)
     geojson: Mapped[Optional[dict]] = mapped_column(JSONB)
     point: Mapped[Optional[str]] = mapped_column(Text)
+    statistical_geography: Mapped[Optional[str]] = mapped_column(Text)
 
     local_plan_documents = db.relationship(
         "LocalPlanDocument",
