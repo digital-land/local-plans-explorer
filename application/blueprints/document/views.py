@@ -66,7 +66,7 @@ def get_document(local_plan_reference, reference):
     doc = LocalPlanDocument.query.get(reference)
     if doc is None:
         return abort(404)
-    return render_template("document/document.html", plan=plan, local_plan_document=doc)
+    return render_template("document/document.html", plan=plan, document=doc)
 
 
 @document.route("/<string:reference>/edit", methods=["GET", "POST"])

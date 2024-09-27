@@ -86,7 +86,7 @@
             <dl class="govuk-summary-list govuk-!-margin-bottom-0">
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Reference</dt>
-                <dd class="govuk-summary-list__value">{{ document.reference }}</dd>
+                <dd class="govuk-summary-list__value"><a href="{{ url_for('document.get_document', local_plan_reference=plan.reference, reference=document.reference ) }}">{{ document.reference }}</a></dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Name</dt>
@@ -115,7 +115,7 @@
                 <dd class="govuk-summary-list__value">{{ document.description if document.description }}</dd>
               </div>
               <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Document type</dt>
+                <dt class="govuk-summary-list__key">Document types</dt>
                 <dd class="govuk-summary-list__value">{{ document.document_types if document.document_types }}</dd>
               </div>
             </dl>
