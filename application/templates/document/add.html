@@ -27,13 +27,12 @@
               </div>
             </div>
           {%- elif field.name == 'document_types' %}
-
               <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset" aria-describedby="document-types-hint">
-                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                    <h2 class="govuk-fieldset__heading">
-                      What type document is this?
-                    </h2>
+                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    <p class="govuk-fieldset__heading">
+                      Document types
+                    </p>
                   </legend>
                   <div id="document-types-hint" class="govuk-hint">
                     Select all that apply.
@@ -50,7 +49,6 @@
                   </div>
                 </fieldset>
               </div>
-
           {% else %}
           <div class="govuk-form-group{{ ' govuk-form-group--error' if field.errors }}">
             {{ field.label(class='govuk-label') }}

@@ -33,6 +33,29 @@
                 </select>
               </div>
             </div>
+          {%- elif field.name == 'document_types' %}
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset" aria-describedby="document-types-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                  <h2 class="govuk-fieldset__heading">
+                    What type document is this?
+                  </h2>
+                </legend>
+                <div id="document-types-hint" class="govuk-hint">
+                  Select all that apply.
+                </div>
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                  {% for choice in field %}
+                  <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="{{ choice.id }}" name="{{ choice.name }}" type="checkbox" value="{{ choice.data }}" {% if choice.checked %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label" for="{{ choice.id }}">
+                      {{ choice.label }}
+                    </label>
+                  </div>
+                  {% endfor %}
+                </div>
+              </fieldset>
+            </div>
           {% else %}
           <div class="govuk-form-group">
             {{ field.label(class='govuk-label') }}
