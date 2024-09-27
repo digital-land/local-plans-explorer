@@ -1,3 +1,4 @@
+import geopandas as gpd
 import slugify
 from flask import Blueprint, abort, redirect, render_template, url_for
 
@@ -20,7 +21,27 @@ def get_plan(reference):
     plan = LocalPlan.query.get(reference)
     if plan is None:
         return abort(404)
-    return render_template("local_plan/plan.html", plan=plan)
+    geographies = []
+    # temporary geography hack until we get some boundaries
+    features = []
+    for org in plan.organisations:
+        if org.geometry:
+            coords, _ = _get_centre_and_bounds(org.geojson["features"])
+            geographies.append(
+                {
+                    "geojson": org.geojson,
+                    "coords": coords,
+                    "reference": org.statistical_geography,
+                }
+            )
+            features.extend(org.geojson["features"])
+    _, bounding_box = _get_centre_and_bounds(features)
+    return render_template(
+        "local_plan/plan.html",
+        plan=plan,
+        geographies=geographies,
+        bounding_box=bounding_box,
+    )
 
 
 @local_plan.route("/add")
@@ -76,3 +97,11 @@ def edit(reference):
         return redirect(url_for("local_plan.get_plan", reference=plan.reference))
 
     return render_template("local_plan/edit.html", plan=plan, form=form)
+
+
+def _get_centre_and_bounds(features):
+    if features is not None:
+        gdf = gpd.GeoDataFrame.from_features(features)
+        bounding_box = list(gdf.total_bounds)
+        return {"lat": gdf.centroid.y[0], "long": gdf.centroid.x[0]}, bounding_box
+    return None, None

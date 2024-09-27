@@ -9,3 +9,5 @@ requests
 alembic-postgresql-enum
 Flask-WTF
 python-slugify
+shapely
+geopandas

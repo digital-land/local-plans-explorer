@@ -1,4 +1,4 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base-with-map.html' %}
 
 
 {% block content %}
@@ -146,8 +146,25 @@
           </div>
         </header>
         <div class="app-summary-card__body">
-        {%- if plan.local_plan_boundary_obj %}
-          <!-- put map here -->
+        {%- if geographies %}
+          {% for geography in geographies %}
+            {%- set map_id = "map-" + geography["reference"] %}
+            <p class="govuk-hint govuk-!-margin-top-0">Reference: {{ geography["reference"] }}</p>
+            <div class="app-map-wrapper">
+              <div id="{{ map_id }}" style="height: 400px;">
+            </div>
+            <script>
+              const AppMap = {}
+              AppMap.mapID = '{{map_id}}';
+              AppMap.geography = {
+                'featureCollection': {{ geography["geojson"] | tojson }},
+                'centrePoint': {
+                  'lat':  {{ geography['coords']['lat'] }},
+                  'long': {{ geography['coords']['long'] }}
+                }
+              }
+            </script>
+          {% endfor %}
         {%- else %}
           <p class="govuk-hint govuk-!-margin-bottom-0">No boundary recorded for this plan</p>
         {% endif -%}
@@ -160,3 +177,13 @@
 
 
 {% endblock content %}
+
+{% block pageScripts %}
+  <script>
+    let map = L.map(AppMap.mapID).setView([AppMap.geography.centrePoint.lat, AppMap.geography.centrePoint.long], 6);
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: 'OSM' }).addTo(map)
+    var boundary_layer = L.geoJSON(AppMap.geography.featureCollection, {}).addTo(map)
+    const bbox = {{ bounding_box | tojson }}
+    map.fitBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]])
+  </script>
+{% endblock pageScripts %}

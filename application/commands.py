@@ -103,6 +103,7 @@ def load_boundaries():
             print("Loading boundary for", org.organisation)
             org.geometry = g["geometry"]
             org.geojson = g["geojson"]
+            org.point = g["point"]
             db.session.add(org)
             db.session.commit()
         else:
@@ -117,12 +118,14 @@ def _get_geography(reference):
         data = resp.json()
         if len(data["entities"]) == 0:
             return None
+        point = data["entities"][0].get("point")
         geojson_url = "https://www.planning.data.gov.uk/entity.geojson"
         resp = requests.get(geojson_url, params=params)
         if resp.status_code == 200:
             geography = {
                 "geojson": resp.json(),
                 "geometry": data["entities"][0].get("geometry"),
+                "point": point,
             }
         return geography
     return None
