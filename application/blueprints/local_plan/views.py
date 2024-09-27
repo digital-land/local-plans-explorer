@@ -35,7 +35,12 @@ def get_plan(reference):
                 }
             )
             features.extend(org.geojson["features"])
-    _, bounding_box = _get_centre_and_bounds(features)
+
+    if features:
+        _, bounding_box = _get_centre_and_bounds(features)
+    else:
+        bounding_box = None
+
     return render_template(
         "local_plan/plan.html",
         plan=plan,
