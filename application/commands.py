@@ -93,29 +93,39 @@ def load_plans():
 
 @data_cli.command("load-boundaries")
 def load_boundaries():
-    print("Loading boundaries")
-    orgs = Organisation.query.filter(
-        Organisation.statistical_geography.isnot(None)
-    ).all()
+    from application.extensions import db
+
+    orgs = Organisation.query.all()
     for org in orgs:
-        print(
-            f"Loading boundary for {org.organisation} statistical geography {org.statistical_geography}"
-        )
-        base_url = "https://datasette.planning.data.gov.uk/local-authority-district/entity.json"
-        url = f"{base_url}?reference__exact={org.statistical_geography}&_shape=object&_col=geometry"
-        resp = requests.get(url)
-        try:
-            resp.raise_for_status()
-            if resp.json():
-                data = resp.json()
-                geometry = list(data.values())[0]["geometry"]
-                if geometry:
-                    org.geometry = geometry
-                    db.session.add(org)
-                    db.session.commit()
-        except Exception as e:
-            print(f"Failed to load boundary for {org.organisation}")
-            print(e)
+        curie = f"statistical-geography:{org.statistical_geography}"
+        g = _get_geography(curie)
+        if g is not None:
+            print("Loading boundary for", org.organisation)
+            org.geometry = g["geometry"]
+            org.geojson = g["geojson"]
+            db.session.add(org)
+            db.session.commit()
+        else:
+            print("No boundary found for", org.organisation)
+
+
+def _get_geography(reference):
+    url = "https://www.planning.data.gov.uk/entity.json"
+    params = {"curie": reference}
+    resp = requests.get(url, params=params)
+    if resp.status_code == 200:
+        data = resp.json()
+        if len(data["entities"]) == 0:
+            return None
+        geojson_url = "https://www.planning.data.gov.uk/entity.geojson"
+        resp = requests.get(geojson_url, params=params)
+        if resp.status_code == 200:
+            geography = {
+                "geojson": resp.json(),
+                "geometry": data["entities"][0].get("geometry"),
+            }
+        return geography
+    return None
 
 
 @data_cli.command("drop-plans")
