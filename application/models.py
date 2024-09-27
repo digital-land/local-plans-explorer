@@ -57,14 +57,20 @@ boundary_organisation = db.Table(
 
 document_organisation = db.Table(
     "document_organisation",
+    db.Column("local_plan_document_reference", Text, nullable=False),
+    db.Column("local_plan_document_local_plan", Text, nullable=False),
     db.Column(
-        "local_plan_document",
-        Text,
-        ForeignKey("local_plan_document.reference"),
-        primary_key=True,
+        "organisation", Text, ForeignKey("organisation.organisation"), nullable=False
     ),
-    db.Column(
-        "organisation", Text, ForeignKey("organisation.organisation"), primary_key=True
+    db.PrimaryKeyConstraint(
+        "local_plan_document_reference",
+        "local_plan_document_local_plan",
+        "organisation",
+    ),
+    db.ForeignKeyConstraint(
+        ["local_plan_document_reference", "local_plan_document_local_plan"],
+        ["local_plan_document.reference", "local_plan_document.local_plan"],
+        ondelete="CASCADE",
     ),
 )
 
@@ -128,12 +134,14 @@ class LocalPlan(BaseModel):
 class LocalPlanDocument(BaseModel):
     __tablename__ = "local_plan_document"
 
+    local_plan: Mapped[str] = mapped_column(
+        ForeignKey("local_plan.reference"), primary_key=True
+    )
+    local_plan_obj: Mapped["LocalPlan"] = relationship(back_populates="documents")
+
     documentation_url: Mapped[Optional[str]] = mapped_column(Text)
     document_url: Mapped[Optional[str]] = mapped_column(Text)
     document_types: Mapped[Optional[list]] = mapped_column(ARRAY(Text))
-
-    local_plan: Mapped[str] = mapped_column(ForeignKey("local_plan.reference"))
-    local_plan_obj: Mapped["LocalPlan"] = relationship(back_populates="documents")
 
     organisations = db.relationship(
         "Organisation",

@@ -33,6 +33,16 @@ def add(local_plan_reference):
     ]
     if form.validate_on_submit():
         reference = slugify(form.name.data)
+
+        doc = LocalPlanDocument.query.filter(
+            LocalPlanDocument.local_plan == local_plan_reference,
+            LocalPlanDocument.reference == reference,
+        ).one_or_none()
+
+        if doc is not None:
+            form.name.errors.append("Document with this name already exists")
+            return render_template("document/add.html", plan=plan, form=form)
+
         doc = LocalPlanDocument(
             reference=reference,
             name=form.name.data,
@@ -63,7 +73,10 @@ def get_document(local_plan_reference, reference):
     plan = LocalPlan.query.get(local_plan_reference)
     if plan is None:
         abort(404)
-    doc = LocalPlanDocument.query.get(reference)
+    doc = LocalPlanDocument.query.filter(
+        LocalPlanDocument.local_plan == local_plan_reference,
+        LocalPlanDocument.reference == reference,
+    ).one_or_none()
     if doc is None:
         return abort(404)
     return render_template("document/document.html", plan=plan, document=doc)
@@ -74,7 +87,10 @@ def edit(local_plan_reference, reference):
     plan = LocalPlan.query.get(local_plan_reference)
     if plan is None:
         return abort(404)
-    doc = LocalPlanDocument.query.get(reference)
+    doc = LocalPlanDocument.query.filter(
+        LocalPlanDocument.local_plan == local_plan_reference,
+        LocalPlanDocument.reference == reference,
+    ).one_or_none()
     if doc is None:
         return abort(404)
 
