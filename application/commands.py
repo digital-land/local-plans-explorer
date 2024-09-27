@@ -113,22 +113,29 @@ def load_boundaries():
 def _get_geography(reference):
     url = "https://www.planning.data.gov.uk/entity.json"
     params = {"curie": reference}
-    resp = requests.get(url, params=params)
-    if resp.status_code == 200:
+    try:
+        resp = requests.get(url, params=params)
+        resp.raise_for_status
         data = resp.json()
         if len(data["entities"]) == 0:
             return None
         point = data["entities"][0].get("point")
         geojson_url = "https://www.planning.data.gov.uk/entity.geojson"
-        resp = requests.get(geojson_url, params=params)
-        if resp.status_code == 200:
+        try:
+            resp = requests.get(geojson_url, params=params)
+            resp.raise_for_status()
             geography = {
                 "geojson": resp.json(),
                 "geometry": data["entities"][0].get("geometry"),
                 "point": point,
             }
-        return geography
-    return None
+            return geography
+        except Exception as e:
+            print(e)
+            return None
+    except Exception as e:
+        print(e)
+        return None
 
 
 @data_cli.command("drop-plans")
