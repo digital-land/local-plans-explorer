@@ -12,42 +12,41 @@
       {% for field in form %}
         {# the fields listed are either not shown or handled individually #}
         {% if field.name not in ['period_start_date', 'period_end_date', 'csrf_token', 'adopted_date_year', 'adopted_date_month', 'adopted_date_day', 'status'] %}
-        {%- if field.name == 'organisations' %}
-        <div class="app-organisation-select" data-module="multi-select">
-          <div class="govuk-form-group" data-multi-select="form-group">
-            {{ field.label(class='govuk-label') }}
-            {{ field(class='govuk-input') }}
-          </div>
-          <div class="app-hidden">
-            <select name="organisation_select" id="organisation_select" data-multi-select="select">
-              {% for organisation in field.choices %}
-              <option value="{{ organisation[0] }}">{{ organisation[1] }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        {% else %}
-        <div class="govuk-form-group{{ ' govuk-form-group--error' if field.errors }}">
-          {{ field.label(class='govuk-label') }}
-          {% if field.description %}
-            <div class="govuk-hint">{{ field.description }}</div>
-          {% endif %}
-          {% if field.errors -%}
-          <p id="{{ field.name }}-error" class="govuk-error-message">
-            {% for error in field.errors %}
-            <span class="govuk-visually-hidden">Error:</span> {{ error }}
-            {% endfor %}
-          </p>
-          {%- endif %}{# end if errors #}
-          {% set extra_classes = " govuk-input--width-4" if "date" in field.name else "" %}
-          {% if field.type == "TextAreaField" %}
-          {{ field(class='govuk-textarea') }}
-          {% else %}
-          {% set classes = 'govuk-input' + extra_classes %}
-          {{ field(class=classes) }}
-          {%- endif %}
-        </div>
-        {% endif -%}{# end of if organisation #}
+          {%- if field.name == 'organisations' %}
+            <div class="app-organisation-select" data-module="multi-select">
+              <div class="govuk-form-group" data-multi-select="form-group">
+                {{ field.label(class='govuk-label') }}
+                {{ field(class='govuk-input') }}
+              </div>
+              <div class="app-hidden">
+                <select name="organisation_select" id="organisation_select" data-multi-select="select">
+                  {% for organisation in field.choices %}
+                  <option value="{{ organisation[0] }}">{{ organisation[1] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="govuk-form-group{{ ' govuk-form-group--error' if field.errors }}">
+              {{ field.label(class='govuk-label') }}
+              {% if field.description %}
+                <div class="govuk-hint">{{ field.description }}</div>
+              {% endif %}
+              {% if field.errors -%}
+              <p id="{{ field.name }}-error" class="govuk-error-message">
+                {% for error in field.errors %}
+                <span class="govuk-visually-hidden">Error:</span> {{ error }}
+                {% endfor %}
+              </p>
+              {%- endif %}{# end if errors #}
+              {% set extra_classes = " govuk-input--width-4" if "date" in field.name else "" %}
+              {% if field.type == "TextAreaField" %}
+              {{ field(class='govuk-textarea') }}
+              {% else %}
+              {% set classes = 'govuk-input' + extra_classes %}
+              {{ field(class=classes) }}
+            {%- endif %}
+            </div>
+          {% endif -%}{# end of if organisation #}
         {% endif -%}{# end if not period dates #}
       {% endfor %}
       <div class="govuk-form-group">

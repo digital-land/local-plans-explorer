@@ -1,9 +1,9 @@
 from flask import Blueprint, abort, redirect, render_template, url_for
 from slugify import slugify
 
-from application.blueprints.document.forms import DocumentForm
+from application.blueprints.document.forms import DocumentForm, EditDocumentForm
 from application.extensions import db
-from application.models import LocalPlan, LocalPlanDocument
+from application.models import DocumentType, LocalPlan, LocalPlanDocument, Status
 from application.utils import (
     get_planning_organisations,
     populate_object,
@@ -28,10 +28,9 @@ def add(local_plan_reference):
         (org.organisation, org.name) for org in get_planning_organisations()
     ]
     form.organisations.choices = [(" ", " ")] + organisation_choices
-    # form.document_types.choices = [
-    #     (dt.name, dt.value) for dt in DocumentType
-    # ]
-
+    form.document_types.choices = [
+        (dt.name, dt.value) for dt in DocumentType.query.all()
+    ]
     if form.validate_on_submit():
         reference = slugify(form.name.data)
         doc = LocalPlanDocument(
@@ -43,6 +42,8 @@ def add(local_plan_reference):
         )
         if form.organisations.data:
             set_organisations(doc, form.organisations.data)
+        if form.document_types.data:
+            doc.document_types = form.document_types.data
         plan.documents.append(doc)
         db.session.add(plan)
         db.session.commit()
@@ -80,7 +81,7 @@ def edit(local_plan_reference, reference):
     organisation__string = ";".join([org.organisation for org in doc.organisations])
 
     del doc.organisations
-    form = DocumentForm(obj=doc)
+    form = EditDocumentForm(obj=doc)
 
     if not form.organisations.data:
         form.organisations.data = organisation__string
@@ -90,10 +91,10 @@ def edit(local_plan_reference, reference):
     ]
 
     form.organisations.choices = organisation_choices
-    # form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
-    # form.document_types.choices = [
-    #     (dt.name, dt.value) for dt in DocumentType
-    # ]
+    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
+    form.document_types.choices = [
+        (dt.name, dt.value) for dt in DocumentType.query.all()
+    ]
 
     if form.validate_on_submit():
         document = populate_object(form, doc)

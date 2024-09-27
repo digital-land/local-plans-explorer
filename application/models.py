@@ -16,10 +16,12 @@ class Status(Enum):
     PUBLISHED = "Published"
 
 
-class DocumentType(Enum):
-    LOCAL_PLAN = "Local plan"
-    SITE_ALLOCATION = "Site allocation"
-    CORE_STRATEGY = "Core strategy"
+class DocumentType(db.Model):
+    __tablename__ = "document_type"
+
+    name: Mapped[str] = mapped_column(Text, primary_key=True)
+    value: Mapped[str] = mapped_column(Text)
+    description: Mapped[Optional[str]] = mapped_column(Text)
 
 
 class DateModel(db.Model):
