@@ -24,11 +24,11 @@
           </li>
           <li class="govuk-header__navigation-item">
             {% if config['AUTHENTICATION_ON'] and session["user"] %}
-            <a class="govuk-header__link" href="#">
+            <a class="govuk-header__link" href="{{ url_for('auth.logout') }}">
               Sign out
             </a>
             {% else %}
-            <a class="govuk-header__link" href="#">
+            <a class="govuk-header__link" href="{{ url_for('auth.login', next=request.path, _external=True) }}">
               Sign in
             </a>
             {% endif %}

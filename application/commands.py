@@ -118,7 +118,7 @@ def _get_geography(reference):
         resp.raise_for_status
         data = resp.json()
         if len(data["entities"]) == 0:
-            print("No entities found for url", url)
+            print("No entities found for url", resp.url)
             return None
         point = data["entities"][0].get("point")
         geojson_url = "https://www.planning.data.gov.uk/entity.geojson"

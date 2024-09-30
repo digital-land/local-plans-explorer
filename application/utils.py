@@ -1,6 +1,21 @@
+from functools import wraps
+
 from sqlalchemy import Date, cast, null, or_
 
 from application.models import LocalPlan, Organisation
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        from flask import current_app, redirect, request, session, url_for
+
+        if current_app.config.get("AUTHENTICATION_ON", True):
+            if session.get("user") is None:
+                return redirect(url_for("auth.login", next=request.url))
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
 def get_planning_organisations():

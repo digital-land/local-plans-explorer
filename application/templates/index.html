@@ -31,15 +31,14 @@
     <h2 class="govuk-heading-l">Get started</h2>
 
     {% if config['AUTHENTICATION_ON'] and session["user"] %}
-      <a href="#" class="govuk-button govuk-button--secondary">
-        <span class="govuk-!-margin-right-1">✚ </span>Review new local plan records</a>
+      <a href="{{ url_for('local_plan.add') }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span>Add new plan record</a>
       <p class="govuk-body">or</p>
     {% else %}
-      <a href="#" class="govuk-button">Sign in to review local plan data</a>
+      <a href="{{ url_for('auth.login') }}" class="govuk-button">Sign in to add a plan</a>
     {% endif %}
-    <p class="govuk-body">
+      <p class="govuk-body">
       <a href="{{ url_for('organisation.organisations') }}" class="govuk-link">Find by organisation</a>
-    </p>
+  </p>
 
   </div>
 </div>
