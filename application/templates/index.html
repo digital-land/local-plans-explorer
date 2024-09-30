@@ -1,26 +1,19 @@
 {% extends 'layouts/base.html' %}
 {% set isHomepage = True %}
 
-{% block mastHead %}
-{{ super() }}
-<div class="app-masthead">
-  <div class="govuk-width-container">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-three-quarters">
-        <h1 class="govuk-heading-xl app-masthead__title govuk-!-margin-bottom-2">
-          Local plans explorer
-        </h1>
-        <p class="govuk-body-l govuk-!-margin-bottom-0 app-masthead__sub-title">
-          Check and modify collected local plans data
-        </p>
-      </div>
-    </div>
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
+      Local plans explorer
+    </h1>
+    <p class="govuk-body-l">
+      Check and modify collected local plans data
+    </p>
   </div>
 </div>
 
-{% endblock %}
-
-{% block content %}
 <div class='govuk-grid-row'>
   <div class='govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop'>
     <p class='govuk-body'>Welcome to the local plans explorer. This is a proof of concept service that allows you to check and modify collected local plans data.</p>
@@ -37,16 +30,15 @@
 
     <h2 class="govuk-heading-l">Get started</h2>
 
-    {% if config['AUTHENTICATION_ON'] and session["user"] %}
-      <a href="#" class="govuk-button govuk-button--secondary">
-        <span class="govuk-!-margin-right-1">✚ </span>Review new local plan records</a>
+    {% if not config.AUTHENTICATION_ON or (config['AUTHENTICATION_ON'] and session["user"]) %}
+      <a href="{{ url_for('local_plan.add') }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span>Add new plan record</a>
       <p class="govuk-body">or</p>
     {% else %}
-      <a href="#" class="govuk-button">Sign in to review local plan data</a>
+      <a href="{{ url_for('auth.login') }}" class="govuk-button">Sign in to add a plan</a>
     {% endif %}
-    <p class="govuk-body">
+      <p class="govuk-body">
       <a href="{{ url_for('organisation.organisations') }}" class="govuk-link">Find by organisation</a>
-    </p>
+  </p>
 
   </div>
 </div>

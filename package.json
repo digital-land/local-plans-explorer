@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Application for exploring and modifying local plans specification data",
   "engines": {
-    "node": ">=18.x"
+    "node": "18.x"
   },
   "scripts": {
     "flask": "flask run",

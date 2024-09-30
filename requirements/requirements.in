@@ -8,3 +8,11 @@ Flask-Migrate
 requests
 alembic-postgresql-enum
 Flask-WTF
+python-slugify
+shapely
+geopandas
+flask-sslify
+is-safe-url
+flask-talisman
+Authlib
+PyGithub

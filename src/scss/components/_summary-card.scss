@@ -1,5 +1,6 @@
 .app-summary-card {
   border: 1px solid $govuk-border-colour;
+  margin-bottom: govuk-spacing(3);
 
   /* Card header */
   .app-summary-card__header {
@@ -55,6 +56,14 @@
       margin-left: govuk-spacing(2);
       text-align: right;
     }
+  }
+
+  .app-summary-card__footer p {
+    display: inline-block;
+  }
+
+  .app-summary-card__footer span {
+    float: right;
   }
 
   .app-summary-card__actions-list-item:first-child {

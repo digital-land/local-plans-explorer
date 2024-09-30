@@ -1,0 +1,212 @@
+{% extends 'layouts/base-with-map.html' %}
+
+
+{% block content %}
+
+  <span class="govuk-caption-l">Local plan</span>
+  <h1 class="govuk-heading-l">{{plan.name}}</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <section class="app-summary-card">
+        <header class="app-summary-card__header">
+          <h2 class="app-summary-card__title">
+            Local plan
+          </h2>
+          <div class="app-summary-card__actions">
+            {%- if not config.AUTHENTICATION_ON or session["user"] %}
+              <a href="{{ url_for('local_plan.edit', reference=plan.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
+            {%- endif %}
+          </div>
+        </header>
+        <div class="app-summary-card__body">
+          <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Reference</dt>
+              <dd class="govuk-summary-list__value">{{ plan.reference }}</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Name</dt>
+              <dd class="govuk-summary-list__value">{{ plan.name }}</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Organisation</dt>
+              <dd class="govuk-summary-list__value">
+                <ul class="govuk-list">
+                {% for org in plan.organisations %}
+                  <li>{{ org.name }}</li>
+                {% endfor %}
+                </ul>
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Documentation URL</dt>
+              <dd class="govuk-summary-list__value"><a href="{{ plan.documentation_url }}" class="govuk-link">{{ plan.documentation_url }}</a></dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Period</dt>
+              <dd class="govuk-summary-list__value">{{ plan.period_start_date }} - {{ plan.period_end_date }}</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Adopted date</dt>
+              <dd class="govuk-summary-list__value">{{ plan.adopted_date if plan.adopted_date }}</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Description</dt>
+              <dd class="govuk-summary-list__value">{{ plan.description if plan.description }}</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="app-summary-card__footer">
+          <p class="govuk-body">Status</p>
+          <span class="govuk-tag govuk-tag--{{plan.status | status_colour }}">{{plan.status.value}}</span>
+        </div>
+      </section>
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 id="documents" class="govuk-heading-m">Plan documents</h2>
+      <p class="govuk-body">Record any plan documents. These can be documents that contain relevant policies, documents outlining activities or publication notices.</p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% for document in plan.documents %}
+        <section class="app-summary-card">
+          <header class="app-summary-card__header">
+            <h2 class="app-summary-card__title">
+              Document
+            </h2>
+            <div class="app-summary-card__actions">
+              <a href="{{ url_for('document.edit', local_plan_reference=plan.reference, reference=document.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> document</span></a>
+            </div>
+          </header>
+          <div class="app-summary-card__body">
+            <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Reference</dt>
+                <dd class="govuk-summary-list__value"><a href="{{ url_for('document.get_document', local_plan_reference=plan.reference, reference=document.reference ) }}">{{ document.reference }}</a></dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Name</dt>
+                <dd class="govuk-summary-list__value">{{ document.name }}</dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Organisation</dt>
+                <dd class="govuk-summary-list__value">
+                  <ul class="govuk-list">
+                  {% for org in document.organisations %}
+                    <li>{{ org.name }}</li>
+                  {% endfor %}
+                  </ul>
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Documentation URL</dt>
+                <dd class="govuk-summary-list__value"><a href="{{ document.documentation_url }}" class="govuk-link">{{ document.documentation_url }}</a></dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Document URL</dt>
+                <dd class="govuk-summary-list__value"><a href="{{ document.document_url }}" class="govuk-link">{{ document.document_url }}</a></dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Description</dt>
+                <dd class="govuk-summary-list__value">{{ document.description if document.description }}</dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Document types</dt>
+                <dd class="govuk-summary-list__value">{{ document.document_types if document.document_types }}</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="app-summary-card__footer">
+            <p class="govuk-body">Status</p>
+            <span class="govuk-tag govuk-tag--{{document.status | status_colour }}">{{document.status.value}}</span>
+          </div>
+        </section>
+      {% endfor %}
+      {%- if not config.AUTHENTICATION_ON or session["user"] %}
+        <a href="{{ url_for('document.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> add document</a>
+      {%- endif %}
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <section class="app-summary-card govuk-!-margin-top-6">
+        <header class="app-summary-card__header">
+          <h2 class="app-summary-card__title">
+            Plan boundary
+          </h2>
+          <div class="app-summary-card__actions">
+              {%- if not config.AUTHENTICATION_ON or session["user"] %}
+              {%- if plan.local_plan_boundary_obj %}
+                <a href="#" class="govuk-link">Edit<span class="govuk-visually-hidden"> boundary</span></a>
+              {% else %}
+                <a href="#" class="govuk-link">Add<span class="govuk-visually-hidden"> boundary</span></a>
+              {% endif -%}
+            {%- endif -%}
+          </div>
+        </header>
+        <div class="app-summary-card__body">
+        {%- if geography %}
+            {%- set map_id = "map-" + geography["references"] %}
+            <p class="govuk-hint govuk-!-margin-top-0">Reference: {{ geography["reference"] }}</p>
+            <div class="app-map-wrapper">
+              <div id="{{ map_id }}" style="height: 400px;">
+            </div>
+            <script>
+              const AppMap = {}
+              AppMap.mapID = '{{map_id}}';
+              AppMap.geography = {
+                'featureCollection': {{ geography["features"] | tojson }},
+                'centrePoint': {
+                  'lat':  {{ geography['coords']['lat'] }},
+                  'long': {{ geography['coords']['long'] }}
+                }
+              }
+            </script>
+        {%- else %}
+          <p class="govuk-hint govuk-!-margin-bottom-0">No boundary recorded for this plan</p>
+        {% endif -%}
+        </div>
+      </section>
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+    </div>
+  </div>
+
+
+
+{% endblock content %}
+
+{% block pageScripts %}
+  {% if geography %}
+    <script>
+
+      function onEachFeature(feature, layer) {
+        if (feature.properties) {
+          let popupContent = '';
+          for (let prop in feature.properties) {
+            popupContent += `<b>${prop}:</b> ${feature.properties[prop]}<br>`;
+          }
+
+          layer.bindTooltip(popupContent, {
+            sticky: true, // Tooltip follows the cursor when hovering
+            opacity: 0.9
+          });
+          layer.bindPopup(popupContent);
+      }
+    }
+
+      let map = L.map(AppMap.mapID).setView([AppMap.geography.centrePoint.lat, AppMap.geography.centrePoint.long], 6);
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: 'OSM' }).addTo(map)
+      var boundary_layer = L.geoJSON(AppMap.geography.featureCollection, {onEachFeature: onEachFeature}).addTo(map)
+      const bbox = {{ bounding_box | tojson }}
+      map.fitBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]])
+
+    </script>
+  {% endif %}
+{% endblock pageScripts %}
