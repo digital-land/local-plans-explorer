@@ -1,5 +1,7 @@
 import geopandas as gpd
 from flask import Blueprint, abort, redirect, render_template, url_for
+from shapely.geometry import mapping, shape
+from shapely.ops import unary_union
 from slugify import slugify
 
 from application.blueprints.local_plan.forms import LocalPlanForm
@@ -25,30 +27,28 @@ def get_plan(reference):
     plan = LocalPlan.query.get(reference)
     if plan is None:
         return abort(404)
-    geographies = []
-    # temporary geography hack until we get some boundaries
-    features = []
-    for org in plan.organisations:
-        if org.geometry:
-            coords, _ = _get_centre_and_bounds(org.geojson["features"])
-            geographies.append(
-                {
-                    "geojson": org.geojson,
-                    "coords": coords,
-                    "reference": org.statistical_geography,
-                }
-            )
-            features.extend(org.geojson["features"])
 
-    if features:
-        _, bounding_box = _get_centre_and_bounds(features)
-    else:
-        bounding_box = None
+    # temporary geography hack until we get some boundaries
+    feature_collection = {"type": "FeatureCollection", "features": []}
+    references = []
+    for org in plan.organisations:
+        if org.geojson:
+            feature_collection["features"].extend(org.geojson["features"])
+            references.append(org.geojson["features"][0]["properties"]["reference"])
+
+    coords, bounding_box = _get_centre_and_bounds(feature_collection)
+    geography = {
+        "name": plan.name,
+        "features": feature_collection,
+        "coords": coords,
+        "bounding_box": bounding_box,
+        "references": ":".join(references),
+    }
 
     return render_template(
         "local_plan/plan.html",
         plan=plan,
-        geographies=geographies,
+        geography=geography,
         bounding_box=bounding_box,
     )
 
@@ -65,6 +65,9 @@ def add():
 
     if form.validate_on_submit():
         reference = slugify(form.name.data)
+
+        # TODO: check if reference already exists and if so append something - maybe the plan period?
+
         plan = LocalPlan(
             reference=reference,
         )
@@ -114,3 +117,18 @@ def _get_centre_and_bounds(features):
         bounding_box = list(gdf.total_bounds)
         return {"lat": gdf.centroid.y[0], "long": gdf.centroid.x[0]}, bounding_box
     return None, None
+
+
+def _combine_geojson_features(features):
+    geometries = []
+    for feature in features:
+        geom = shape(feature["geometry"])
+        geometries.append(geom)
+
+    combined_geometry = unary_union(geometries)
+
+    combined_feature = {
+        "geometry": mapping(combined_geometry),
+    }
+
+    return combined_feature

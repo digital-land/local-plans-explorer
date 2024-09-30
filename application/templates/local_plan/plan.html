@@ -142,7 +142,7 @@
             Plan boundary
           </h2>
           <div class="app-summary-card__actions">
-            {%- if not config.AUTHENTICATION_ON or session["user"] %}
+              {%- if not config.AUTHENTICATION_ON or session["user"] %}
               {%- if plan.local_plan_boundary_obj %}
                 <a href="#" class="govuk-link">Edit<span class="govuk-visually-hidden"> boundary</span></a>
               {% else %}
@@ -152,9 +152,8 @@
           </div>
         </header>
         <div class="app-summary-card__body">
-        {%- if geographies %}
-          {% for geography in geographies %}
-            {%- set map_id = "map-" + geography["reference"] %}
+        {%- if geography %}
+            {%- set map_id = "map-" + geography["references"] %}
             <p class="govuk-hint govuk-!-margin-top-0">Reference: {{ geography["reference"] }}</p>
             <div class="app-map-wrapper">
               <div id="{{ map_id }}" style="height: 400px;">
@@ -163,14 +162,13 @@
               const AppMap = {}
               AppMap.mapID = '{{map_id}}';
               AppMap.geography = {
-                'featureCollection': {{ geography["geojson"] | tojson }},
+                'featureCollection': {{ geography["features"] | tojson }},
                 'centrePoint': {
                   'lat':  {{ geography['coords']['lat'] }},
                   'long': {{ geography['coords']['long'] }}
                 }
               }
             </script>
-          {% endfor %}
         {%- else %}
           <p class="govuk-hint govuk-!-margin-bottom-0">No boundary recorded for this plan</p>
         {% endif -%}
@@ -185,13 +183,30 @@
 {% endblock content %}
 
 {% block pageScripts %}
-  {% if geographies %}
+  {% if geography %}
     <script>
+
+      function onEachFeature(feature, layer) {
+        if (feature.properties) {
+          let popupContent = '';
+          for (let prop in feature.properties) {
+            popupContent += `<b>${prop}:</b> ${feature.properties[prop]}<br>`;
+          }
+
+          layer.bindTooltip(popupContent, {
+            sticky: true, // Tooltip follows the cursor when hovering
+            opacity: 0.9
+          });
+          layer.bindPopup(popupContent);
+      }
+    }
+
       let map = L.map(AppMap.mapID).setView([AppMap.geography.centrePoint.lat, AppMap.geography.centrePoint.long], 6);
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: 'OSM' }).addTo(map)
-      var boundary_layer = L.geoJSON(AppMap.geography.featureCollection, {}).addTo(map)
+      var boundary_layer = L.geoJSON(AppMap.geography.featureCollection, {onEachFeature: onEachFeature}).addTo(map)
       const bbox = {{ bounding_box | tojson }}
       map.fitBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]])
+
     </script>
   {% endif %}
 {% endblock pageScripts %}
