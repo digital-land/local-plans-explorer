@@ -13,7 +13,9 @@
             Local plan
           </h2>
           <div class="app-summary-card__actions">
-            <a href="{{ url_for('local_plan.edit', reference=plan.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
+            {%- if not config.AUTHENTICATION_ON or session["user"] %}
+              <a href="{{ url_for('local_plan.edit', reference=plan.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
+            {%- endif %}
           </div>
         </header>
         <div class="app-summary-card__body">
@@ -126,7 +128,9 @@
           </div>
         </section>
       {% endfor %}
-      <a href="{{ url_for('document.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> add document</a>
+      {%- if not config.AUTHENTICATION_ON or session["user"] %}
+        <a href="{{ url_for('document.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> add document</a>
+      {%- endif %}
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     </div>
   </div>
@@ -138,11 +142,13 @@
             Plan boundary
           </h2>
           <div class="app-summary-card__actions">
-            {%- if plan.local_plan_boundary_obj %}
-            <a href="#" class="govuk-link">Edit<span class="govuk-visually-hidden"> boundary</span></a>
-            {% else %}
-            <a href="#" class="govuk-link">Add<span class="govuk-visually-hidden"> boundary</span></a>
-            {% endif -%}
+            {%- if not config.AUTHENTICATION_ON or session["user"] %}
+              {%- if plan.local_plan_boundary_obj %}
+                <a href="#" class="govuk-link">Edit<span class="govuk-visually-hidden"> boundary</span></a>
+              {% else %}
+                <a href="#" class="govuk-link">Add<span class="govuk-visually-hidden"> boundary</span></a>
+              {% endif -%}
+            {%- endif -%}
           </div>
         </header>
         <div class="app-summary-card__body">

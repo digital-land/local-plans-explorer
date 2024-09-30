@@ -6,6 +6,7 @@ from application.extensions import db
 from application.models import DocumentType, LocalPlan, LocalPlanDocument, Status
 from application.utils import (
     get_planning_organisations,
+    login_required,
     populate_object,
     set_organisations,
 )
@@ -18,6 +19,7 @@ document = Blueprint(
 
 
 @document.route("/", methods=["GET", "POST"])
+@login_required
 def add(local_plan_reference):
     plan = LocalPlan.query.get(local_plan_reference)
     if plan is None:
@@ -83,6 +85,7 @@ def get_document(local_plan_reference, reference):
 
 
 @document.route("/<string:reference>/edit", methods=["GET", "POST"])
+@login_required
 def edit(local_plan_reference, reference):
     plan = LocalPlan.query.get(local_plan_reference)
     if plan is None:

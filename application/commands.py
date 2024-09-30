@@ -39,10 +39,10 @@ def load_orgs():
                 print("Adding new org", org["organisation"])
             else:
                 print("Updating org", org["organisation"])
-                for key, value in org.items():
-                    if key in columns:
-                        v = value if value else None
-                        setattr(org_obj, key, v)
+            for key, value in org.items():
+                if key in columns:
+                    v = value if value else None
+                    setattr(org_obj, key, v)
             db.session.add(org_obj)
             db.session.commit()
         except Exception as e:

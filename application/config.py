@@ -23,7 +23,7 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = True
     WTF_CSRF_ENABLED = False
-    AUTHENTICATION_ON = True
+    AUTHENTICATION_ON = False
 
 
 class TestConfig(Config):

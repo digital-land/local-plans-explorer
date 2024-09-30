@@ -103,7 +103,6 @@
                 Status
               </legend>
               <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
-
               {% for choice in form.status.choices %}
                 <div class="govuk-radios__item">
                   <input class="govuk-radios__input" id="{{ choice[0] }}" name="status" type="radio" value="{{ choice[0] }}" {% if choice[0] == plan.status.name %} checked{% endif %}>
@@ -112,8 +111,6 @@
                   </label>
               </div>
               {% endfor %}
-
-
               </div>
             </fieldset>
           </div>

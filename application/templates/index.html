@@ -30,7 +30,7 @@
 
     <h2 class="govuk-heading-l">Get started</h2>
 
-    {% if config['AUTHENTICATION_ON'] and session["user"] %}
+    {% if not config.AUTHENTICATION_ON or (config['AUTHENTICATION_ON'] and session["user"]) %}
       <a href="{{ url_for('local_plan.add') }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span>Add new plan record</a>
       <p class="govuk-body">or</p>
     {% else %}

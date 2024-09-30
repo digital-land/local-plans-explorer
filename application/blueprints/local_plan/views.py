@@ -1,11 +1,15 @@
 import geopandas as gpd
-import slugify
 from flask import Blueprint, abort, redirect, render_template, url_for
+from slugify import slugify
 
 from application.blueprints.local_plan.forms import LocalPlanForm
 from application.extensions import db
 from application.models import LocalPlan, Status
-from application.utils import get_planning_organisations, populate_object
+from application.utils import (
+    get_planning_organisations,
+    login_required,
+    populate_object,
+)
 
 local_plan = Blueprint("local_plan", __name__, url_prefix="/local-plan")
 
@@ -49,31 +53,31 @@ def get_plan(reference):
     )
 
 
-@local_plan.route("/add")
+@local_plan.route("/add", methods=["GET", "POST"])
+@login_required
 def add():
     form = LocalPlanForm()
     organisation_choices = [
         (org.organisation, org.name) for org in get_planning_organisations()
     ]
     form.organisations.choices = [(" ", " ")] + organisation_choices
+    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
 
     if form.validate_on_submit():
         reference = slugify(form.name.data)
         plan = LocalPlan(
             reference=reference,
-            name=form.name.data,
-            description=form.description.data,
-            period_start_date=form.date_created.data,
-            period_end_date=form.date_updated.data,
         )
+        populate_object(form, plan)
         db.session.add(plan)
         db.session.commit()
-        return redirect(url_for("local_plan.get_local_plan", reference=plan.reference))
+        return redirect(url_for("local_plan.get_plan", reference=plan.reference))
 
     return render_template("local_plan/add.html", form=form)
 
 
 @local_plan.route("/<string:reference>/edit", methods=["GET", "POST"])
+@login_required
 def edit(reference):
     plan = LocalPlan.query.get(reference)
     if plan is None:
