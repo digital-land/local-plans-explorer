@@ -30,6 +30,9 @@ def add(local_plan_reference):
         (org.organisation, org.name) for org in get_planning_organisations()
     ]
     form.organisations.choices = [(" ", " ")] + organisation_choices
+    organisation__string = ";".join([org.organisation for org in plan.organisations])
+    form.organisations.data = organisation__string
+
     form.document_types.choices = [
         (dt.name, dt.value) for dt in DocumentType.query.all()
     ]
