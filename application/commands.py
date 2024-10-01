@@ -158,7 +158,7 @@ def drop_plans():
 def load_docs():
     current_file_path = Path(__file__).resolve()
     data_directory = os.path.join(current_file_path.parent.parent, "data")
-    file_path = os.path.join(data_directory, "local-plan-documents.csv")
+    file_path = os.path.join(data_directory, "local-plan-document.csv")
 
     document_types = None
 
