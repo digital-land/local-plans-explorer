@@ -200,36 +200,36 @@ def load_docs():
                         k = key.lower().replace("-", "_")
                         if k in columns:
                             setattr(document, k, value if value else None)
-                else:
-                    print("Updating local plan document", row["reference"])
-                    for key, value in row.items():
-                        k = key.lower().replace("-", "_")
-                        if k in columns and not k.endswith("date"):
-                            setattr(document, k, value if value else None)
 
-                document.document_types = document_types
+                    document.document_types = document_types
+                    organisations = row.get("organisations")
+                    if organisations:
+                        for org in organisations.split(";") if organisations else []:
+                            organisation = Organisation.query.get(org)
+                            if (
+                                organisation is not None
+                                and organisation not in document.organisations
+                            ):
+                                document.organisations.append(organisation)
+                                db.session.add(organisation)
+                    else:
+                        for org in plan.organisations:
+                            if org not in document.organisations:
+                                document.organisations.append(org)
+                                db.session.add(org)
+                    if document not in plan.documents:
+                        plan.documents.append(document)
+                    db.session.add(plan)
+                    db.session.add(document)
+                    db.session.commit()
 
-                organisations = row.get("organisations")
-                if organisations:
-                    for org in organisations.split(";") if organisations else []:
-                        organisation = Organisation.query.get(org)
-                        if (
-                            organisation is not None
-                            and organisation not in document.organisations
-                        ):
-                            document.organisations.append(organisation)
-                            db.session.add(organisation)
                 else:
-                    # copy organisations from local plan
-                    for org in plan.organisations:
-                        if org not in document.organisations:
-                            document.organisations.append(org)
-                            db.session.add(org)
-                if document not in plan.documents:
-                    plan.documents.append(document)
-                db.session.add(plan)
-                db.session.add(document)
-                db.session.commit()
+                    print("local plan document", row["reference"], "already loaded")
+
+                    # for key, value in row.items():
+                    #     k = key.lower().replace("-", "_")
+                    #     if k in columns and not k.endswith("date"):
+                    #         setattr(document, k, value if value else None)
             except Exception as e:
                 print(f"Error processing row {row['reference']}: {e}")
                 db.session.rollback()
