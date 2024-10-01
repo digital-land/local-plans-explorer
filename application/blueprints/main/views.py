@@ -1,8 +1,14 @@
-from flask import Blueprint, render_template
+import random
+
+from flask import Blueprint, redirect, render_template, request, url_for
 from sqlalchemy import not_
 
-from application.models import LocalPlan, LocalPlanDocument
-from application.utils import adopted_plan_count, get_plans_query, plan_count
+from application.models import LocalPlan, LocalPlanDocument, Status
+from application.utils import (
+    adopted_plan_count,
+    get_planning_organisations,
+    get_plans_query,
+)
 
 main = Blueprint("main", __name__, template_folder="templates")
 
@@ -16,9 +22,8 @@ def index():
 def stats():
     return render_template(
         "stats.html",
-        plan_count=plan_count(),
+        plan_count=LocalPlan.query.count(),
         adopted_plan_count=adopted_plan_count(),
-        local_plan_count=plan_count(),
         plans_with_docs=get_plans_query(LocalPlan.documents.any(), count=True),
         plans_without_docs=get_plans_query(not_(LocalPlan.documents.any()), count=True),
         total_documents=LocalPlanDocument.query.count(),
@@ -28,59 +33,47 @@ def stats():
     )
 
 
-# @main.route("/randomiser")
-# def randomiser():
-#     adopted_local_plans = get_adopted_local_plans()
-#     organisations = get_organisations_expected_to_publish_plan()
-#     orgs_with_adopted_lp = [
-#         organisation
-#         for plan in adopted_local_plans
-#         for organisation in plan.organisations
-#     ]
-#     orgs_without_adopted_lp = _exclude_orgs(organisations, orgs_with_adopted_lp)
+@main.route("/randomiser")
+def randomiser():
+    organisations = get_planning_organisations()
 
-#     counts = {
-#         "orgs": len(orgs_without_adopted_lp),
-#         "no_geography": get_plans_query(
-#             not_(DevelopmentPlan.development_plan_boundary.is_(None)), count=True
-#         ),
-#         "no_documents": get_plans_query(
-#             not_(DevelopmentPlan.documents.any()), count=True
-#         ),
-#         "no_events": get_plans_query(not_(DevelopmentPlan.timetable.any()), count=True),
-#     }
+    orgs_without_plan = [org for org in organisations if not org.local_plans]
 
-#     if "random" in request.args:
-#         option = request.args.get("random")
+    counts = {
+        "orgs": len(organisations),
+        "no_geography": get_plans_query(
+            not_(LocalPlan.local_plan_boundary.is_(None)), count=True
+        ),
+        "no_documents": get_plans_query(not_(LocalPlan.documents.any()), count=True),
+        "review_documents": get_plans_query(
+            LocalPlan.documents.any(LocalPlanDocument.status == Status.FOR_REVIEW),
+            count=True,
+        ),
+    }
 
-#         # for org with no adopted local plan
-#         if option == "organisation":
-#             random_org = random.choice(orgs_without_adopted_lp)
-#             return redirect(
-#                 url_for("organisation.organisation", reference=random_org.organisation)
-#             )
+    if "random" in request.args:
+        option = request.args.get("random")
 
-#         # for plans missing something
-#         condition = None
-#         if option == "missing-geography":
-#             condition = not_(DevelopmentPlan.geography.has())
-#         if option == "no-documents":
-#             condition = not_(DevelopmentPlan.documents.any())
-#         if option == "no-events":
-#             condition = not_(DevelopmentPlan.timetable.any())
+        if option == "organisation":
+            random_org = random.choice(orgs_without_plan)
+            return redirect(
+                url_for(
+                    "organisation.get_organisation", reference=random_org.organisation
+                )
+            )
+        condition = None
+        if option == "review-documents":
+            condition = LocalPlan.documents.any(
+                LocalPlanDocument.status == Status.FOR_REVIEW
+            )
+        if option == "no-documents":
+            condition = not_(LocalPlan.documents.any())
 
-#         if condition is not None:
-#             filtered_plans = get_plans_query(condition)
-#             random_plan = random.choice(filtered_plans)
-#             return redirect(
-#                 url_for("development_plan.plan", reference=random_plan.reference)
-#             )
+        if condition is not None:
+            filtered_plans = get_plans_query(condition)
+            random_plan = random.choice(filtered_plans)
+            return redirect(
+                url_for("local_plan.get_plan", reference=random_plan.reference)
+            )
 
-#     return render_template("randomiser.html", counts=counts)
-
-
-def _exclude(main_list, to_exclude, attr_name="reference"):
-    items_to_remove = [getattr(item, attr_name) for item in to_exclude]
-    return [
-        item for item in main_list if getattr(item, attr_name) not in items_to_remove
-    ]
+    return render_template("randomiser.html", counts=counts)

@@ -2,7 +2,7 @@ from functools import wraps
 
 from sqlalchemy import Date, cast, null, or_
 
-from application.models import LocalPlan, Organisation
+from application.models import LocalPlan, Organisation, Status
 
 
 def login_required(f):
@@ -39,14 +39,12 @@ def get_planning_organisations():
     return orgs
 
 
-def get_adopted_plans(with_org_list=True):
-    adopted_plans = LocalPlan.query.filter(LocalPlan.adopted_date.isnot(None)).all()
-    orgs_with_adopted_plan = [
-        organisation for plan in adopted_plans for organisation in plan.organisations
-    ]
-    if with_org_list:
-        return adopted_plans, orgs_with_adopted_plan
-    return adopted_plans
+def get_plans_for_review():
+    return LocalPlan.query.filter(LocalPlan.status == Status.FOR_REVIEW).all()
+
+
+def get_plans_with_documents_for_review():
+    return LocalPlan.query.filter(LocalPlan.status == Status.FOR_REVIEW).all()
 
 
 def combine_feature_collections(feature_collections):
@@ -58,6 +56,10 @@ def combine_feature_collections(feature_collections):
     combined_fc = {"type": "FeatureCollection", "features": combined_features}
 
     return combined_fc
+
+
+def adopted_plan_count():
+    return LocalPlan.query.filter(LocalPlan.adopted_date.isnot(None)).count()
 
 
 def get_adopted_local_plans():
@@ -136,31 +138,6 @@ def populate_object(form, obj):
 
 def plan_count():
     return LocalPlan.query.count()
-
-
-def adopted_plan_count():
-    return LocalPlan.query.filter(LocalPlan.adopted_date.isnot(None)).count()
-
-
-def get_organisations_expected_to_publish_plan():
-    orgs = (
-        Organisation.query.filter(
-            or_(
-                Organisation.organisation.contains("local-authority"),
-                Organisation.organisation.contains("national-park"),
-                Organisation.organisation.contains("development-corporation"),
-            )
-        )
-        .filter(
-            or_(
-                Organisation.end_date.is_(None),
-                cast(Organisation.end_date, Date) == null(),
-            )
-        )
-        .order_by(Organisation.name.asc())
-        .all()
-    )
-    return orgs
 
 
 def get_plans_query(condition, count=False):
