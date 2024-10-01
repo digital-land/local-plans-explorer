@@ -218,11 +218,13 @@ def load_docs():
                             and organisation not in document.organisations
                         ):
                             document.organisations.append(organisation)
+                            db.session.add(organisation)
                 else:
                     # copy organisations from local plan
                     for org in plan.organisations:
                         if org not in document.organisations:
                             document.organisations.append(org)
+                            db.session.add(org)
                 if document not in plan.documents:
                     plan.documents.append(document)
                 db.session.add(plan)

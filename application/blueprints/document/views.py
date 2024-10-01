@@ -122,6 +122,12 @@ def edit(local_plan_reference, reference):
         document = populate_object(form, doc)
         db.session.add(document)
         db.session.commit()
-        return redirect(url_for("local_plan.get_plan", reference=plan.reference))
+        return redirect(
+            url_for(
+                "document.get_document",
+                local_plan_reference=plan.reference,
+                reference=document.reference,
+            )
+        )
 
     return render_template("document/edit.html", plan=plan, document=doc, form=form)
