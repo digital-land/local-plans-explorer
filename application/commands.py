@@ -166,6 +166,7 @@ def load_docs():
         reader = csv.DictReader(file)
         columns = set([column.name for column in inspect(LocalPlanDocument).c])
 
+        document_types = set([])
         for row in reader:
             try:
                 plan = LocalPlan.query.get(row["local-plan"])
@@ -182,16 +183,7 @@ def load_docs():
                 document_type = row.pop("document-types", None)
                 if document_type is not None:
                     document_type = document_type.replace("-", "_").upper()
-
-                if document_type is not None:
-                    doc_type = DocumentType.query.get(document_type)
-                    if doc_type is None:
-                        value = document_type.replace("_", " ")
-                        value = value[0].upper() + value[1:].lower()
-                        doc_type = DocumentType(name=document_type, value=value)
-                        db.session.add(doc_type)
-
-                document_types = [document_type] if document_type else []
+                    document_types.add(document_type)
 
                 if document is None:
                     print("Adding new local plan document", row["reference"])
@@ -201,7 +193,7 @@ def load_docs():
                         if k in columns:
                             setattr(document, k, value if value else None)
 
-                    document.document_types = document_types
+                    document.document_types = [document_type] if document_type else None
                     organisations = row.get("organisations")
                     if organisations:
                         for org in organisations.split(";") if organisations else []:
@@ -225,7 +217,6 @@ def load_docs():
 
                 else:
                     print("local plan document", row["reference"], "already loaded")
-
                     # for key, value in row.items():
                     #     k = key.lower().replace("-", "_")
                     #     if k in columns and not k.endswith("date"):
@@ -233,3 +224,12 @@ def load_docs():
             except Exception as e:
                 print(f"Error processing row {row['reference']}: {e}")
                 db.session.rollback()
+
+    for document_type in document_types:
+        doc_type = DocumentType.query.get(document_type)
+        if doc_type is None:
+            value = document_type.replace("_", " ")
+            value = value[0].upper() + value[1:].lower()
+            doc_type = DocumentType(name=document_type, value=value)
+            db.session.add(doc_type)
+            db.session.commit()
