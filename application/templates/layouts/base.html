@@ -20,7 +20,12 @@
         <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide menu" hidden>Menu</button>
         <ul id="navigation" class="govuk-header__navigation-list">
           <li class="govuk-header__navigation-item">
-            <a href="{{ url_for('organisation.organisations') }}" class="govuk-header__link">Find by organisation</a>
+            <a class="govuk-header__link" href="{{ url_for('organisation.organisations') }}">Find by organisation</a>
+          </li>
+          <li class="govuk-header__navigation-item">
+            <a class="govuk-header__link" href="{{ url_for('main.stats') }}">
+              Stats
+            </a>
           </li>
           <li class="govuk-header__navigation-item">
             {% if config['AUTHENTICATION_ON'] and session["user"] %}

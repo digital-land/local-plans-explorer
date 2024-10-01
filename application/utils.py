@@ -132,3 +132,39 @@ def populate_object(form, obj):
             obj.organisations.append(organisation)
 
     return obj
+
+
+def plan_count():
+    return LocalPlan.query.count()
+
+
+def adopted_plan_count():
+    return LocalPlan.query.filter(LocalPlan.adopted_date.isnot(None)).count()
+
+
+def get_organisations_expected_to_publish_plan():
+    orgs = (
+        Organisation.query.filter(
+            or_(
+                Organisation.organisation.contains("local-authority"),
+                Organisation.organisation.contains("national-park"),
+                Organisation.organisation.contains("development-corporation"),
+            )
+        )
+        .filter(
+            or_(
+                Organisation.end_date.is_(None),
+                cast(Organisation.end_date, Date) == null(),
+            )
+        )
+        .order_by(Organisation.name.asc())
+        .all()
+    )
+    return orgs
+
+
+def get_plans_query(condition, count=False):
+    query = LocalPlan.query.filter(condition)
+    if count:
+        return query.count()
+    return query.all()
