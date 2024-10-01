@@ -7,7 +7,13 @@ from flask.cli import AppGroup
 from sqlalchemy.inspection import inspect
 
 from application.extensions import db
-from application.models import LocalPlan, Organisation, local_plan_organisation
+from application.models import (
+    DocumentType,
+    LocalPlan,
+    LocalPlanDocument,
+    Organisation,
+    local_plan_organisation,
+)
 
 data_cli = AppGroup("data")
 
@@ -146,3 +152,82 @@ def drop_plans():
     LocalPlan.query.delete()
     db.session.commit()
     print("Local Plans dropped")
+
+
+@data_cli.command("load-docs")
+def load_docs():
+    current_file_path = Path(__file__).resolve()
+    data_directory = os.path.join(current_file_path.parent.parent, "data")
+    file_path = os.path.join(data_directory, "local-plan-documents.csv")
+
+    document_types = None
+
+    with open(file_path, mode="r") as file:
+        reader = csv.DictReader(file)
+        columns = set([column.name for column in inspect(LocalPlanDocument).c])
+
+        for row in reader:
+            try:
+                plan = LocalPlan.query.get(row["local-plan"])
+                if plan is None:
+                    print(
+                        "Skipping document", row["reference"], "as local plan not found"
+                    )
+                    continue
+                document = LocalPlanDocument.query.filter(
+                    LocalPlanDocument.local_plan == plan.reference,
+                    LocalPlanDocument.reference == row["reference"],
+                ).one_or_none()
+
+                document_type = row.pop("document-types", None)
+                if document_type is not None:
+                    document_type = document_type.replace("-", "_").upper()
+
+                if document_type is not None:
+                    doc_type = DocumentType.query.get(document_type)
+                    if doc_type is None:
+                        value = document_type.replace("_", " ")
+                        value = value[0].upper() + value[1:].lower()
+                        doc_type = DocumentType(name=document_type, value=value)
+                        db.session.add(doc_type)
+
+                document_types = [document_type] if document_type else []
+
+                if document is None:
+                    print("Adding new local plan document", row["reference"])
+                    document = LocalPlanDocument()
+                    for key, value in row.items():
+                        k = key.lower().replace("-", "_")
+                        if k in columns:
+                            setattr(document, k, value if value else None)
+                else:
+                    print("Updating local plan document", row["reference"])
+                    for key, value in row.items():
+                        k = key.lower().replace("-", "_")
+                        if k in columns and not k.endswith("date"):
+                            setattr(document, k, value if value else None)
+
+                document.document_types = document_types
+
+                organisations = row.get("organisations")
+                if organisations:
+                    for org in organisations.split(";") if organisations else []:
+                        organisation = Organisation.query.get(org)
+                        if (
+                            organisation is not None
+                            and organisation not in document.organisations
+                        ):
+                            document.organisations.append(organisation)
+                else:
+                    # copy organisations from local plan
+                    for org in plan.organisations:
+                        if org not in document.organisations:
+                            document.organisations.append(org)
+                if document not in plan.documents:
+                    plan.documents.append(document)
+                db.session.add(plan)
+                db.session.add(document)
+                db.session.commit()
+            except Exception as e:
+                print(f"Error processing row {row['reference']}: {e}")
+                db.session.rollback()
