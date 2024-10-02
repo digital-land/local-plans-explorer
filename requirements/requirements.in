@@ -16,3 +16,4 @@ is-safe-url
 flask-talisman
 Authlib
 PyGithub
+pydantic

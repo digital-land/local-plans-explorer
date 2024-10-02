@@ -240,3 +240,4 @@ web_modules/
 .yarn-integrity
 package-lock.json
 .DS_Store
+data/local-plan-document-copyable.csv

@@ -6,14 +6,9 @@ import requests
 from flask.cli import AppGroup
 from sqlalchemy.inspection import inspect
 
+from application.export import LocalPlanModel
 from application.extensions import db
-from application.models import (
-    DocumentType,
-    LocalPlan,
-    LocalPlanDocument,
-    Organisation,
-    local_plan_organisation,
-)
+from application.models import LocalPlan, Organisation, Status, local_plan_organisation
 
 data_cli = AppGroup("data")
 
@@ -154,82 +149,81 @@ def drop_plans():
     print("Local Plans dropped")
 
 
-@data_cli.command("load-docs")
-def load_docs():
+@data_cli.command("create-import-docs")
+def create_importable_docs():
     current_file_path = Path(__file__).resolve()
     data_directory = os.path.join(current_file_path.parent.parent, "data")
     file_path = os.path.join(data_directory, "local-plan-document.csv")
-
-    document_types = None
-
+    out_file_path = os.path.join(data_directory, "local-plan-document-copyable.csv")
     with open(file_path, mode="r") as file:
         reader = csv.DictReader(file)
-        columns = set([column.name for column in inspect(LocalPlanDocument).c])
+        with open(out_file_path, mode="w") as out_file:
+            fieldnames = list(reader.fieldnames) + [
+                "start-date",
+                "end-date",
+                "description",
+                "status",
+            ]
+            fieldnames = [field.replace("-", "_") for field in fieldnames]
+            writer = csv.DictWriter(out_file, fieldnames=fieldnames)
+            writer.writeheader()
+            for row in reader:
+                fixed_row = {}
+                try:
+                    plan = LocalPlan.query.get(row["local-plan"])
+                    if plan is None:
+                        print(
+                            "Skipping document",
+                            row["reference"],
+                            "as local plan not found",
+                        )
+                        continue
 
-        document_types = set([])
-        for row in reader:
-            try:
-                plan = LocalPlan.query.get(row["local-plan"])
-                if plan is None:
-                    print(
-                        "Skipping document", row["reference"], "as local plan not found"
+                    fixed_row["name"] = row["name"]
+                    fixed_row["reference"] = row["reference"]
+                    fixed_row["local_plan"] = row["local-plan"]
+                    fixed_row["document_types"] = (
+                        "{" + row["document-types"].replace("-", "_").upper() + "}"
                     )
-                    continue
-                document = LocalPlanDocument.query.filter(
-                    LocalPlanDocument.local_plan == plan.reference,
-                    LocalPlanDocument.reference == row["reference"],
-                ).one_or_none()
+                    fixed_row["document_url"] = row["document-url"]
+                    fixed_row["documentation_url"] = row["documentation-url"]
+                    fixed_row["start_date"] = ""
+                    fixed_row["description"] = ""
+                    fixed_row["status"] = "FOR_REVIEW"
+                    writer.writerow(fixed_row)
+                except Exception as e:
+                    print(f"Error processing row {row['reference']}: {e}")
+    print("Copyable file created")
 
-                document_type = row.pop("document-types", None)
-                if document_type is not None:
-                    document_type = document_type.replace("-", "_").upper()
-                    document_types.add(document_type)
 
-                if document is None:
-                    print("Adding new local plan document", row["reference"])
-                    document = LocalPlanDocument()
-                    for key, value in row.items():
-                        k = key.lower().replace("-", "_")
-                        if k in columns:
-                            setattr(document, k, value if value else None)
+@data_cli.command("export")
+def export_data():
+    current_file_path = Path(__file__).resolve()
+    data_directory = os.path.join(current_file_path.parent.parent, "data", "export")
 
-                    document.document_types = [document_type] if document_type else None
-                    organisations = row.get("organisations")
-                    if organisations:
-                        for org in organisations.split(";") if organisations else []:
-                            organisation = Organisation.query.get(org)
-                            if (
-                                organisation is not None
-                                and organisation not in document.organisations
-                            ):
-                                document.organisations.append(organisation)
-                                db.session.add(organisation)
-                    else:
-                        for org in plan.organisations:
-                            if org not in document.organisations:
-                                document.organisations.append(org)
-                                db.session.add(org)
-                    if document not in plan.documents:
-                        plan.documents.append(document)
-                    db.session.add(plan)
-                    db.session.add(document)
-                    db.session.commit()
+    if not os.path.exists(data_directory):
+        os.makedirs(data_directory)
 
-                else:
-                    print("local plan document", row["reference"], "already loaded")
-                    # for key, value in row.items():
-                    #     k = key.lower().replace("-", "_")
-                    #     if k in columns and not k.endswith("date"):
-                    #         setattr(document, k, value if value else None)
-            except Exception as e:
-                print(f"Error processing row {row['reference']}: {e}")
-                db.session.rollback()
+    file_path = os.path.join(data_directory, "local-plan.csv")
 
-    for document_type in document_types:
-        doc_type = DocumentType.query.get(document_type)
-        if doc_type is None:
-            value = document_type.replace("_", " ")
-            value = value[0].upper() + value[1:].lower()
-            doc_type = DocumentType(name=document_type, value=value)
-            db.session.add(doc_type)
-            db.session.commit()
+    local_plans = LocalPlan.query.filter(
+        LocalPlan.status == Status.FOR_PUBLICATION
+    ).all()
+
+    if local_plans:
+        with open(file_path, mode="w") as file:
+            fieldnames = list(LocalPlanModel.model_fields.keys())
+            fieldnames = [field.replace("_", "-") for field in fieldnames]
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            for obj in LocalPlan.query.filter(
+                LocalPlan.status == Status.FOR_PUBLICATION
+            ):
+                m = LocalPlanModel.model_validate(obj)
+                data = m.model_dump(by_alias=True)
+                writer.writerow(data)
+                obj.status = Status.PUBLISHED
+                db.session.add(obj)
+                db.session.commit()
+    else:
+        print("No local plans found for export")
