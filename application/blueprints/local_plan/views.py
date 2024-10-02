@@ -36,14 +36,18 @@ def get_plan(reference):
             feature_collection["features"].extend(org.geojson["features"])
             references.append(org.geojson["features"][0]["properties"]["reference"])
 
-    coords, bounding_box = _get_centre_and_bounds(feature_collection)
-    geography = {
-        "name": plan.name,
-        "features": feature_collection,
-        "coords": coords,
-        "bounding_box": bounding_box,
-        "references": ":".join(references),
-    }
+    if len(feature_collection["features"]) > 0:
+        coords, bounding_box = _get_centre_and_bounds(feature_collection)
+        geography = {
+            "name": plan.name,
+            "features": feature_collection,
+            "coords": coords,
+            "bounding_box": bounding_box,
+            "references": ":".join(references),
+        }
+    else:
+        geography = None
+        bounding_box = None
 
     return render_template(
         "local_plan/plan.html",
