@@ -1,13 +1,7 @@
-import csv
 import datetime
-import os
-from pathlib import Path
-from tempfile import TemporaryDirectory
 from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict, field_serializer, model_validator
-
-from application.models import LocalPlan, Status
 
 
 class OrganisationModel(BaseModel):
@@ -114,20 +108,3 @@ class LocalPlanDocumentModel(LocalPlanBaseModel):
 class LocalPlanBoundaryModel(LocalPlanBaseModel):
     geometry: str
     local_plan_boundary_type: str
-
-
-def export_data_to_file():
-    tempdir = TemporaryDirectory()
-    path = Path(tempdir.name)
-    csv_path = os.path.join(path, "local-plan.csv")
-    with open(csv_path, "w") as f:
-        fieldnames = list(LocalPlanModel.model_fields.keys())
-        fieldnames = [field.replace("_", "-") for field in fieldnames]
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        for obj in LocalPlan.query.filter(LocalPlan.status == Status.TO):
-            m = LocalPlanModel.model_validate(obj)
-            data = m.model_dump(by_alias=True)
-            writer.writerow(data)
-
-    return tempdir
