@@ -260,7 +260,7 @@ def export_data():
 
 
 @data_cli.command("set-orgs")
-def set_ogs():
+def set_orgs():
     subquery = (
         select(document_organisation.c.local_plan_document_reference)
         .where(
