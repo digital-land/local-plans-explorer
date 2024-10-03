@@ -1,7 +1,10 @@
+import base64
 import csv
 import os
 from pathlib import Path
 
+import click
+import github
 import requests
 from flask.cli import AppGroup
 from sqlalchemy import not_, select
@@ -205,8 +208,28 @@ def create_importable_docs():
     print("Copyable file created")
 
 
-@data_cli.command("export")
+@data_cli.command("set-orgs")
+def set_orgs():
+    subquery = (
+        select(document_organisation.c.local_plan_document_reference)
+        .where(
+            document_organisation.c.local_plan_document_reference
+            == LocalPlanDocument.reference
+        )
+        .exists()
+    )
+    query = select(LocalPlanDocument).where(not_(subquery))
+    result = db.session.execute(query).scalars().all()
+
+    for doc in result:
+        doc.organisations = doc.local_plan_obj.organisations
+        db.session.add(doc)
+        db.session.commit()
+
+
+@data_cli.command("export-data")
 def export_data():
+    updated_data = False
     current_file_path = Path(__file__).resolve()
     data_directory = os.path.join(current_file_path.parent.parent, "data", "export")
 
@@ -236,6 +259,7 @@ def export_data():
                 db.session.add(obj)
                 db.session.commit()
         print(f"{len(local_plans)} local plans exported")
+        updated_data = True
     else:
         print("No local plans found for export")
 
@@ -265,24 +289,90 @@ def export_data():
                 db.session.add(doc)
                 db.session.commit()
             print(f"{len(local_plan_documents)} local plan documents exported")
+            updated_data = True
     else:
         print("No local plan documents found for export")
 
+    return updated_data
 
-@data_cli.command("set-orgs")
-def set_orgs():
-    subquery = (
-        select(document_organisation.c.local_plan_document_reference)
-        .where(
-            document_organisation.c.local_plan_document_reference
-            == LocalPlanDocument.reference
+
+@data_cli.command("push-export")
+def push_export():
+    current_file_path = Path(__file__).resolve()
+    export_directory = os.path.join(current_file_path.parent.parent, "data", "export")
+
+    repo_data_path = os.getenv("LOCAL_PLANS_REPO_DATA_PATH")
+    repo = _get_repo(os.environ)
+
+    print("Pushing changes for", repo, "and path", repo_data_path)
+
+    for csv_file in [
+        "local-plan.csv",
+        "local-plan-document.csv",
+        "local-plan-boundary.csv",
+    ]:
+        file_path = os.path.join(export_directory, csv_file)
+        try:
+            with open(file_path, "r") as f:
+                local_content = f.read()
+        except FileNotFoundError:
+            print(f"Local file {file_path} not found. Skipping.")
+            continue
+
+        remote_path = os.path.join(repo_data_path, csv_file)
+        file, remote_content = _get_file_contents(repo, remote_path)
+
+        if file is None or local_content != remote_content:
+            _commit(repo, file, local_content)
+        else:
+            print(f"No changes in {file_path}. No commit needed.")
+
+    print("Done")
+
+
+def _get_repo(config):
+    app_id = config.get("GITHUB_APP_ID")
+    repo_name = config.get("LOCAL_PLANS_REPO_NAME")
+    base64_key = config.get("GITHUB_APP_PRIVATE_KEY")
+    private_key = base64.b64decode(base64_key)
+    private_key_decoded = private_key.decode("utf-8")
+    auth = github.Auth.AppAuth(app_id, private_key_decoded)
+    gi = github.GithubIntegration(auth=auth)
+    installation_id = gi.get_installations()[0].id
+    gh = gi.get_github_for_installation(installation_id)
+    return gh.get_repo(repo_name)
+
+
+def _get_file_contents(repo, file_path):
+    try:
+        file = repo.get_contents(file_path)
+        file_content = file.decoded_content.decode("utf-8")
+        return file, file_content
+    except github.GithubException as e:
+        # Handle the case where the file doesn't exist in the repo
+        print(f"Error fetching file {file_path}: {e}")
+        return None, None
+
+
+def _commit(repo, file, contents, message="Updated local-plan data"):
+    if file is None:
+        print(
+            f"File not found or error in fetching file. Skipping commit for {file.path}."
         )
-        .exists()
-    )
-    query = select(LocalPlanDocument).where(not_(subquery))
-    result = db.session.execute(query).scalars().all()
+        return
+    if contents != file.decoded_content.decode("utf-8"):
+        repo.update_file(file.path, message, contents, file.sha)
+        print(f"{file.path} updated successfully!")
+    else:
+        print(f"No changes detected in {file.path}. Skipping commit.")
 
-    for doc in result:
-        doc.organisations = doc.local_plan_obj.organisations
-        db.session.add(doc)
-        db.session.commit()
+
+@data_cli.command("export")
+@click.pass_context
+def export(ctx):
+    update_needed = ctx.invoke(export_data)
+    if update_needed:
+        ctx.invoke(push_export)
+        print("Export complete")
+    else:
+        print("No data to export")

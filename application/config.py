@@ -18,6 +18,8 @@ class Config(object):
     GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
     GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
     SAFE_URLS = set(os.getenv("SAFE_URLS", "").split(","))
+    LOCAL_PLANS_REPO_NAME = os.getenv("LOCAL_PLANS_REPO_NAME")
+    LOCAL_PLANS_REPO_DATA_PATH = os.getenv("LOCAL_PLANS_REPO_DATA_PATH")
 
 
 class DevelopmentConfig(Config):
