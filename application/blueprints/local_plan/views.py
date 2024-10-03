@@ -49,11 +49,14 @@ def get_plan(reference):
         geography = None
         bounding_box = None
 
+    document_counts = _get_document_counts(plan.documents)
+
     return render_template(
         "local_plan/plan.html",
         plan=plan,
         geography=geography,
         bounding_box=bounding_box,
+        document_counts=document_counts,
     )
 
 
@@ -136,3 +139,10 @@ def _combine_geojson_features(features):
     }
 
     return combined_feature
+
+
+def _get_document_counts(documents):
+    counts = {}
+    for status in Status:
+        counts[status.value] = len([doc for doc in documents if doc.status == status])
+    return counts
