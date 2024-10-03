@@ -87,7 +87,6 @@ class LocalPlanModel(LocalPlanBaseModel):
 
 class LocalPlanDocumentModel(LocalPlanBaseModel):
     local_plan: str
-    document_type: str
     document_url: str
     documentation_url: str
     notes: Optional[str] = None

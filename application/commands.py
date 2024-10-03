@@ -6,8 +6,9 @@ import requests
 from flask.cli import AppGroup
 from sqlalchemy import not_, select
 from sqlalchemy.inspection import inspect
+from sqlalchemy.orm import joinedload
 
-from application.export import LocalPlanModel
+from application.export import LocalPlanDocumentModel, LocalPlanModel
 from application.extensions import db
 from application.models import (
     LocalPlan,
@@ -213,7 +214,9 @@ def export_data():
         os.makedirs(data_directory)
 
     local_plan_file_path = os.path.join(data_directory, "local-plan.csv")
-    local_plan__document_file_path = os.path.join(data_directory, "local-plan.csv")
+    local_plan__document_file_path = os.path.join(
+        data_directory, "local-plan-document.csv"
+    )
 
     local_plans = LocalPlan.query.filter(
         LocalPlan.status == Status.FOR_PUBLICATION
@@ -236,24 +239,31 @@ def export_data():
     else:
         print("No local plans found for export")
 
-    local_plan_documents = LocalPlanModel.query.filter(
-        LocalPlan.status == Status.FOR_PUBLICATION
-    ).all()
+    stmt = (
+        select(LocalPlanDocument)
+        .join(LocalPlan, LocalPlanDocument.local_plan_obj)
+        .where(
+            LocalPlanDocument.status == Status.FOR_PUBLICATION,
+            LocalPlan.status.in_([Status.FOR_PUBLICATION, Status.PUBLISHED]),
+        )
+        .options(joinedload(LocalPlanDocument.local_plan_obj))
+    )
+
+    local_plan_documents = db.session.scalars(stmt).all()
 
     if local_plan_documents:
         with open(local_plan__document_file_path, mode="w") as file:
-            fieldnames = list(LocalPlanModel.model_fields.keys())
+            fieldnames = list(LocalPlanDocumentModel.model_fields.keys())
             fieldnames = [field.replace("_", "-") for field in fieldnames]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
-            for plan in local_plans:
-                for doc in plan.documents:
-                    m = LocalPlanModel.model_validate(doc)
-                    data = m.model_dump(by_alias=True)
-                    writer.writerow(data)
-                    doc.status = Status.PUBLISHED
-                    db.session.add(doc)
-                    db.session.commit()
+            for doc in local_plan_documents:
+                m = LocalPlanDocumentModel.model_validate(doc)
+                data = m.model_dump(by_alias=True)
+                writer.writerow(data)
+                doc.status = Status.PUBLISHED
+                db.session.add(doc)
+                db.session.commit()
             print(f"{len(local_plan_documents)} local plan documents exported")
     else:
         print("No local plan documents found for export")
