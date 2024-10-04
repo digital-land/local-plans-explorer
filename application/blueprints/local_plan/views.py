@@ -1,13 +1,11 @@
-import geopandas as gpd
 from flask import Blueprint, abort, redirect, render_template, url_for
-from shapely.geometry import mapping, shape
-from shapely.ops import unary_union
 from slugify import slugify
 
 from application.blueprints.local_plan.forms import LocalPlanForm
 from application.extensions import db
 from application.models import LocalPlan, Status
 from application.utils import (
+    get_centre_and_bounds,
     get_planning_organisations,
     login_required,
     populate_object,
@@ -29,7 +27,7 @@ def get_plan(reference):
         return abort(404)
 
     if plan.boundary and plan.boundary.geojson:
-        coords, bounding_box = _get_centre_and_bounds(plan.boundary.geojson)
+        coords, bounding_box = get_centre_and_bounds(plan.boundary.geojson)
         geography = {
             "name": plan.name,
             "features": plan.boundary.geojson,
@@ -108,29 +106,6 @@ def edit(reference):
         return redirect(url_for("local_plan.get_plan", reference=plan.reference))
 
     return render_template("local_plan/edit.html", plan=plan, form=form)
-
-
-def _get_centre_and_bounds(features):
-    if features is not None:
-        gdf = gpd.GeoDataFrame.from_features(features)
-        bounding_box = list(gdf.total_bounds)
-        return {"lat": gdf.centroid.y[0], "long": gdf.centroid.x[0]}, bounding_box
-    return None, None
-
-
-def _combine_geojson_features(features):
-    geometries = []
-    for feature in features:
-        geom = shape(feature["geometry"])
-        geometries.append(geom)
-
-    combined_geometry = unary_union(geometries)
-
-    combined_feature = {
-        "geometry": mapping(combined_geometry),
-    }
-
-    return combined_feature
 
 
 def _get_document_counts(documents):

@@ -5,6 +5,7 @@ from application.blueprints.boundary.forms import BoundaryForm
 from application.extensions import db
 from application.models import LocalPlan, LocalPlanBoundary
 from application.utils import (
+    get_centre_and_bounds,
     get_planning_organisations,
     login_required,
     set_organisations,
@@ -74,20 +75,26 @@ def edit(local_plan_reference, reference):
     if lp_boundary is None:
         return abort(404)
 
-    form = BoundaryForm()
+    organisation__string = ";".join(
+        [org.organisation for org in lp_boundary.organisations]
+    )
+    del lp_boundary.organisations
+    form = BoundaryForm(obj=lp_boundary)
+    if not form.organisations.data:
+        form.organisations.data = organisation__string
+
     organisation_choices = [
         (org.organisation, org.name) for org in get_planning_organisations()
     ]
-    form.organisations.choices = [(" ", " ")] + organisation_choices
-    organisation__string = ";".join([org.organisation for org in plan.organisations])
-    form.organisations.data = organisation__string
+    form.organisations.choices = organisation_choices
 
     if form.validate_on_submit():
+        # TODO - update the boundary or if referenced by any other plans, create a new one
         return redirect(
             url_for(
                 "boundary.get_boundary",
                 local_plan_reference=local_plan_reference,
-                boundary_reference="some-reference",
+                reference=lp_boundary.reference,
             )
         )
     return render_template(
@@ -103,4 +110,16 @@ def get_boundary(local_plan_reference, reference):
     boundary = LocalPlanBoundary.query.get(reference)
     if boundary is None:
         return abort(404)
-    return render_template("boundary/boundary.html", plan=plan, boundary=boundary)
+
+    coords, bounding_box = get_centre_and_bounds(plan.boundary.geojson)
+    geography = {
+        "name": plan.name,
+        "features": plan.boundary.geojson,
+        "coords": coords,
+        "bounding_box": bounding_box,
+        "reference": boundary.reference,
+    }
+
+    return render_template(
+        "boundary/boundary.html", plan=plan, boundary=boundary, geography=geography
+    )

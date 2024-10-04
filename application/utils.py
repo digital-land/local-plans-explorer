@@ -1,5 +1,8 @@
 from functools import wraps
 
+import geopandas as gpd
+from shapely.geometry import mapping, shape
+from shapely.ops import unary_union
 from sqlalchemy import Date, cast, null, or_
 
 from application.models import LocalPlan, Organisation, Status
@@ -145,3 +148,26 @@ def get_plans_query(condition, count=False):
     if count:
         return query.count()
     return query.all()
+
+
+def get_centre_and_bounds(features):
+    if features is not None:
+        gdf = gpd.GeoDataFrame.from_features(features)
+        bounding_box = list(gdf.total_bounds)
+        return {"lat": gdf.centroid.y[0], "long": gdf.centroid.x[0]}, bounding_box
+    return None, None
+
+
+def combine_geojson_features(features):
+    geometries = []
+    for feature in features:
+        geom = shape(feature["geometry"])
+        geometries.append(geom)
+
+    combined_geometry = unary_union(geometries)
+
+    combined_feature = {
+        "geometry": mapping(combined_geometry),
+    }
+
+    return combined_feature

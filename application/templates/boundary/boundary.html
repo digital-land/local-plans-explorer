@@ -2,4 +2,77 @@
 
 {% block content %}
 
-{% endblock content}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <section class="app-summary-card govuk-!-margin-top-6">
+      <header class="app-summary-card__header">
+        <h2 class="app-summary-card__title">
+          Boundary
+        </h2>
+        <div class="app-summary-card__actions">
+            {%- if not config.AUTHENTICATION_ON or session["user"] %}
+              {%- if geography %}
+                <a href="{{ url_for('boundary.edit', local_plan_reference=plan.reference, reference=plan.boundary.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> boundary</span></a>
+              {% else %}
+                <a href="{{ url_for('boundary.add', local_plan_reference=plan.reference) }}" class="govuk-link">Add<span class="govuk-visually-hidden"> boundary</span></a>
+              {% endif -%}
+          {%- endif -%}
+        </div>
+      </header>
+      <div class="app-summary-card__body">
+      {%- if geography %}
+          {%- set map_id = "map-" + geography["reference"] %}
+          <p class="govuk-hint govuk-!-margin-top-0">Reference: {{ geography["reference"] }}</p>
+          <div class="app-map-wrapper">
+            <div id="{{ map_id }}" style="height: 400px;">
+          </div>
+          <script>
+            const AppMap = {}
+            AppMap.mapID = '{{map_id}}';
+            AppMap.geography = {
+              'featureCollection': {{ geography["features"] | tojson }},
+              'centrePoint': {
+                'lat':  {{ geography['coords']['lat'] }},
+                'long': {{ geography['coords']['long'] }}
+              }
+            }
+          </script>
+      {%- else %}
+        <p class="govuk-hint govuk-!-margin-bottom-0">No boundary recorded for this plan</p>
+      {% endif -%}
+      </div>
+    </section>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block pageScripts %}
+  {% if geography %}
+    <script>
+
+      function onEachFeature(feature, layer) {
+        if (feature.properties) {
+          let popupContent = '';
+          for (let prop in feature.properties) {
+            popupContent += `<b>${prop}:</b> ${feature.properties[prop]}<br>`;
+          }
+
+          layer.bindTooltip(popupContent, {
+            sticky: true, // Tooltip follows the cursor when hovering
+            opacity: 0.9
+          });
+          layer.bindPopup(popupContent);
+      }
+    }
+
+      let map = L.map(AppMap.mapID).setView([AppMap.geography.centrePoint.lat, AppMap.geography.centrePoint.long], 6);
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: 'OSM' }).addTo(map)
+      var boundary_layer = L.geoJSON(AppMap.geography.featureCollection, {onEachFeature: onEachFeature}).addTo(map)
+      const bbox = {{ geography['bounding_box'] | tojson }}
+      map.fitBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]])
+
+    </script>
+  {% endif %}
+{% endblock pageScripts %}
