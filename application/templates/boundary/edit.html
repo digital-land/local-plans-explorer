@@ -1,5 +1,67 @@
+
 {% extends 'layouts/base-with-map.html' %}
 
 {% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+  <form class="govuk-form" method="POST" action="{{ url_for('boundary.edit', local_plan_reference=plan.reference, reference=boundary.reference) }}">
+    {{ form.hidden_tag() }}
+        <div class="govuk-form-group">
+          <label for="#" class="govuk-label">Reference</label>
+          <div class="govuk-body govuk-!-font-weight-bold">{{ boundary.reference }}</div>
+        </div>
 
-{% endblock content}
+        {% for field in form %}
+        {# the fields listed are either not shown or handled individually #}
+        {%- if field.name not in ['status', 'csrf_token'] %}
+          {%- if field.name == 'organisations' %}
+            <div class="app-organisation-select" data-module="multi-select">
+              <div class="govuk-form-group" data-multi-select="form-group">
+                {{ field.label(class='govuk-label') }}
+                {{ field(class='govuk-input') }}
+              </div>
+              <div class="app-hidden">
+                <select name="organisation_select" id="organisation_select" data-multi-select="select">
+                  {% for organisation in field.choices %}
+                  <option value="{{ organisation[0] }}">{{ organisation[1] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+          {% else %}
+          <div class="govuk-form-group">
+            {{ field.label(class='govuk-label') }}
+            {% if field.type == "TextAreaField" %}
+            {{ field(class='govuk-textarea') }}
+            {% else %}
+            {{ field(class='govuk-input') }}
+            {% endif %}
+            {% if field.errors %}
+              <ul>
+              {% for error in field.errors %}
+                  <li>{{ error }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+          {% endif %}{# end if organisation field #}
+        {% endif -%}
+        {% endfor %}
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <div class="govuk-button-group">
+        <button class="govuk-button" type="submit">Edit record</button>
+        <a class="govuk-link" href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}">Cancel</a>
+    </div>
+  </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pageScripts %}
+  <script>
+    const $multiSelectModule = document.querySelector('[data-module="multi-select"]')
+    const multiSelectModule = new dptp.MultiSelect($multiSelectModule).init()
+  </script>
+{% endblock pageScripts %}

@@ -165,16 +165,16 @@
           <div class="app-summary-card__actions">
               {%- if not config.AUTHENTICATION_ON or session["user"] %}
                 {%- if geography %}
-                  <a href="#" class="govuk-link">Edit<span class="govuk-visually-hidden"> boundary</span></a>
+                  <a href="{{ url_for('boundary.edit', local_plan_reference=plan.reference, reference=plan.boundary.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> boundary</span></a>
                 {% else %}
-                  <a href="#" class="govuk-link">Add<span class="govuk-visually-hidden"> boundary</span></a>
+                  <a href="{{ url_for('boundary.add', local_plan_reference=plan.reference) }}" class="govuk-link">Add<span class="govuk-visually-hidden"> boundary</span></a>
                 {% endif -%}
             {%- endif -%}
           </div>
         </header>
         <div class="app-summary-card__body">
         {%- if geography %}
-            {%- set map_id = "map-" + geography["references"] %}
+            {%- set map_id = "map-" + geography["reference"] %}
             <p class="govuk-hint govuk-!-margin-top-0">Reference: {{ geography["reference"] }}</p>
             <div class="app-map-wrapper">
               <div id="{{ map_id }}" style="height: 400px;">

@@ -89,6 +89,8 @@ class LocalPlanBoundary(BaseModel):
     plan_boundary_type: Mapped[Optional[str]] = mapped_column(Text)
     geometry: Mapped[Optional[str]] = mapped_column(Text)
 
+    geojson: Mapped[Optional[dict]] = mapped_column(JSONB)
+
     organisations = db.relationship(
         "Organisation",
         secondary=boundary_organisation,
@@ -96,9 +98,7 @@ class LocalPlanBoundary(BaseModel):
         back_populates="local_plan_boundaries",
     )
 
-    local_plans: Mapped[List["LocalPlan"]] = relationship(
-        back_populates="local_plan_boundary_obj"
-    )
+    local_plans: Mapped[List["LocalPlan"]] = relationship(back_populates="boundary")
 
 
 class LocalPlan(BaseModel):
@@ -115,9 +115,7 @@ class LocalPlan(BaseModel):
 
     status: Mapped[Status] = mapped_column(ENUM(Status), default=Status.FOR_REVIEW)
 
-    local_plan_boundary_obj: Mapped["LocalPlanBoundary"] = relationship(
-        back_populates="local_plans"
-    )
+    boundary: Mapped["LocalPlanBoundary"] = relationship(back_populates="local_plans")
 
     documents: Mapped[List["LocalPlanDocument"]] = relationship(
         back_populates="local_plan_obj"

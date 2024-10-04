@@ -118,4 +118,4 @@ class LocalPlanDocumentModel(LocalPlanBaseModel):
 
 class LocalPlanBoundaryModel(LocalPlanBaseModel):
     geometry: str
-    local_plan_boundary_type: str
+    plan_boundary_type: str

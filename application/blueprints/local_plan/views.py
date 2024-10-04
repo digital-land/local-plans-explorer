@@ -28,22 +28,14 @@ def get_plan(reference):
     if plan is None:
         return abort(404)
 
-    # temporary geography hack until we get some boundaries
-    feature_collection = {"type": "FeatureCollection", "features": []}
-    references = []
-    for org in plan.organisations:
-        if org.geojson:
-            feature_collection["features"].extend(org.geojson["features"])
-            references.append(org.geojson["features"][0]["properties"]["reference"])
-
-    if len(feature_collection["features"]) > 0:
-        coords, bounding_box = _get_centre_and_bounds(feature_collection)
+    if plan.boundary and plan.boundary.geojson:
+        coords, bounding_box = _get_centre_and_bounds(plan.boundary.geojson)
         geography = {
             "name": plan.name,
-            "features": feature_collection,
+            "features": plan.boundary.geojson,
             "coords": coords,
             "bounding_box": bounding_box,
-            "references": ":".join(references),
+            "reference": plan.boundary.reference,
         }
     else:
         geography = None

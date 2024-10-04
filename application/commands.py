@@ -15,6 +15,7 @@ from application.export import LocalPlanDocumentModel, LocalPlanModel
 from application.extensions import db
 from application.models import (
     LocalPlan,
+    LocalPlanBoundary,
     LocalPlanDocument,
     Organisation,
     Status,
@@ -371,3 +372,32 @@ def export(ctx):
         print("Export complete")
     else:
         print("No data to export")
+
+
+@data_cli.command("default-boundaries")
+def set_default_boundaries():
+    from application.models import Organisation
+
+    orgs = Organisation.query.filter(Organisation.geometry.isnot(None)).all()
+    for org in orgs:
+        reference = f"{org.organisation}:statistical-geography"
+        boundary = LocalPlanBoundary.query.get(reference)
+        if boundary is None:
+            boundary = LocalPlanBoundary(
+                reference=reference,
+                name=f"{org.name} statistical geography",
+                description="Default local plan boundary",
+                geometry=org.geometry,
+                geojson=org.geojson,
+                plan_boundary_type="statistical-geography",
+            )
+            boundary.organisations.append(org)
+
+            for plan in org.local_plans:
+                boundary.local_plans.append(plan)
+
+            db.session.add(boundary)
+            db.session.commit()
+            print("Boundary created for", org.organisation)
+
+    print("Default boundaries set")
