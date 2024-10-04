@@ -3,5 +3,3 @@
 pytest
 pre-commit
 black
-flask-debugtoolbar
-Pygments

@@ -51,13 +51,12 @@ def register_blueprints(app):
 def register_extensions(app):
     from flask_sslify import SSLify
 
-    from application.extensions import db, migrate, oauth, toolbar
+    from application.extensions import db, migrate, oauth
 
     db.init_app(app)
     migrate.init_app(app, db)
     oauth.init_app(app)
     sslify = SSLify(app)  # noqa
-    toolbar.init_app(app)
 
     # create the CSP for the app - until then leave commented out
     # talisman.init_app(app, content_security_policy=None)
