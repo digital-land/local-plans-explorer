@@ -19,7 +19,6 @@ from application.models import (
     Organisation,
     Status,
     document_organisation,
-    local_plan_organisation,
 )
 
 data_cli = AppGroup("data")
@@ -150,15 +149,6 @@ def _get_geography(reference):
     except Exception as e:
         print(e)
         return None
-
-
-@data_cli.command("drop-plans")
-def drop_plans():
-    db.session.query(local_plan_organisation).delete()
-    db.session.commit()
-    LocalPlan.query.delete()
-    db.session.commit()
-    print("Local Plans dropped")
 
 
 @data_cli.command("create-import-docs")
