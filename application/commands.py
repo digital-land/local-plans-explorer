@@ -213,7 +213,7 @@ def set_orgs():
     result = db.session.execute(query).scalars().all()
 
     for doc in result:
-        doc.organisations = doc.local_plan_obj.organisations
+        doc.organisations = doc.plan.organisations
         db.session.add(doc)
         db.session.commit()
 
@@ -260,12 +260,12 @@ def export_data():
 
     stmt = (
         select(LocalPlanDocument)
-        .join(LocalPlan, LocalPlanDocument.local_plan_obj)
+        .join(LocalPlan, LocalPlanDocument.plan)
         .where(
             LocalPlanDocument.status.in_([Status.FOR_PUBLICATION, Status.PUBLISHED]),
             LocalPlan.status.in_([Status.FOR_PUBLICATION, Status.PUBLISHED]),
         )
-        .options(joinedload(LocalPlanDocument.local_plan_obj))
+        .options(joinedload(LocalPlanDocument.plan))
         .order_by(LocalPlanDocument.reference)
     )
 

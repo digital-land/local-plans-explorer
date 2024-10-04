@@ -3,7 +3,6 @@ from functools import wraps
 import geopandas as gpd
 from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
-from sqlalchemy import Date, cast, null, or_
 
 from application.models import LocalPlan, Organisation, Status
 
@@ -19,27 +18,6 @@ def login_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
-
-
-def get_planning_organisations():
-    orgs = (
-        Organisation.query.filter(
-            or_(
-                Organisation.organisation.contains("local-authority"),
-                Organisation.organisation.contains("national-park"),
-                Organisation.organisation.contains("development-corporation"),
-            )
-        )
-        .filter(
-            or_(
-                Organisation.end_date.is_(None),
-                cast(Organisation.end_date, Date) == null(),
-            )
-        )
-        .order_by(Organisation.name.asc())
-        .all()
-    )
-    return orgs
 
 
 def get_plans_for_review():

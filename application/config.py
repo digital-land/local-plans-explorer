@@ -26,6 +26,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     WTF_CSRF_ENABLED = False
     AUTHENTICATION_ON = False
+    SQLALCHEMY_RECORD_QUERIES = True
 
 
 class TestConfig(Config):

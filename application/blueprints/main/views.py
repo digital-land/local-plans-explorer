@@ -3,12 +3,8 @@ import random
 from flask import Blueprint, redirect, render_template, request, url_for
 from sqlalchemy import not_
 
-from application.models import LocalPlan, LocalPlanDocument, Status
-from application.utils import (
-    adopted_plan_count,
-    get_planning_organisations,
-    get_plans_query,
-)
+from application.models import LocalPlan, LocalPlanDocument, Organisation, Status
+from application.utils import adopted_plan_count, get_plans_query
 
 main = Blueprint("main", __name__, template_folder="templates")
 
@@ -35,7 +31,11 @@ def stats():
 
 @main.route("/randomiser")
 def randomiser():
-    organisations = get_planning_organisations()
+    organisations = (
+        Organisation.query.filter(Organisation.end_date.is_(None))
+        .order_by(Organisation.name)
+        .all()
+    )
 
     orgs_without_plan = [org for org in organisations if not org.local_plans]
 

@@ -3,13 +3,8 @@ from slugify import slugify
 
 from application.blueprints.local_plan.forms import LocalPlanForm
 from application.extensions import db
-from application.models import LocalPlan, Status
-from application.utils import (
-    get_centre_and_bounds,
-    get_planning_organisations,
-    login_required,
-    populate_object,
-)
+from application.models import LocalPlan, Organisation, Status
+from application.utils import get_centre_and_bounds, login_required, populate_object
 
 local_plan = Blueprint("local_plan", __name__, url_prefix="/local-plan")
 
@@ -54,9 +49,12 @@ def get_plan(reference):
 @login_required
 def add():
     form = LocalPlanForm()
-    organisation_choices = [
-        (org.organisation, org.name) for org in get_planning_organisations()
-    ]
+    planning_orgs = (
+        Organisation.query.filter(Organisation.end_date.is_(None))
+        .order_by(Organisation.name)
+        .all()
+    )
+    organisation_choices = [(org.organisation, org.name) for org in planning_orgs]
     form.organisations.choices = [(" ", " ")] + organisation_choices
     form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
 
@@ -92,9 +90,12 @@ def edit(reference):
     if not form.organisations.data:
         form.organisations.data = organisation__string
 
-    organisation_choices = [
-        (org.organisation, org.name) for org in get_planning_organisations()
-    ]
+    organisations = (
+        Organisation.query.filter(Organisation.end_date.is_(None))
+        .order_by(Organisation.name)
+        .all()
+    )
+    organisation_choices = [(org.organisation, org.name) for org in organisations]
     form.organisations.choices = organisation_choices
 
     form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]

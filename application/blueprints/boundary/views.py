@@ -3,13 +3,8 @@ from slugify import slugify
 
 from application.blueprints.boundary.forms import BoundaryForm
 from application.extensions import db
-from application.models import LocalPlan, LocalPlanBoundary
-from application.utils import (
-    get_centre_and_bounds,
-    get_planning_organisations,
-    login_required,
-    set_organisations,
-)
+from application.models import LocalPlan, LocalPlanBoundary, Organisation
+from application.utils import get_centre_and_bounds, login_required, set_organisations
 
 boundary = Blueprint(
     "boundary",
@@ -26,9 +21,12 @@ def add(local_plan_reference):
         abort(404)
 
     form = BoundaryForm()
-    organisation_choices = [
-        (org.organisation, org.name) for org in get_planning_organisations()
-    ]
+    organisations = (
+        Organisation.query.filter(Organisation.end_date.is_(None))
+        .order_by(Organisation.name)
+        .all()
+    )
+    organisation_choices = [(org.organisation, org.name) for org in organisations]
     form.organisations.choices = [(" ", " ")] + organisation_choices
     organisation__string = ";".join([org.organisation for org in plan.organisations])
     form.organisations.data = organisation__string
@@ -83,9 +81,12 @@ def edit(local_plan_reference, reference):
     if not form.organisations.data:
         form.organisations.data = organisation__string
 
-    organisation_choices = [
-        (org.organisation, org.name) for org in get_planning_organisations()
-    ]
+    organisations = (
+        Organisation.query.filter(Organisation.end_date.is_(None))
+        .order_by(Organisation.name)
+        .all()
+    )
+    organisation_choices = [(org.organisation, org.name) for org in organisations]
     form.organisations.choices = organisation_choices
 
     if form.validate_on_submit():

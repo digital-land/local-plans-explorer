@@ -3,13 +3,14 @@ from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm, EditDocumentForm
 from application.extensions import db
-from application.models import DocumentType, LocalPlan, LocalPlanDocument, Status
-from application.utils import (
-    get_planning_organisations,
-    login_required,
-    populate_object,
-    set_organisations,
+from application.models import (
+    DocumentType,
+    LocalPlan,
+    LocalPlanDocument,
+    Organisation,
+    Status,
 )
+from application.utils import login_required, populate_object, set_organisations
 
 document = Blueprint(
     "document",
@@ -26,9 +27,12 @@ def add(local_plan_reference):
         abort(404)
 
     form = DocumentForm()
-    organisation_choices = [
-        (org.organisation, org.name) for org in get_planning_organisations()
-    ]
+    organisations = (
+        Organisation.query.filter(Organisation.end_date.is_(None))
+        .order_by(Organisation.name)
+        .all()
+    )
+    organisation_choices = [(org.organisation, org.name) for org in organisations]
     form.organisations.choices = [(" ", " ")] + organisation_choices
     organisation__string = ";".join([org.organisation for org in plan.organisations])
     form.organisations.data = organisation__string
@@ -75,24 +79,18 @@ def add(local_plan_reference):
 
 @document.route("/<string:reference>")
 def get_document(local_plan_reference, reference):
-    plan = LocalPlan.query.get(local_plan_reference)
-    if plan is None:
-        abort(404)
     doc = LocalPlanDocument.query.filter(
         LocalPlanDocument.local_plan == local_plan_reference,
         LocalPlanDocument.reference == reference,
     ).one_or_none()
     if doc is None:
         return abort(404)
-    return render_template("document/document.html", plan=plan, document=doc)
+    return render_template("document/document.html", plan=doc.plan, document=doc)
 
 
 @document.route("/<string:reference>/edit", methods=["GET", "POST"])
 @login_required
 def edit(local_plan_reference, reference):
-    plan = LocalPlan.query.get(local_plan_reference)
-    if plan is None:
-        return abort(404)
     doc = LocalPlanDocument.query.filter(
         LocalPlanDocument.local_plan == local_plan_reference,
         LocalPlanDocument.reference == reference,
@@ -108,12 +106,15 @@ def edit(local_plan_reference, reference):
     if not form.organisations.data:
         form.organisations.data = organisation__string
 
-    organisation_choices = [
-        (org.organisation, org.name) for org in get_planning_organisations()
-    ]
+    organisations = (
+        Organisation.query.filter(Organisation.end_date.is_(None))
+        .order_by(Organisation.name)
+        .all()
+    )
+    organisation_choices = [(org.organisation, org.name) for org in organisations]
 
     form.organisations.choices = organisation_choices
-    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
+    form.status.choices = [(s.name, s.value) for s in Status]
     form.document_types.choices = [
         (dt.name, dt.value) for dt in DocumentType.query.all()
     ]
@@ -125,9 +126,9 @@ def edit(local_plan_reference, reference):
         return redirect(
             url_for(
                 "document.get_document",
-                local_plan_reference=plan.reference,
+                local_plan_reference=document.plan.reference,
                 reference=document.reference,
             )
         )
 
-    return render_template("document/edit.html", plan=plan, document=doc, form=form)
+    return render_template("document/edit.html", plan=doc.plan, document=doc, form=form)

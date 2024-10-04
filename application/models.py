@@ -94,7 +94,7 @@ class LocalPlanBoundary(BaseModel):
     organisations = db.relationship(
         "Organisation",
         secondary=boundary_organisation,
-        lazy="subquery",
+        lazy="joined",
         back_populates="local_plan_boundaries",
     )
 
@@ -118,13 +118,13 @@ class LocalPlan(BaseModel):
     boundary: Mapped["LocalPlanBoundary"] = relationship(back_populates="local_plans")
 
     documents: Mapped[List["LocalPlanDocument"]] = relationship(
-        back_populates="local_plan_obj"
+        back_populates="plan", lazy="select"
     )
 
     organisations = db.relationship(
         "Organisation",
         secondary=local_plan_organisation,
-        lazy="subquery",
+        lazy="joined",
         back_populates="local_plans",
     )
 
@@ -135,7 +135,7 @@ class LocalPlanDocument(BaseModel):
     local_plan: Mapped[str] = mapped_column(
         ForeignKey("local_plan.reference"), primary_key=True
     )
-    local_plan_obj: Mapped["LocalPlan"] = relationship(back_populates="documents")
+    plan: Mapped["LocalPlan"] = relationship(back_populates="documents", lazy="joined")
 
     documentation_url: Mapped[Optional[str]] = mapped_column(Text)
     document_url: Mapped[Optional[str]] = mapped_column(Text)
@@ -144,7 +144,7 @@ class LocalPlanDocument(BaseModel):
     organisations = db.relationship(
         "Organisation",
         secondary=document_organisation,
-        lazy="subquery",
+        lazy="select",
         back_populates="local_plan_documents",
     )
 
@@ -166,20 +166,20 @@ class Organisation(DateModel):
     local_plan_documents = db.relationship(
         "LocalPlanDocument",
         secondary=document_organisation,
-        lazy="subquery",
+        lazy="select",
         back_populates="organisations",
     )
 
     local_plans = db.relationship(
         "LocalPlan",
         secondary=local_plan_organisation,
-        lazy="subquery",
+        lazy="joined",
         back_populates="organisations",
     )
 
     local_plan_boundaries = db.relationship(
         "LocalPlanBoundary",
         secondary=boundary_organisation,
-        lazy="subquery",
+        lazy="select",
         back_populates="organisations",
     )

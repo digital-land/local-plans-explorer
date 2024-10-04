@@ -1,7 +1,6 @@
 from flask import Blueprint, abort, redirect, render_template, request, url_for
 
 from application.models import Organisation
-from application.utils import get_planning_organisations
 
 organisation = Blueprint("organisation", __name__, url_prefix="/organisation")
 
@@ -10,12 +9,15 @@ organisation = Blueprint("organisation", __name__, url_prefix="/organisation")
 def organisations():
     if "organisation" in request.args:
         lpa = request.args.get("organisation")
-        print(lpa)
         return redirect(
             url_for("organisation.organisation", reference=f"local-authority-eng:{lpa}")
         )
 
-    orgs = get_planning_organisations()
+    orgs = (
+        Organisation.query.filter(Organisation.end_date.is_(None))
+        .order_by(Organisation.name)
+        .all()
+    )
     return render_template("organisation/index.html", organisations=orgs)
 
 
