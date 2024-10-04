@@ -103,6 +103,18 @@ class LocalPlanDocumentModel(LocalPlanBaseModel):
                 setattr(values, field, "")
         return values
 
+    @field_serializer(
+        "document_types",
+    )
+    def serialize_document_types(self, value):
+        doc_types = []
+        if value is not None:
+            for val in value:
+                doc_types.append(val.replace("_", "-").lower())
+        if doc_types:
+            return ";".join(doc_types)
+        return ""
+
 
 class LocalPlanBoundaryModel(LocalPlanBaseModel):
     geometry: str

@@ -241,9 +241,13 @@ def export_data():
         data_directory, "local-plan-document.csv"
     )
 
-    local_plans = LocalPlan.query.filter(
-        LocalPlan.status == Status.FOR_PUBLICATION
-    ).all()
+    local_plans = (
+        LocalPlan.query.filter(
+            LocalPlan.status.in_([Status.FOR_PUBLICATION, Status.PUBLISHED])
+        )
+        .order_by(LocalPlan.reference)
+        .all()
+    )
 
     if local_plans:
         with open(local_plan_file_path, mode="w") as file:
@@ -267,10 +271,11 @@ def export_data():
         select(LocalPlanDocument)
         .join(LocalPlan, LocalPlanDocument.local_plan_obj)
         .where(
-            LocalPlanDocument.status == Status.FOR_PUBLICATION,
+            LocalPlanDocument.status.in_([Status.FOR_PUBLICATION, Status.PUBLISHED]),
             LocalPlan.status.in_([Status.FOR_PUBLICATION, Status.PUBLISHED]),
         )
         .options(joinedload(LocalPlanDocument.local_plan_obj))
+        .order_by(LocalPlanDocument.reference)
     )
 
     local_plan_documents = db.session.scalars(stmt).all()
