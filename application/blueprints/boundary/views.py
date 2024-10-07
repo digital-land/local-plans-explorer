@@ -1,9 +1,12 @@
 from flask import Blueprint, abort, redirect, render_template, url_for
+
+# from geojson import loads
+# from shapely.geometry import shape
 from slugify import slugify
 
-from application.blueprints.boundary.forms import BoundaryForm
+from application.blueprints.boundary.forms import BoundaryForm, EditBoundaryForm
 from application.extensions import db
-from application.models import LocalPlan, LocalPlanBoundary, Organisation
+from application.models import LocalPlan, LocalPlanBoundary, Organisation, Status
 from application.utils import get_centre_and_bounds, login_required, set_organisations
 
 boundary = Blueprint(
@@ -77,7 +80,7 @@ def edit(local_plan_reference, reference):
         [org.organisation for org in lp_boundary.organisations]
     )
     del lp_boundary.organisations
-    form = BoundaryForm(obj=lp_boundary)
+    form = EditBoundaryForm(obj=lp_boundary)
     if not form.organisations.data:
         form.organisations.data = organisation__string
 
@@ -88,9 +91,11 @@ def edit(local_plan_reference, reference):
     )
     organisation_choices = [(org.organisation, org.name) for org in organisations]
     form.organisations.choices = organisation_choices
+    form.status.choices = [(s.name, s.value) for s in Status]
 
     if form.validate_on_submit():
-        # TODO - update the boundary or if referenced by any other plans, create a new one
+        # Update boundary fields, however if geometry is changed
+        # create a new boundary record
         return redirect(
             url_for(
                 "boundary.get_boundary",

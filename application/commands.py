@@ -7,7 +7,7 @@ import click
 import github
 import requests
 from flask.cli import AppGroup
-from sqlalchemy import not_, select
+from sqlalchemy import not_, select, text
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import joinedload
 
@@ -44,6 +44,17 @@ def load_orgs():
             continue
         if org["end_date"]:
             print("Skipping end dated org", org["organisation"])
+            continue
+        if org["dataset"] not in [
+            "local-authority",
+            "development-corporation",
+            "national-park-authority",
+        ]:
+            print(
+                "Skipping org",
+                org["organisation"],
+                "as not a local authority, development corporation or national park authority",
+            )
             continue
         try:
             org_obj = Organisation.query.get(org["organisation"])
@@ -401,3 +412,32 @@ def set_default_boundaries():
             print("Boundary created for", org.organisation)
 
     print("Default boundaries set")
+
+
+@data_cli.command("load-doc-types")
+def load_doc_types():
+    current_file_path = Path(__file__).resolve()
+    data_directory = os.path.join(current_file_path.parent.parent, "data")
+    file_path = os.path.join(data_directory, "document-type.csv")
+
+    with open(file_path, mode="r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            name = row["name"]
+            value = row["value"]
+            sql = text(
+                "INSERT INTO document_type (name, value) VALUES (:name, :value) ON CONFLICT DO NOTHING"
+            )
+            db.session.execute(sql, {"name": name, "value": value})
+    db.session.commit()
+
+
+@data_cli.command("load-all")
+@click.pass_context
+def load_all(ctx):
+    ctx.invoke(load_orgs)
+    ctx.invoke(load_plans)
+    ctx.invoke(load_boundaries)
+    ctx.invoke(set_default_boundaries)
+    ctx.invoke(load_doc_types)
+    print("Data load complete")

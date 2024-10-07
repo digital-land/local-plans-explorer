@@ -56,6 +56,8 @@ flask-talisman==1.1.0
     # via -r requirements/requirements.in
 flask-wtf==1.2.1
     # via -r requirements/requirements.in
+geojson==3.1.0
+    # via -r requirements/requirements.in
 geopandas==1.0.1
     # via -r requirements/requirements.in
 govuk-frontend-jinja==3.3.0

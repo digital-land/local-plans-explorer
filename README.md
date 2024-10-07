@@ -18,26 +18,22 @@ and have a look at http://localhost:5000
 
 #### Loading baseline data into the database
 
-There are commands for loading organsations, plans and boundaries that can be run as follows
+Create a Postgres db called local_plans
 
-    flask data load-orgs
-    flask data load-plans
-    flask data load-boundaries
+    createdb local_plans
 
-Organisations would need to be loaded before either loading plans or boundaries.
+There is a command for loading organsations, plans, boundaries and document types, that can be run as follows
 
-Once at least organastions and plans are loaded then documents can be loaded.
+    flask data load-all
 
 The [local-plan-document.csv](data/local-plan-document.csv) is reasonably large so loading it is easiest done with posgres \COPY command.
 
-That file needs a bit of preprocessing to make it \COPY command friendly.
+That file has had a bit of preprocessing to make it \COPY command friendly. That is the [local-plan-document-copyable.csv](data/local-plan-document-copyable.csv)
 
-To do that run this command:
+To load the documents run the \COPY command, and assuming you are in the data directory, open a psql shell and run:
 
-    flask data create-import-docs
+  psql -d local_plans
 
-That generates a preprocessed file named local-plan-document-copyable.csv in the data directory.
-
-To run the \COPY command, and assuming you are in the data directory, open a psql shell and run:
+Then run \COPY command:
 
     \COPY local_plan_document(reference,local_plan,name,document_url,documentation_url,document_types,start_date,end_date,description,status) FROM 'local-plan-document-copyable.csv' WITH CSV HEADER;
