@@ -32,7 +32,7 @@ That file has had a bit of preprocessing to make it \COPY command friendly. That
 
 To load the documents run the \COPY command, and assuming you are in the data directory, open a psql shell and run:
 
-  psql -d local_plans
+    psql -d local_plans
 
 Then run \COPY command:
 
