@@ -28,6 +28,21 @@
                 </select>
               </div>
             </div>
+          {%- elif field.name == 'geojson' %}
+          <div class="govuk-form-group">
+            {{ field.label(class='govuk-label') }}
+            <textarea name="geojson" id="geojson" class="govuk-textarea" rows="15">
+              {{ form.geojson.data | tojson}}
+            </textarea>
+            {% if field.errors %}
+              <ul>
+              {% for error in field.errors %}
+                  <li>{{ error }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+
           {% else %}
           <div class="govuk-form-group">
             {{ field.label(class='govuk-label') }}

@@ -1,7 +1,6 @@
 from flask import Blueprint, abort, redirect, render_template, url_for
-
-# from geojson import loads
-# from shapely.geometry import shape
+from geojson import loads
+from shapely.geometry import shape
 from slugify import slugify
 
 from application.blueprints.boundary.forms import BoundaryForm, EditBoundaryForm
@@ -94,13 +93,20 @@ def edit(local_plan_reference, reference):
     form.status.choices = [(s.name, s.value) for s in Status]
 
     if form.validate_on_submit():
-        # Update boundary fields, however if geometry is changed
-        # create a new boundary record
+        geojson = form.geojson.data
+        if geojson is not None:
+            form_geojson = loads(geojson)
+            existing_geojson = lp_boundary.geojson
+            un_changed = _compare_feature_collections(form_geojson, existing_geojson)
+            if un_changed:
+                print("Update the existing boundary")
+            else:
+                print("Create a new boundary")
+
         return redirect(
             url_for(
-                "boundary.get_boundary",
-                local_plan_reference=local_plan_reference,
-                reference=lp_boundary.reference,
+                "local_plan.get_plan",
+                reference=local_plan_reference,
             )
         )
     return render_template(
@@ -129,3 +135,29 @@ def get_boundary(local_plan_reference, reference):
     return render_template(
         "boundary/boundary.html", plan=plan, boundary=boundary, geography=geography
     )
+
+
+def _sort_feature(feature):
+    geom = shape(feature["geometry"]).wkt
+    properties = tuple(sorted(feature["properties"].items()))
+    return (geom, properties)
+
+
+def _compare_feature_collections(feature_collection_1, feature_collection_2):
+    if (
+        feature_collection_1["type"] != "FeatureCollection"
+        or feature_collection_2["type"] != "FeatureCollection"
+    ):
+        return False
+
+    features_1 = sorted(feature_collection_1["features"], key=_sort_feature)
+    features_2 = sorted(feature_collection_2["features"], key=_sort_feature)
+
+    if len(features_1) != len(features_2):
+        return False
+
+    for f1, f2 in zip(features_1, features_2):
+        if not shape(f1["geometry"]).equals(shape(f2["geometry"])):
+            return False
+
+    return True
