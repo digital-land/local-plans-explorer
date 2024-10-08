@@ -25,7 +25,7 @@
 </div>
 
 <div class="govuk-grid-row">
-  <!-- <div class="govuk-grid-column-one-quarter">
+  <div class="govuk-grid-column-one-quarter">
     <form class="govuk-form">
       <div class="govuk-form-group">
         <fieldset class="govuk-fieldset">
@@ -34,27 +34,21 @@
               Filter planning authorities
             </h1>
           </legend>
-
           <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="planningAuthorityFilter" name="planningAuthorityFilter" type="radio" value="all" {% if planning_authority_filter is none or planning_authority_filter == 'all'%}checked{% endif %}>
-              <label class="govuk-label govuk-radios__label" for="planningAuthorityFilter">
+              <input class="govuk-radios__input" id="planStatusFilter" name="planStatusFilter" type="radio" value="all" {% if plan_status_filter is none or plan_status_filter == 'all'%}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="planStatusFilter">
                 All
               </label>
             </div>
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="planningAuthorityFilter-2" name="planningAuthorityFilter" type="radio" value="with" {% if planning_authority_filter == 'with'%}checked{% endif %}>
-              <label class="govuk-label govuk-radios__label" for="planningAuthorityFilter-2">
-                With adopted plan
-              </label>
-            </div>
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="planningAuthorityFilter-3" name="planningAuthorityFilter" type="radio" value="without" {% if planning_authority_filter == 'without'%}checked{% endif %}>
-              <label class="govuk-label govuk-radios__label" for="planningAuthorityFilter-3">
-                Without adopted plan
-              </label>
-            </div>
-          </div>
+            {% for status in statuses %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="planStatusFilter-{{loop.index}}" name="planStatusFilter" type="radio" value="{{status.name}}" {% if plan_status_filter ==  status.name %}checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="planStatusFilter-{{loop.index}}">
+                  {{ status.value }}
+                </label>
+              </div>
+            {% endfor %}
         </fieldset>
         <div class="govuk-form-group">
           <button class="govuk-button govuk-button--secondary" data-module="govuk-button">
@@ -63,7 +57,7 @@
         </div>
       </div>
     </form>
-  </div> -->
+  </div>
   <div class="govuk-grid-column-three-quarters">
     <div class="app-list__wrapper dl-list-filter__count govuk-!-margin-top-6">
 
@@ -85,16 +79,18 @@
             </dt>
             <dd class="govuk-summary-list__value app-summary-list__value">
               {% if organisation.local_plans | length > 0 %}
-              <ul class="govuk-list govuk-!-margin-bottom-3">
-                {% for plan in organisation.local_plans %}
-                  <li>
-                    <a href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}" class="govuk-link">{{ plan.name }}</a>
-                    <span class="govuk-tag govuk-tag--{{plan.status | status_colour }}">{{plan.status.value}}</span>
-                  </li>
-                {% endfor %}
-              </ul>
+                <ul class="govuk-list govuk-!-margin-bottom-3">
+                  {% for plan in organisation.local_plans %}
+                    {% if not plan_status_filter or plan_status_filter == plan.status.name or plan_status_filter == 'all' %}
+                        <li>
+                          <a href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}" class="govuk-link">{{ plan.name }}</a>
+                          <span class="govuk-tag govuk-tag--{{plan.status | status_colour }}">{{plan.status.value}}</span>
+                        </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
               {% endif %}
-              <!-- <a href="#" class="govuk-button govuk-button--secondary app-button--s">Add plan</a> -->
+              <!-- <a href="#" class="govuk-button govuk-button--secondary app-button--s">Add plan</a>  -->
             </dd>
           </div>
 
