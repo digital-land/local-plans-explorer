@@ -280,7 +280,7 @@ def export_data():
         .order_by(LocalPlanDocument.reference)
     )
 
-    local_plan_documents = db.session.scalars(stmt).all()
+    local_plan_documents = db.session.scalars(stmt).unique().all()
 
     if local_plan_documents:
         with open(local_plan__document_file_path, mode="w") as file:
@@ -441,3 +441,76 @@ def load_all(ctx):
     ctx.invoke(set_default_boundaries)
     ctx.invoke(load_doc_types)
     print("Data load complete")
+
+
+@data_cli.command("load-db-backup")
+def load_db_backup():
+    import subprocess
+    import sys
+    import tempfile
+
+    from flask import current_app
+
+    # check heroku cli installed
+    result = subprocess.run(["which", "heroku"], capture_output=True, text=True)
+
+    if result.returncode == 1:
+        print("Heroku CLI is not installed. Please install it and try again.")
+        sys.exit(1)
+
+    # check heroku login
+    result = subprocess.run(["heroku", "whoami"], capture_output=True, text=True)
+
+    if "Error: not logged in" in result.stderr:
+        print("Please login to heroku using 'heroku login' and try again.")
+        sys.exit(1)
+
+    print("Starting load data into", current_app.config["SQLALCHEMY_DATABASE_URI"])
+    if (
+        input(
+            "Completing process will overwrite your local database. Enter 'y' to continue, or anything else to exit. "
+        )
+        != "y"
+    ):
+        print("Exiting without making any changes")
+        sys.exit(0)
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        path = os.path.join(tempdir, "latest.dump")
+
+        # get the latest dump from heroku
+        result = subprocess.run(
+            [
+                "heroku",
+                "pg:backups:download",
+                "-a",
+                "local-plans-explorer",
+                "-o",
+                path,
+            ]
+        )
+
+        if result.returncode != 0:
+            print("Error downloading the backup")
+            sys.exit(1)
+
+        # restore the dump to the local database
+        subprocess.run(
+            [
+                "pg_restore",
+                "--verbose",
+                "--clean",
+                "--no-acl",
+                "--no-owner",
+                "-h",
+                "localhost",
+                "-d",
+                "local_plans",
+                path,
+            ]
+        )
+        print(
+            "\n\nRestored the dump to the local database using pg_restore. You can ignore warnings from pg_restore."
+        )
+
+    print("Data loaded successfully")

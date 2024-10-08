@@ -1,6 +1,7 @@
 from flask import Blueprint, abort, redirect, render_template, url_for
 from geojson import loads
-from shapely.geometry import shape
+from shapely.geometry import MultiPolygon, shape
+from shapely.geometry.polygon import Polygon
 from slugify import slugify
 
 from application.blueprints.boundary.forms import BoundaryForm, EditBoundaryForm
@@ -100,15 +101,32 @@ def edit(local_plan_reference, reference):
             un_changed = _compare_feature_collections(form_geojson, existing_geojson)
             if un_changed:
                 print("Update the existing boundary")
+                lp_boundary.name = form.name.data
+                lp_boundary.description = form.description.data
+                lp_boundary.plan_boundary_type = form.plan_boundary_type.data
+                if form.organisations.data:
+                    set_organisations(lp_boundary, form.organisations.data)
+                db.session.add(lp_boundary)
             else:
                 print("Create a new boundary")
+                reference = slugify(f"{form.name.data}:{_generate_random_string()}")
+                geometry = _convert_to_wkt(form_geojson)
 
-        return redirect(
-            url_for(
-                "local_plan.get_plan",
-                reference=local_plan_reference,
-            )
-        )
+                lp_boundary = LocalPlanBoundary(
+                    reference=reference,
+                    name=form.name.data,
+                    description=form.description.data,
+                    geometry=geometry,
+                    geojson=form_geojson,
+                    plan_boundary_type=form.plan_boundary_type.data,
+                )
+                if form.organisations.data:
+                    set_organisations(lp_boundary, form.organisations.data)
+                lp_boundary.local_plans.append(plan)
+                db.session.add(lp_boundary)
+            db.session.commit()
+
+        return redirect(url_for("local_plan.get_plan", reference=local_plan_reference))
     return render_template(
         "boundary/edit.html", plan=plan, form=form, boundary=lp_boundary
     )
@@ -161,3 +179,27 @@ def _compare_feature_collections(feature_collection_1, feature_collection_2):
             return False
 
     return True
+
+
+def _generate_random_string(length=6):
+    import random
+    import string
+
+    characters = (
+        string.ascii_letters + string.digits
+    )  # Contains both letters and digits
+    random_string = "".join(random.choice(characters) for _ in range(length))
+    return random_string
+
+
+def _convert_to_wkt(feature_collection):
+    polygons = []
+    for feature in feature_collection["features"]:
+        geometry = shape(feature["geometry"])
+        if isinstance(geometry, Polygon):
+            polygons.append(geometry)
+        elif isinstance(geometry, MultiPolygon):
+            polygons.extend(geometry.geoms)
+
+    multi_polygon = MultiPolygon(polygons)
+    return multi_polygon.wkt
