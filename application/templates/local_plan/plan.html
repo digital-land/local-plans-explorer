@@ -127,7 +127,7 @@
           <div class="app-summary-card__footer">
             <p class="govuk-body">Status</p>
             <span class="govuk-tag govuk-tag--{{document.status | status_colour }}">{{document.status.value}}</span>
-            {% if document.status.name == "FOR_PUBLICATION" and plan.status.name != "FOR_PUBLICATION" %}
+            {% if document.status.name == "FOR_PUBLICATION" and plan.status.name != "FOR_PUBLICATION" and plan.status.name != "PUBLISHED" %}
               <p class="govuk-hint govuk-!-font-size-14">Note: This document will only be published when the local plan is also selected for publication</p>
             {% endif %}
           </div>
@@ -196,7 +196,7 @@
         <div class="app-summary-card__footer">
           <p class="govuk-body">Status</p>
           <span class="govuk-tag govuk-tag--{{plan.boundary_status | status_colour }}">{{plan.boundary_status .value}}</span>
-          {% if plan.boundary_status.name == "FOR_PUBLICATION" and plan.status.name != "FOR_PUBLICATION" %}
+          {% if plan.boundary_status.name == "FOR_PUBLICATION" and plan.status.name != "FOR_PUBLICATION"  and plan.status.name != "PUBLISHED"%}
             <p class="govuk-hint govuk-!-font-size-14">Note: This boundary will only be published when the local plan is also selected for publication</p>
           {% endif %}
         </div>

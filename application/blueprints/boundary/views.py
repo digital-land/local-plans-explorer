@@ -123,7 +123,12 @@ def edit(local_plan_reference, reference):
                 if form.organisations.data:
                     set_organisations(lp_boundary, form.organisations.data)
                 lp_boundary.local_plans.append(plan)
-                db.session.add(lp_boundary)
+
+            if form.status.data == Status.FOR_PUBLICATION.name:
+                plan.boundary_status = Status.FOR_PUBLICATION
+                db.session.add(plan)
+
+            db.session.add(lp_boundary)
             db.session.commit()
 
         return redirect(url_for("local_plan.get_plan", reference=local_plan_reference))

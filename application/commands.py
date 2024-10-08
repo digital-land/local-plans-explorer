@@ -11,7 +11,11 @@ from sqlalchemy import not_, select, text
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import joinedload
 
-from application.export import LocalPlanDocumentModel, LocalPlanModel
+from application.export import (
+    LocalPlanBoundaryModel,
+    LocalPlanDocumentModel,
+    LocalPlanModel,
+)
 from application.extensions import db
 from application.models import (
     LocalPlan,
@@ -251,6 +255,8 @@ def export_data():
         .all()
     )
 
+    boundaries_to_export = set([])
+
     if local_plans:
         with open(local_plan_file_path, mode="w") as file:
             fieldnames = list(LocalPlanModel.model_fields.keys())
@@ -258,6 +264,8 @@ def export_data():
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             for obj in local_plans:
+                if obj.boundary_status in [Status.FOR_PUBLICATION, Status.PUBLISHED]:
+                    boundaries_to_export.add(obj.local_plan_boundary)
                 m = LocalPlanModel.model_validate(obj)
                 data = m.model_dump(by_alias=True)
                 writer.writerow(data)
@@ -299,6 +307,27 @@ def export_data():
             updated_data = True
     else:
         print("No local plan documents found for export")
+
+    boundaries = LocalPlanBoundary.query.filter(
+        LocalPlanBoundary.reference.in_(boundaries_to_export)
+    ).all()
+
+    if boundaries:
+        boundary_file_path = os.path.join(data_directory, "local-plan-boundary.csv")
+        with open(boundary_file_path, mode="w") as file:
+            fieldnames = list(LocalPlanBoundaryModel.model_fields.keys())
+            fieldnames = [field.replace("_", "-") for field in fieldnames]
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            for boundary in boundaries:
+                m = LocalPlanBoundaryModel.model_validate(boundary)
+                data = m.model_dump(by_alias=True)
+                writer.writerow(data)
+                for local_plan in boundary.local_plans:
+                    local_plan.boundary_status = Status.PUBLISHED
+                    db.session.add(local_plan)
+        print(f"{len(boundaries)} local plan boundaries exported")
+        updated_data = True
 
     return updated_data
 
