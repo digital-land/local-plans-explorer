@@ -30,7 +30,7 @@ The [local-plan-document.csv](data/local-plan-document.csv) is reasonably large 
 
 That file has had a bit of preprocessing to make it \COPY command friendly. That is the [local-plan-document-copyable.csv](data/local-plan-document-copyable.csv)
 
-To load the documents run the \COPY command, and assuming you are in the data directory, open a psql shell and run:
+To load the documents run the \COPY command, and assuming you are in the data directory, open a psql shell connecting to the local_plans database:
 
     psql -d local_plans
 
