@@ -21,8 +21,8 @@
               </div>
               <div class="app-hidden">
                 <select name="organisation_select" id="organisation_select" data-multi-select="select">
-                  {% for organisation in field.choices %}
-                  <option value="{{ organisation[0] }}">{{ organisation[1] }}</option>
+                  {% for choice in field.choices %}
+                    <option value="{{ choice[0] }}">{{ choice[1] }}</option>
                   {% endfor %}
                 </select>
               </div>

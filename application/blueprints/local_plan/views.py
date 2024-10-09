@@ -54,13 +54,17 @@ def add():
         org = Organisation.query.get_or_404(organisation)
     else:
         org = None
-    planning_orgs = (
+    orgs = (
         Organisation.query.filter(Organisation.end_date.is_(None))
         .order_by(Organisation.name)
         .all()
     )
-    organisation_choices = [(org.organisation, org.name) for org in planning_orgs]
+    organisation_choices = [(org.organisation, org.name) for org in orgs]
     form.organisations.choices = [(" ", " ")] + organisation_choices
+    if org is not None:
+        form.organisations.default = org.organisation
+        form.process()
+
     form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
 
     if form.validate_on_submit():
