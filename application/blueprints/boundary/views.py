@@ -7,7 +7,12 @@ from slugify import slugify
 from application.blueprints.boundary.forms import BoundaryForm, EditBoundaryForm
 from application.extensions import db
 from application.models import LocalPlan, LocalPlanBoundary, Organisation, Status
-from application.utils import get_centre_and_bounds, login_required, set_organisations
+from application.utils import (
+    generate_random_string,
+    get_centre_and_bounds,
+    login_required,
+    set_organisations,
+)
 
 boundary = Blueprint(
     "boundary",
@@ -109,7 +114,7 @@ def edit(local_plan_reference, reference):
                 db.session.add(lp_boundary)
             else:
                 print("Create a new boundary")
-                reference = slugify(f"{form.name.data}:{_generate_random_string()}")
+                reference = slugify(f"{form.name.data}:{generate_random_string()}")
                 geometry = _convert_to_wkt(form_geojson)
 
                 lp_boundary = LocalPlanBoundary(
@@ -184,17 +189,6 @@ def _compare_feature_collections(feature_collection_1, feature_collection_2):
             return False
 
     return True
-
-
-def _generate_random_string(length=6):
-    import random
-    import string
-
-    characters = (
-        string.ascii_letters + string.digits
-    )  # Contains both letters and digits
-    random_string = "".join(random.choice(characters) for _ in range(length))
-    return random_string
 
 
 def _convert_to_wkt(feature_collection):
