@@ -9,10 +9,10 @@
   <div class="govuk-grid-column-two-thirds">
   <form class="govuk-form" method="POST">
     {{ form.hidden_tag() }}
-
         <div class="govuk-form-group">
           <label for="#" class="govuk-label">Reference</label>
           <div class="govuk-body govuk-!-font-weight-bold">{{ plan.reference }}</div>
+          <span class="govuk-tag govuk-tag--{{plan.status | status_colour }}">{{plan.status.value}}</span>
         </div>
 
         {% for field in form %}

@@ -114,7 +114,7 @@ def edit(local_plan_reference, reference):
     organisation_choices = [(org.organisation, org.name) for org in organisations]
 
     form.organisations.choices = organisation_choices
-    form.status.choices = [(s.name, s.value) for s in Status]
+    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
     form.document_types.choices = [
         (dt.name, dt.value) for dt in DocumentType.query.all()
     ]

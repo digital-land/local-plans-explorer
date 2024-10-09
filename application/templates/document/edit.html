@@ -14,6 +14,7 @@
         <div class="govuk-form-group">
           <label for="#" class="govuk-label">Reference</label>
           <div class="govuk-body govuk-!-font-weight-bold">{{ document.reference }}</div>
+          <span class="govuk-tag govuk-tag--{{document.status | status_colour }}">{{document.status.value}}</span>
         </div>
 
         {% for field in form %}

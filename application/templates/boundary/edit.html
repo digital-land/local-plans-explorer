@@ -9,6 +9,7 @@
         <div class="govuk-form-group">
           <label for="#" class="govuk-label">Reference</label>
           <div class="govuk-body govuk-!-font-weight-bold">{{ boundary.reference }}</div>
+          <span class="govuk-tag govuk-tag--{{plan.boundary_status | status_colour }}">{{plan.boundary_status.value}}</span>
         </div>
 
         {% for field in form %}
