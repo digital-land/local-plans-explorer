@@ -18,3 +18,4 @@ Authlib
 PyGithub
 pydantic
 geojson
+sentry-sdk[flask]

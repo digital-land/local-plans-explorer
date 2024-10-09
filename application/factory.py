@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
+import os
+
 from flask import Flask, render_template
 from flask.cli import load_dotenv
 
@@ -75,6 +77,14 @@ def register_extensions(app):
             authorize_params=None,
             api_base_url="https://api.github.com/",
             client_kwargs={"scope": "user:email read:org"},
+        )
+
+    if os.environ.get("SENTRY_DSN") is not None:
+        import sentry_sdk
+        from sentry_sdk.integrations.flask import FlaskIntegration
+
+        sentry_sdk.init(
+            dsn=os.environ.get("SENTRY_DSN"), integrations=[FlaskIntegration()]
         )
 
 

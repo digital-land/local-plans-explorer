@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, redirect, render_template, url_for
+from flask import Blueprint, abort, redirect, render_template, request, url_for
 from slugify import slugify
 
 from application.blueprints.local_plan.forms import LocalPlanForm
@@ -49,6 +49,11 @@ def get_plan(reference):
 @login_required
 def add():
     form = LocalPlanForm()
+    if request.args.get("organisation"):
+        organisation = request.args.get("organisation")
+        org = Organisation.query.get_or_404(organisation)
+    else:
+        org = None
     planning_orgs = (
         Organisation.query.filter(Organisation.end_date.is_(None))
         .order_by(Organisation.name)
@@ -71,7 +76,7 @@ def add():
         db.session.commit()
         return redirect(url_for("local_plan.get_plan", reference=plan.reference))
 
-    return render_template("local_plan/add.html", form=form)
+    return render_template("local_plan/add.html", form=form, organisation=org)
 
 
 @local_plan.route("/<string:reference>/edit", methods=["GET", "POST"])
