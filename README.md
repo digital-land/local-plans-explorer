@@ -15,12 +15,17 @@ Run the app
 
 and have a look at http://localhost:5000
 
+If you click around the app you will get errors until you have set up the database. Steps below.
 
 #### Loading baseline data into the database
 
 Create a Postgres db called local_plans
 
     createdb local_plans
+
+Run migrations
+
+    flask db upgrade
 
 There is a command for loading organsations, plans, boundaries and document types, that can be run as follows
 
