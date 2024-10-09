@@ -543,3 +543,33 @@ def load_db_backup():
         )
 
     print("Data loaded successfully")
+
+
+@data_cli.command("set-org-websites")
+def set_org_websites():
+    base_url = "https://datasette.planning.data.gov.uk/digital-land/organisation.json"
+    orgs = Organisation.query.all()
+    for org in orgs:
+        params = {
+            "website__notblank": 1,
+            "organisation__exact": org.organisation,
+            "_shape": "array",
+        }
+
+        try:
+            resp = requests.get(base_url, params=params)
+            resp.raise_for_status()
+            data = resp.json()
+            print(f"Fetching data for {org.organisation}")
+            if len(data) > 0:
+                website = data[0].get("website")
+                if website:
+                    org.website = website
+                    db.session.add(org)
+                    db.session.commit()
+                    print(f"Set website {website} for {org.organisation}")
+            else:
+                print(f"No website found for {org.organisation}")
+        except Exception as e:
+            print(f"Error fetching data for {org.organisation}: {e}")
+            continue

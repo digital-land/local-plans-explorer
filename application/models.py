@@ -171,6 +171,7 @@ class Organisation(DateModel):
     geojson: Mapped[Optional[dict]] = mapped_column(JSONB)
     point: Mapped[Optional[str]] = mapped_column(Text)
     statistical_geography: Mapped[Optional[str]] = mapped_column(Text)
+    website: Mapped[Optional[str]] = mapped_column(Text)
 
     local_plan_documents = db.relationship(
         "LocalPlanDocument",
