@@ -131,7 +131,7 @@ class LocalPlan(BaseModel):
     # boundary status set on local plan as boundary is one to many from local_plan_boundary
     # to local_plan, therefore boundary is specific to a single local plan and therefore
     # approval needs to be set at the plan level
-    boundary_status: Mapped[Status] = mapped_column(
+    boundary_status: Mapped[Optional[Status]] = mapped_column(
         ENUM(Status), default=Status.FOR_REVIEW
     )
 
@@ -155,9 +155,7 @@ class LocalPlanDocument(BaseModel):
         back_populates="local_plan_documents",
     )
 
-    status: Mapped[Optional[Status]] = mapped_column(
-        ENUM(Status), default=Status.FOR_REVIEW, nullable=True
-    )
+    status: Mapped[Status] = mapped_column(ENUM(Status), default=Status.FOR_REVIEW)
 
 
 class Organisation(DateModel):
