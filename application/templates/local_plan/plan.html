@@ -120,7 +120,11 @@
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Document types</dt>
-                <dd class="govuk-summary-list__value">{{ document.document_types if document.document_types }}</dd>
+                <dd class="govuk-summary-list__value">
+                  {% if document.document_types %}
+                  {% for type in document.document_types %}{{ type }}{{ "" if loop.last else ", " }}{% endfor %}
+                  {% endif %}
+                </dd>
               </div>
             </dl>
           </div>
