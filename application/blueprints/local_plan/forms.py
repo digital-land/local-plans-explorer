@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import RadioField, StringField, TextAreaField
-from wtforms.validators import URL, DataRequired, Optional, Regexp
+from wtforms import RadioField, StringField, TextAreaField, URLField
+from wtforms.validators import DataRequired, Optional, Regexp
 
 
 class LocalPlanForm(FlaskForm):
@@ -17,11 +17,10 @@ class LocalPlanForm(FlaskForm):
         validators=[Optional()],
         description="The year the plan ends, for example, 2045",
     )
-    documentation_url = StringField(
+    documentation_url = URLField(
         "URL for plan information",
         validators=[
-            Optional(),
-            URL(),
+            DataRequired(),
             Regexp("^https?://", message="URL must start with http or https"),
         ],
     )

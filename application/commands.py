@@ -18,6 +18,7 @@ from application.export import (
 )
 from application.extensions import db
 from application.models import (
+    DocumentType,
     LocalPlan,
     LocalPlanBoundary,
     LocalPlanDocument,
@@ -573,3 +574,14 @@ def set_org_websites():
         except Exception as e:
             print(f"Error fetching data for {org.organisation}: {e}")
             continue
+
+
+@data_cli.command("scrape-docs")
+def scrape_docs():
+    from application.scraping import extract_links_from_page
+
+    document_types = [doc.value for doc in DocumentType.query.all()]
+    url = "https://www.arun.gov.uk/adopted-local-plan/"
+    reference = "test-of-a-new-plan-record"
+    link_data = extract_links_from_page(url, reference, document_types)
+    print(link_data)

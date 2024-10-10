@@ -8,14 +8,11 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-m">{{organisation.name}}</h1>
+      <h1 class="govuk-heading-l">{{organisation.name}}</h1>
       <p class="govuk-body-m"><a href="{{organisation.website}}">Website</a></p>
-      <h2 class="govuk-heading-m">Local plans</h2>
-    </div>
-    <div class="govuk-grid-column-one-third">
-      <h3 class="govuk-heading-m">Actions</h3>
+      <h2 class="govuk-heading-l">Local plans</h2>
       {%- if not config.AUTHENTICATION_ON or session["user"] %}
-        <a href="{{ url_for('local_plan.add', organisation=organisation.organisation) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> add plan</a>
+          <a href="{{ url_for('local_plan.add', organisation=organisation.organisation) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> add new plan</a>
       {%- endif %}
     </div>
   </div>

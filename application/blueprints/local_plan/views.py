@@ -3,7 +3,13 @@ from slugify import slugify
 
 from application.blueprints.local_plan.forms import LocalPlanForm
 from application.extensions import db
-from application.models import LocalPlan, Organisation, Status
+from application.models import (
+    DocumentType,
+    LocalPlan,
+    LocalPlanDocument,
+    Organisation,
+    Status,
+)
 from application.utils import get_centre_and_bounds, login_required, populate_object
 
 local_plan = Blueprint("local_plan", __name__, url_prefix="/local-plan")
@@ -116,6 +122,39 @@ def edit(reference):
         return redirect(url_for("local_plan.get_plan", reference=plan.reference))
 
     return render_template("local_plan/edit.html", plan=plan, form=form)
+
+
+@local_plan.route("/<string:reference>/find-documents", methods=["GET", "POST"])
+@login_required
+def find_documents(reference):
+    from application.scraping import extract_links_from_page
+
+    plan = LocalPlan.query.get(reference)
+    if plan is None:
+        abort(404)
+
+    document_types = [doc.value for doc in DocumentType.query.all()]
+    document_links = extract_links_from_page(
+        plan.documentation_url, plan.reference, document_types
+    )
+
+    for link in document_links:
+        document_url = link["document_url"]
+        existing_doc = LocalPlanDocument.query.filter(
+            LocalPlanDocument.document_url == document_url
+        ).one_or_none()
+        if existing_doc:
+            link["existing"] = existing_doc.reference
+            if existing_doc.local_plan == plan.reference:
+                link["linked_to_plan"] = True
+            else:
+                link["linked_to_plan"] = False
+        else:
+            link["existing"] = None
+
+    return render_template(
+        "local_plan/documents-found.html", plan=plan, document_links=document_links
+    )
 
 
 def _get_document_counts(documents):

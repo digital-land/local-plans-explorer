@@ -19,3 +19,5 @@ PyGithub
 pydantic
 geojson
 sentry-sdk[flask]
+beautifulsoup4
+thefuzz

@@ -14,6 +14,8 @@ annotated-types==0.7.0
     # via pydantic
 authlib==1.3.2
     # via -r requirements/requirements.in
+beautifulsoup4==4.12.3
+    # via -r requirements/requirements.in
 blinker==1.8.2
     # via
     #   flask
@@ -128,6 +130,8 @@ python-slugify==8.0.4
     # via -r requirements/requirements.in
 pytz==2024.2
     # via pandas
+rapidfuzz==3.10.0
+    # via thefuzz
 requests==2.32.3
     # via
     #   -r requirements/requirements.in
@@ -140,6 +144,8 @@ shapely==2.0.6
     #   geopandas
 six==1.16.0
     # via python-dateutil
+soupsieve==2.6
+    # via beautifulsoup4
 sqlalchemy==2.0.34
     # via
     #   alembic
@@ -147,6 +153,8 @@ sqlalchemy==2.0.34
     #   flask-sqlalchemy
 text-unidecode==1.3
     # via python-slugify
+thefuzz==0.22.1
+    # via -r requirements/requirements.in
 typing-extensions==4.12.2
     # via
     #   alembic
