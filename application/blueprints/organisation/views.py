@@ -10,7 +10,9 @@ def organisations():
     if "organisation" in request.args:
         lpa = request.args.get("organisation")
         return redirect(
-            url_for("organisation.organisation", reference=f"local-authority-eng:{lpa}")
+            url_for(
+                "organisation.get_organisation", reference=f"local-authority-eng:{lpa}"
+            )
         )
 
     plan_status_filter = request.args.get("planStatusFilter", None)

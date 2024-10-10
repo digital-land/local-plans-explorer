@@ -7,7 +7,7 @@ from slugify import slugify
 from thefuzz import process
 
 
-def extract_links_from_page(url, local_plan_reference, reference_data):
+def extract_links_from_page(url, plan, reference_data):
     response = requests.get(url, verify=False)
     soup = BeautifulSoup(response.content, "html.parser")
     links = soup.find_all("a", href=True)
@@ -23,12 +23,12 @@ def extract_links_from_page(url, local_plan_reference, reference_data):
                 document_type = match[0]
             else:
                 document_type = None
-            reference = f"{local_plan_reference}-{slugify(name)}"
+
             document_links.append(
                 {
                     "name": name,
-                    "reference": reference,
-                    "local-plan": local_plan_reference,
+                    "reference": slugify(name),
+                    "local_plan": plan.reference,
                     "document_url": document_url,
                     "documentation_url": url,
                     "document_type": document_type,

@@ -16,6 +16,11 @@ class Status(Enum):
     PUBLISHED = "Published"
 
 
+class CandidateDocumentStatus(Enum):
+    ACCEPT = "Accept"
+    REJECT = "Reject"
+
+
 class DocumentType(db.Model):
     __tablename__ = "document_type"
 
@@ -135,6 +140,10 @@ class LocalPlan(BaseModel):
         ENUM(Status), default=Status.FOR_REVIEW
     )
 
+    candidate_documents: Mapped[List["CandidateLocalPlanDocument"]] = relationship(
+        back_populates="plan", lazy="joined"
+    )
+
 
 class LocalPlanDocument(BaseModel):
     __tablename__ = "local_plan_document"
@@ -156,6 +165,21 @@ class LocalPlanDocument(BaseModel):
     )
 
     status: Mapped[Status] = mapped_column(ENUM(Status), default=Status.FOR_REVIEW)
+
+
+class CandidateLocalPlanDocument(BaseModel):
+    local_plan: Mapped[str] = mapped_column(
+        ForeignKey("local_plan.reference"), primary_key=True
+    )
+    plan: Mapped["LocalPlan"] = relationship(
+        back_populates="candidate_documents", lazy="joined"
+    )
+    documentation_url: Mapped[Optional[str]] = mapped_column(Text)
+    document_url: Mapped[Optional[str]] = mapped_column(Text)
+    document_type: Mapped[Optional[str]] = mapped_column(Text)
+    status: Mapped[Optional[CandidateDocumentStatus]] = mapped_column(
+        ENUM(CandidateDocumentStatus), nullable=True
+    )
 
 
 class Organisation(DateModel):

@@ -70,7 +70,11 @@
         </h2>
         <p class="govuk-hint govuk-!-font-size-14">Edit the plan record to add/correct information or change it's status.</p>
         <p class="govuk-hint govuk-!-font-size-14">To include the plan in the local-plan.csv export for the data platform, set it's status to "For publication".</p>
-        <!-- <p class="govuk-hint govuk-!-font-size-14">To exclude the record from the data export set it's status to "Not for publication"</p> -->
+        {% if not plan.documents or plan.canidate_documents %}
+          <p  class="govuk-hint govuk-!-font-size-14">Click here to find and select relevant documents from the plan web page</p>
+            <a href="{{ url_for('local_plan.find_documents', reference=plan.reference) }}" class="govuk-button govuk-button--primary">
+            <span class="govuk-!-margin-right-1">✚ </span> find documents</a>
+        {% endif %}
     </div>
   </div>
   </div>
@@ -138,7 +142,8 @@
         </section>
       {% endfor %}
       {%- if not config.AUTHENTICATION_ON or session["user"] %}
-        <a href="{{ url_for('document.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> add document</a>
+        <a href="{{ url_for('document.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary">
+          <span class="govuk-!-margin-right-1">✚ </span> add document</a>
       {%- endif %}
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     </div>
