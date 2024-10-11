@@ -358,7 +358,7 @@ def add_geography(reference):
     missing_geographies = []
 
     for org in plan.organisations:
-        if org.geometry is not None:
+        if org.geometry is not None and org.geojson is not None:
             references.append(org.statistical_geography)
             geographies.append(_make_collection(org.geojson))
         else:

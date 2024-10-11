@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, abort, redirect, render_template, url_for
 from slugify import slugify
 
@@ -10,7 +12,12 @@ from application.models import (
     Organisation,
     Status,
 )
-from application.utils import login_required, populate_object, set_organisations
+from application.utils import (
+    generate_random_string,
+    login_required,
+    populate_object,
+    set_organisations,
+)
 
 document = Blueprint(
     "document",
@@ -41,17 +48,7 @@ def add(local_plan_reference):
         (dt.name, dt.value) for dt in DocumentType.query.all()
     ]
     if form.validate_on_submit():
-        reference = slugify(form.name.data)
-
-        doc = LocalPlanDocument.query.filter(
-            LocalPlanDocument.local_plan == local_plan_reference,
-            LocalPlanDocument.reference == reference,
-        ).one_or_none()
-
-        if doc is not None:
-            form.name.errors.append("Document with this name already exists")
-            return render_template("document/add.html", plan=plan, form=form)
-
+        reference = _make_reference(form, plan.reference)
         doc = LocalPlanDocument(
             reference=reference,
             name=form.name.data,
@@ -132,3 +129,34 @@ def edit(local_plan_reference, reference):
         )
 
     return render_template("document/edit.html", plan=doc.plan, document=doc, form=form)
+
+
+def _make_reference(form, plan_reference):
+    reference = slugify(form.name.data)
+    doc = LocalPlanDocument.query.filter(
+        LocalPlanDocument.local_plan == plan_reference,
+        LocalPlanDocument.reference == reference,
+    ).one_or_none()
+
+    if doc is None:
+        return reference
+
+    reference = slugify(f"{reference}-{plan_reference}")
+    doc = LocalPlanDocument.query.filter(
+        LocalPlanDocument.local_plan == plan_reference,
+        LocalPlanDocument.reference == reference,
+    ).one_or_none()
+
+    if doc is None:
+        return reference
+
+    reference = f"{reference}-{datetime.now().strftime('%Y-%m-%d')}"
+    doc = LocalPlanDocument.query.filter(
+        LocalPlanDocument.local_plan == plan_reference,
+        LocalPlanDocument.reference == reference,
+    ).one_or_none()
+
+    if doc is None:
+        return reference
+
+    return f"{reference}-{generate_random_string(6)}"
