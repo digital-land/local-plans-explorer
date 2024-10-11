@@ -79,38 +79,14 @@
             {% endif %}
           </div>
         </div>
-
-
-           <!--<div id="contact-hint" class="govuk-hint">
-            Select one option.
-          </div>-->
           <div class="govuk-!-margin-top-6">
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="geography-provided-1" name="geography-provided" type="radio" value="yes">
-              <label class="govuk-label govuk-radios__label" for="geography-provided-1">
-                Yes
-              </label>
-            </div>
-            <div class="govuk-radios" data-module="govuk-radios">
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="geography-provided-2" name="geography-provided" type="radio" value="no" data-aria-controls="conditional-geography">
-                <label class="govuk-label govuk-radios__label" for="geography-provided-2">
-                  No
+
+            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+              <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="geography-provided" name="geography-provided" type="checkbox" value="geography-provided">
+                <label class="govuk-label govuk-checkboxes__label" for="geography-provided">
+                  Use this area? <span class="govuk-hint">If you don't check this box you'll be able to add an area later.
                 </label>
-              </div>
-              <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-geography">
-                <div class="govuk-form-group">
-                  <label class="govuk-label" for="file-upload">
-                    Upload shapefile
-                  </label>
-                  <input class="govuk-file-upload" id="file-upload" name="fileUpload" type="file">
-                </div>
-                <div class="govuk-form-group">
-                  <label class="govuk-label" for="designated-plan-area">
-                    Area name
-                  </label>
-                  <input class="govuk-input" id="designated-plan-area" name="designated-plan-area" type="text">
-                </div>
               </div>
             </div>
           </div>

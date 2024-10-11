@@ -284,8 +284,8 @@ def add_geography(reference):
         return abort(404)
 
     if request.method == "POST":
-        geography_provided = request.form.get("geography-provided")
-        if geography_provided == "yes":
+        geography_provided = request.form.get("geography-provided", None)
+        if geography_provided is not None:
             geographies = [
                 _make_collection(org.geojson)
                 for org in plan.organisations
@@ -323,39 +323,65 @@ def add_geography(reference):
             db.session.add(boundary)
             db.session.commit()
             return redirect(url_for("local_plan.get_plan", reference=plan.reference))
+    # Don't include file upload at this stage
+    # else:
+    #     if "fileUpload" in request.files:
+    #         file = request.files["fileUpload"]
+    #         reference = (
+    #             request.form["designated-plan-area"].replace(" ", "-").lower()
+    #         )
+    #         if file and _allowed_file(file.filename):
+    #             with TemporaryDirectory() as tempdir:
+    #                 filename = secure_filename(file.filename)
+    #                 shapefile_path = os.path.join(tempdir, filename)
+    #                 file.save(shapefile_path)
+    #                 gdf = gpd.read_file(shapefile_path)
+    #                 geojson = gdf.to_crs(epsg="4326").to_json()
+    #                 boundary = LocalPlanBoundary(
+    #                     reference=reference,
+    #                     geojson=json.loads(geojson),
+    #                     plan_boundary_type="combined-planning-authority-district"
+    #                 )
+    #                 plan.geography = boundary
+    #                 boundary.local_plans.append(plan)
+    #                 db.session.add(plan)
+    #                 db.session.add(boundary)
+    #                 db.session.commit()
+    #
+    #         return redirect(url_for("development_plan.plan", reference=plan.reference))
+    #
 
-    else:
-        geographies = []
-        references = []
-        missing_geographies = []
+    geographies = []
+    references = []
+    missing_geographies = []
 
-        for org in plan.organisations:
-            if org.geometry is not None:
-                references.append(org.statistical_geography)
-                geographies.append(_make_collection(org.geojson))
-            else:
-                missing_geographies.append(org)
-        if geographies:
-            geography = combine_geographies(geographies)
-            geography_reference = ":".join(references)
-            gdf = gpd.read_file(json.dumps(geography), driver="GeoJSON")
-            coords = {"lat": gdf.centroid.y[0], "long": gdf.centroid.x[0]}
-            bounding_box = list(gdf.total_bounds)
+    for org in plan.organisations:
+        if org.geometry is not None:
+            references.append(org.statistical_geography)
+            geographies.append(_make_collection(org.geojson))
         else:
-            geography = None
-            geography_reference = None
-            coords = None
-            bounding_box = None
-        return render_template(
-            "local_plan/choose-geography.html",
-            plan=plan,
-            geography=geography,
-            geography_reference=geography_reference,
-            coords=coords,
-            geographies=geographies,
-            missing_geographies=missing_geographies,
-            bounding_box=bounding_box,
-        )
+            missing_geographies.append(org)
+    if geographies:
+        geography = combine_geographies(geographies)
+        geography_reference = ":".join(references)
+        gdf = gpd.read_file(json.dumps(geography), driver="GeoJSON")
+        coords = {"lat": gdf.centroid.y[0], "long": gdf.centroid.x[0]}
+        bounding_box = list(gdf.total_bounds)
+    else:
+        geography = None
+        geography_reference = None
+        coords = None
+        bounding_box = None
+    return render_template(
+        "local_plan/choose-geography.html",
+        plan=plan,
+        geography=geography,
+        geography_reference=geography_reference,
+        coords=coords,
+        geographies=geographies,
+        missing_geographies=missing_geographies,
+        bounding_box=bounding_box,
+    )
 
 
 def _get_document_counts(documents):
@@ -389,3 +415,10 @@ def _make_collection(geojson):
     if geojson["type"] == "FeatureCollection":
         return geojson
     return {}
+
+
+def _allowed_file(filename):
+    from flask import current_app
+
+    ALLOWED_EXTENSIONS = current_app.config["ALLOWED_EXTENSIONS"]
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
