@@ -53,7 +53,7 @@
             <h3 class="govuk-heading-s">Why are we showing this area?</h3>
             {% if plan.organisations|length == 1 %}
               {% if geographies %}
-              <p class="govuk-body">This is the planning authority district for {{ plan.organisations[0].name }}</p>
+              <p class="govuk-body-s">This is the planning authority district for {{ plan.organisations[0].name }}</p>
               {% else %}
               <p class="govuk-body app-warning">We weren't able to find the planning authority district for {{ plan.organisations[0].name }}</p>
               {% endif %}
@@ -80,46 +80,33 @@
           </div>
         </div>
           <div class="govuk-!-margin-top-6">
-
             <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+              <div id="geography-provided-hint" class="govuk-hint">
+                Confirm the area is correct or skip and add one later
+              </div>
               <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="geography-provided" name="geography-provided" type="checkbox" value="geography-provided">
                 <label class="govuk-label govuk-checkboxes__label" for="geography-provided">
-                  Use this area? <span class="govuk-hint">If you don't check this box you'll be able to add an area later.
+                  Area is correct
                 </label>
               </div>
             </div>
+
           </div>
         </fieldset>
       </div>
       {% else %}
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          <div class="govuk-warning-text">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-              <span class="govuk-warning-text__assistive">Warning</span>
-              We don't have any boundaries for the authoring planning authorities. Please provide one.
-            </strong>
-          </div>
-
-          <div class="govuk-form-group">
-            <input id="geography-provided" type="hidden" name="geography-provided" value="no">
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="file-upload">
-                Upload shapefile
-              </label>
-              <input class="govuk-file-upload" id="file-upload" name="fileUpload" type="file">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-warning-text">
+              <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+              <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                We don't have any boundaries for the authoring planning authorities. Please provide one.
+              </strong>
             </div>
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="designated-plan-area">
-                Area name
-              </label>
-              <input class="govuk-input" id="designated-plan-area" name="designated-plan-area" type="text">
-            </div>
-          </div>
-        </div><!-- end .govuk-grid-column-two-thirds -->
-      </div><!-- end .govuk-grid-row -->
+          </div><!-- end .govuk-grid-column-two-thirds -->
+        </div><!-- end .govuk-grid-row -->
 
       {% endif %}
 

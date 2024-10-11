@@ -323,6 +323,8 @@ def add_geography(reference):
             db.session.add(boundary)
             db.session.commit()
             return redirect(url_for("local_plan.get_plan", reference=plan.reference))
+        else:
+            return redirect(url_for("local_plan.get_plan", reference=plan.reference))
     # Don't include file upload at this stage
     # else:
     #     if "fileUpload" in request.files:
