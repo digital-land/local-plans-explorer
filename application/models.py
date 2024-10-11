@@ -145,6 +145,12 @@ class LocalPlan(BaseModel):
         back_populates="plan", lazy="joined"
     )
 
+    def unprocessed_canidate_documents(self):
+        return CandidateDocument.query.filter(
+            CandidateDocument.local_plan == self.reference,
+            CandidateDocument.status.is_(None),
+        ).all()
+
 
 class LocalPlanDocument(BaseModel):
     __tablename__ = "local_plan_document"

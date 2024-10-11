@@ -85,6 +85,7 @@ def add():
             reference=reference,
         )
         populate_object(form, plan)
+        # TODO: add boundary - default will be the organisation/organisatios boundary - combined if necessary
         db.session.add(plan)
         db.session.commit()
         return redirect(url_for("local_plan.get_plan", reference=plan.reference))
@@ -228,6 +229,7 @@ def accept_document(reference, doc_id):
             return redirect(
                 url_for("local_plan.find_documents", reference=plan.reference)
             )
+        return redirect(url_for("local_plan.get_plan", reference=plan.reference))
 
     return render_template(
         "document/add.html",
