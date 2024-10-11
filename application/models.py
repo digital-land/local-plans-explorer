@@ -1,9 +1,10 @@
 import datetime
+import uuid
 from enum import Enum
 from typing import List, Optional
 
 from sqlalchemy import Date, ForeignKey, Integer, Text
-from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from application.extensions import db
@@ -16,7 +17,7 @@ class Status(Enum):
     PUBLISHED = "Published"
 
 
-class CandidateDocumentStatus(Enum):
+class DocumentStatus(Enum):
     ACCEPT = "Accept"
     REJECT = "Reject"
 
@@ -140,7 +141,7 @@ class LocalPlan(BaseModel):
         ENUM(Status), default=Status.FOR_REVIEW
     )
 
-    candidate_documents: Mapped[List["CandidateLocalPlanDocument"]] = relationship(
+    candidate_documents: Mapped[List["CandidateDocument"]] = relationship(
         back_populates="plan", lazy="joined"
     )
 
@@ -167,18 +168,23 @@ class LocalPlanDocument(BaseModel):
     status: Mapped[Status] = mapped_column(ENUM(Status), default=Status.FOR_REVIEW)
 
 
-class CandidateLocalPlanDocument(BaseModel):
-    local_plan: Mapped[str] = mapped_column(
-        ForeignKey("local_plan.reference"), primary_key=True
+class CandidateDocument(db.Model):
+    id: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
+    name: Mapped[Optional[str]] = mapped_column(Text)
+    local_plan: Mapped[str] = mapped_column(ForeignKey("local_plan.reference"))
     plan: Mapped["LocalPlan"] = relationship(
         back_populates="candidate_documents", lazy="joined"
     )
     documentation_url: Mapped[Optional[str]] = mapped_column(Text)
     document_url: Mapped[Optional[str]] = mapped_column(Text)
     document_type: Mapped[Optional[str]] = mapped_column(Text)
-    status: Mapped[Optional[CandidateDocumentStatus]] = mapped_column(
-        ENUM(CandidateDocumentStatus), nullable=True
+    status: Mapped[Optional[DocumentStatus]] = mapped_column(
+        ENUM(DocumentStatus), nullable=True
+    )
+    entry_date: Mapped[datetime.date] = mapped_column(
+        Date, default=datetime.datetime.today
     )
 
 

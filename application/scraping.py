@@ -3,7 +3,6 @@ from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
-from slugify import slugify
 from thefuzz import process
 
 
@@ -27,7 +26,6 @@ def extract_links_from_page(url, plan, reference_data):
             document_links.append(
                 {
                     "name": name,
-                    "reference": slugify(name),
                     "local_plan": plan.reference,
                     "document_url": document_url,
                     "documentation_url": url,
