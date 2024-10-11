@@ -20,6 +20,7 @@ def create_app(config_filename):
     register_context_processors(app)
     register_commands(app)
     register_filters(app)
+    register_globals(app)
     return app
 
 
@@ -130,3 +131,9 @@ def register_filters(app):
 
     app.add_template_filter(get_date_part, name="date_part")
     app.add_template_filter(get_status_colour, name="status_colour")
+
+
+def register_globals(app):
+    from digital_land_frontend.globals import random_int
+
+    app.jinja_env.globals.update(random_int=random_int)

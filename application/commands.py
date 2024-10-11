@@ -18,7 +18,6 @@ from application.export import (
 )
 from application.extensions import db
 from application.models import (
-    DocumentType,
     LocalPlan,
     LocalPlanBoundary,
     LocalPlanDocument,
@@ -150,9 +149,10 @@ def _get_geography(reference):
             print("No entities found for url", resp.url)
             return None
         point = data["entities"][0].get("point")
-        geojson_url = "https://www.planning.data.gov.uk/entity.geojson"
+        entity = data["entities"][0].get("entity")
+        geojson_url = f"https://www.planning.data.gov.uk/entity/{entity}.geojson"
         try:
-            resp = requests.get(geojson_url, params=params)
+            resp = requests.get(geojson_url)
             resp.raise_for_status()
             geography = {
                 "geojson": resp.json(),
@@ -574,14 +574,3 @@ def set_org_websites():
         except Exception as e:
             print(f"Error fetching data for {org.organisation}: {e}")
             continue
-
-
-@data_cli.command("scrape-docs")
-def scrape_docs():
-    from application.scraping import extract_links_from_page
-
-    document_types = [doc.value for doc in DocumentType.query.all()]
-    url = "https://www.arun.gov.uk/adopted-local-plan/"
-    reference = "test-of-a-new-plan-record"
-    link_data = extract_links_from_page(url, reference, document_types)
-    print(link_data)

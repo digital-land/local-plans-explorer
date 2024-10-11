@@ -28,15 +28,20 @@ def get_plans_with_documents_for_review():
     return LocalPlan.query.filter(LocalPlan.status == Status.FOR_REVIEW).all()
 
 
-def combine_feature_collections(feature_collections):
+def combine_geographies(geographies):
     combined_features = []
 
-    for fc in feature_collections:
-        combined_features.extend(fc["features"])
+    for geojson in geographies:
+        if geojson["type"] == "FeatureCollection":
+            combined_features.extend(geojson["features"])
+        elif geojson["type"] == "Feature":
+            combined_features.append(geojson)
+        else:
+            raise ValueError(f"Unsupported GeoJSON type: {geojson['type']}")
 
-    combined_fc = {"type": "FeatureCollection", "features": combined_features}
+    combined_geographies = {"type": "FeatureCollection", "features": combined_features}
 
-    return combined_fc
+    return combined_geographies
 
 
 def adopted_plan_count():

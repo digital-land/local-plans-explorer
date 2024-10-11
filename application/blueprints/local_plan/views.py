@@ -1,3 +1,7 @@
+import json
+from datetime import datetime
+
+import geopandas as gpd
 from flask import Blueprint, abort, redirect, render_template, request, url_for
 from slugify import slugify
 
@@ -9,11 +13,18 @@ from application.models import (
     DocumentStatus,
     DocumentType,
     LocalPlan,
+    LocalPlanBoundary,
     LocalPlanDocument,
     Organisation,
     Status,
 )
-from application.utils import get_centre_and_bounds, login_required, populate_object
+from application.utils import (
+    combine_geographies,
+    generate_random_string,
+    get_centre_and_bounds,
+    login_required,
+    populate_object,
+)
 
 local_plan = Blueprint("local_plan", __name__, url_prefix="/local-plan")
 
@@ -77,18 +88,15 @@ def add():
     form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
 
     if form.validate_on_submit():
-        reference = slugify(form.name.data)
-
-        # TODO: check if reference already exists and if so append something - maybe the plan period?
-
+        reference = _make_reference(form)
         plan = LocalPlan(
             reference=reference,
         )
         populate_object(form, plan)
-        # TODO: add boundary - default will be the organisation/organisatios boundary - combined if necessary
+
         db.session.add(plan)
         db.session.commit()
-        return redirect(url_for("local_plan.get_plan", reference=plan.reference))
+        return redirect(url_for("local_plan.add_geography", reference=plan.reference))
 
     return render_template("local_plan/add.html", form=form, organisation=org)
 
@@ -268,8 +276,116 @@ def reject_document(reference, doc_id):
     return redirect(url_for("local_plan.get_plan", reference=plan.reference))
 
 
+@local_plan.route("/<string:reference>/geography/add", methods=["GET", "POST"])
+@login_required
+def add_geography(reference):
+    plan = LocalPlan.query.get(reference)
+    if plan is None:
+        return abort(404)
+
+    if request.method == "POST":
+        geography_provided = request.form.get("geography-provided")
+        if geography_provided == "yes":
+            geographies = [
+                _make_collection(org.geojson)
+                for org in plan.organisations
+                if org.geojson is not None
+            ]
+
+            if len(plan.organisations) == 1:
+                reference = (
+                    plan.organisations[0].statistical_geography
+                    if plan.organisations[0].geojson is not None
+                    else None
+                )
+                geography_type = "planning-authority-district"
+            else:
+                reference = ":".join(
+                    [
+                        org.statistical_geography
+                        for org in plan.organisations
+                        if org.geojson is not None
+                    ]
+                )
+                geography_type = "combined-planning-authority-district"
+
+            geojson = combine_geographies(geographies)
+            boundary = LocalPlanBoundary.query.get(reference)
+            if boundary is None:
+                boundary = LocalPlanBoundary(
+                    reference=reference,
+                    geojson=geojson,
+                    plan_boundary_type=geography_type,
+                )
+            plan.boundary = boundary
+            boundary.local_plans.append(plan)
+            db.session.add(plan)
+            db.session.add(boundary)
+            db.session.commit()
+            return redirect(url_for("local_plan.get_plan", reference=plan.reference))
+
+    else:
+        geographies = []
+        references = []
+        missing_geographies = []
+
+        for org in plan.organisations:
+            if org.geometry is not None:
+                references.append(org.statistical_geography)
+                geographies.append(_make_collection(org.geojson))
+            else:
+                missing_geographies.append(org)
+        if geographies:
+            geography = combine_geographies(geographies)
+            geography_reference = ":".join(references)
+            gdf = gpd.read_file(json.dumps(geography), driver="GeoJSON")
+            coords = {"lat": gdf.centroid.y[0], "long": gdf.centroid.x[0]}
+            bounding_box = list(gdf.total_bounds)
+        else:
+            geography = None
+            geography_reference = None
+            coords = None
+            bounding_box = None
+        return render_template(
+            "local_plan/choose-geography.html",
+            plan=plan,
+            geography=geography,
+            geography_reference=geography_reference,
+            coords=coords,
+            geographies=geographies,
+            missing_geographies=missing_geographies,
+            bounding_box=bounding_box,
+        )
+
+
 def _get_document_counts(documents):
     counts = {}
     for status in Status:
         counts[status.value] = len([doc for doc in documents if doc.status == status])
     return counts
+
+
+def _make_reference(form):
+    reference = slugify(form.name.data)
+    if LocalPlan.query.get(reference) is None:
+        return reference
+
+    reference = slugify(
+        f"{reference}-{form.period_start_date.data}-{form.period_end_date.data}"
+    )
+    if LocalPlan.query.get(reference) is None:
+        return reference
+
+    reference = f"{reference}-{datetime.now().strftime('%Y-%m-%d')}"
+    if LocalPlan.query.get(reference) is None:
+        return reference
+
+    return f"{reference}-{generate_random_string(6)}"
+
+
+def _make_collection(geojson):
+    if geojson["type"] == "Feature":
+        return {"type": "FeatureCollection", "features": [geojson]}
+    if geojson["type"] == "FeatureCollection":
+        return geojson
+    return {}
