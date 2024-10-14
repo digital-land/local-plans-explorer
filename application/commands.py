@@ -327,6 +327,7 @@ def export_data():
                 for local_plan in boundary.local_plans:
                     local_plan.boundary_status = Status.PUBLISHED
                     db.session.add(local_plan)
+        db.session.commit()
         print(f"{len(boundaries)} local plan boundaries exported")
         updated_data = True
 
