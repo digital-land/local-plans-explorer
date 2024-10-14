@@ -421,7 +421,7 @@ def set_default_boundaries():
 
     orgs = Organisation.query.filter(Organisation.geometry.isnot(None)).all()
     for org in orgs:
-        reference = f"{org.organisation}:statistical-geography"
+        reference = org.statistical_geography
         boundary = LocalPlanBoundary.query.get(reference)
         if boundary is None:
             boundary = LocalPlanBoundary(

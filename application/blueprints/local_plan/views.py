@@ -300,7 +300,7 @@ def add_geography(reference):
                 )
                 geography_type = "planning-authority-district"
             else:
-                reference = ":".join(
+                reference = "-".join(
                     [
                         org.statistical_geography
                         for org in plan.organisations

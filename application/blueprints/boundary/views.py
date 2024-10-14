@@ -114,7 +114,7 @@ def edit(local_plan_reference, reference):
                 db.session.add(lp_boundary)
             else:
                 print("Create a new boundary")
-                reference = slugify(f"{form.name.data}:{generate_random_string()}")
+                reference = slugify(f"{form.name.data}-{generate_random_string()}")
                 geometry = _convert_to_wkt(form_geojson)
 
                 lp_boundary = LocalPlanBoundary(
