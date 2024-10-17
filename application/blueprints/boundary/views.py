@@ -96,7 +96,7 @@ def edit(local_plan_reference, reference):
     )
     organisation_choices = [(org.organisation, org.name) for org in organisations]
     form.organisations.choices = organisation_choices
-    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
+    form.status.choices = [(s.name, s.value) for s in Status if s != Status.EXPORTED]
 
     if form.validate_on_submit():
         geojson = form.geojson.data
@@ -129,8 +129,8 @@ def edit(local_plan_reference, reference):
                     set_organisations(lp_boundary, form.organisations.data)
                 lp_boundary.local_plans.append(plan)
 
-            if form.status.data == Status.FOR_PUBLICATION.name:
-                plan.boundary_status = Status.FOR_PUBLICATION
+            if form.status.data == Status.FOR_PLATFORM.name:
+                plan.boundary_status = Status.FOR_PLATFORM
                 db.session.add(plan)
 
             db.session.add(lp_boundary)

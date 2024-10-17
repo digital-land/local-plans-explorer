@@ -58,7 +58,7 @@ def add(local_plan_reference):
             document_url=form.document_url.data,
         )
         if form.for_publication.data:
-            doc.status = Status.FOR_PUBLICATION
+            doc.status = Status.FOR_PLATFORM
         if form.organisations.data:
             set_organisations(doc, form.organisations.data)
         if form.document_types.data:
@@ -114,7 +114,7 @@ def edit(local_plan_reference, reference):
     organisation_choices = [(org.organisation, org.name) for org in organisations]
 
     form.organisations.choices = organisation_choices
-    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
+    form.status.choices = [(s.name, s.value) for s in Status if s != Status.EXPORTED]
     form.document_types.choices = [
         (dt.name, dt.value)
         for dt in DocumentType.query.order_by(DocumentType.value).all()

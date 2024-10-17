@@ -12,9 +12,9 @@ from application.extensions import db
 
 class Status(Enum):
     FOR_REVIEW = "For review"
-    FOR_PUBLICATION = "For publication"
-    NOT_FOR_PUBLICATION = "Not for publication"
-    PUBLISHED = "Published"
+    FOR_PLATFORM = "For platform"
+    NOT_FOR_PLATFORM = "Not for platform"
+    EXPORTED = "Exported"
 
 
 class DocumentStatus(Enum):

@@ -250,7 +250,7 @@ def export_data():
 
     local_plans = (
         LocalPlan.query.filter(
-            LocalPlan.status.in_([Status.FOR_PUBLICATION, Status.PUBLISHED])
+            LocalPlan.status.in_([Status.FOR_PLATFORM, Status.EXPORTED])
         )
         .order_by(LocalPlan.reference)
         .all()
@@ -265,12 +265,12 @@ def export_data():
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             for obj in local_plans:
-                if obj.boundary_status in [Status.FOR_PUBLICATION, Status.PUBLISHED]:
+                if obj.boundary_status in [Status.FOR_PLATFORM, Status.EXPORTED]:
                     boundaries_to_export.add(obj.local_plan_boundary)
                 m = LocalPlanModel.model_validate(obj)
                 data = m.model_dump(by_alias=True)
                 writer.writerow(data)
-                obj.status = Status.PUBLISHED
+                obj.status = Status.EXPORTED
                 db.session.add(obj)
                 db.session.commit()
         print(f"{len(local_plans)} local plans exported")
@@ -282,8 +282,8 @@ def export_data():
         select(LocalPlanDocument)
         .join(LocalPlan, LocalPlanDocument.plan)
         .where(
-            LocalPlanDocument.status.in_([Status.FOR_PUBLICATION, Status.PUBLISHED]),
-            LocalPlan.status.in_([Status.FOR_PUBLICATION, Status.PUBLISHED]),
+            LocalPlanDocument.status.in_([Status.FOR_PLATFORM, Status.EXPORTED]),
+            LocalPlan.status.in_([Status.FOR_PLATFORM, Status.EXPORTED]),
         )
         .options(joinedload(LocalPlanDocument.plan))
         .order_by(LocalPlanDocument.reference)
@@ -301,7 +301,7 @@ def export_data():
                 m = LocalPlanDocumentModel.model_validate(doc)
                 data = m.model_dump(by_alias=True)
                 writer.writerow(data)
-                doc.status = Status.PUBLISHED
+                doc.status = Status.EXPORTED
                 db.session.add(doc)
                 db.session.commit()
             print(f"{len(local_plan_documents)} local plan documents exported")
@@ -325,7 +325,7 @@ def export_data():
                 data = m.model_dump(by_alias=True)
                 writer.writerow(data)
                 for local_plan in boundary.local_plans:
-                    local_plan.boundary_status = Status.PUBLISHED
+                    local_plan.boundary_status = Status.EXPORTED
                     db.session.add(local_plan)
         db.session.commit()
         print(f"{len(boundaries)} local plan boundaries exported")

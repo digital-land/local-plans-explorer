@@ -13,9 +13,9 @@ def get_date_part(d_str, part):
 def get_status_colour(status: Status) -> str:
     if status == Status.FOR_REVIEW:
         return "light-blue"
-    if status == Status.FOR_PUBLICATION:
+    if status == Status.FOR_PLATFORM:
         return "yellow"
-    if status == Status.PUBLISHED:
+    if status == Status.EXPORTED:
         return "green"
-    if status == Status.NOT_FOR_PUBLICATION:
+    if status == Status.NOT_FOR_PLATFORM:
         return "red"

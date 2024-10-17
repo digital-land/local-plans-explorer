@@ -85,7 +85,7 @@ def add():
         form.organisations.default = org.organisation
         form.process()
 
-    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
+    form.status.choices = [(s.name, s.value) for s in Status if s != Status.EXPORTED]
 
     if form.validate_on_submit():
         reference = _make_reference(form)
@@ -125,7 +125,7 @@ def edit(reference):
     organisation_choices = [(org.organisation, org.name) for org in organisations]
     form.organisations.choices = organisation_choices
 
-    form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
+    form.status.choices = [(s.name, s.value) for s in Status if s != Status.EXPORTED]
 
     if form.validate_on_submit():
         plan = populate_object(form, plan)
