@@ -11,7 +11,7 @@
       {{ form.hidden_tag() }}
       {% for field in form %}
         {# the fields listed are either not shown or handled individually #}
-        {% if field.name not in ['status', 'csrf_token', 'include_in_dataset'] %}
+        {% if field.name not in ['status', 'csrf_token'] %}
           {%- if field.name == 'organisations' %}
             <div class="app-organisation-select" data-module="multi-select">
               <div class="govuk-form-group" data-multi-select="form-group">
@@ -49,6 +49,27 @@
                   </div>
                 </fieldset>
               </div>
+            {%- elif field.name == 'for_publication' %}
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset" aria-describedby="ready-for-publication-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                  <p class="govuk-fieldset__heading">
+                    Set publication status
+                  </p>
+                </legend>
+                <div id="document-types-hint" class="govuk-hint">
+                  Select this if the document is ready for publication.
+                </div>
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                  <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="for_publication" name="for_publication" type="checkbox" value="for_publication">
+                    <label class="govuk-label govuk-checkboxes__label" for="for_publication">
+                      {{ field.label }}
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
           {% else %}
           <div class="govuk-form-group{{ ' govuk-form-group--error' if field.errors }}">
             {{ field.label(class='govuk-label') }}

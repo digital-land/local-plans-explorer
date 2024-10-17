@@ -1,5 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import RadioField, SelectMultipleField, StringField, TextAreaField
+from wtforms import (
+    BooleanField,
+    RadioField,
+    SelectMultipleField,
+    StringField,
+    TextAreaField,
+)
 from wtforms.validators import URL, DataRequired, Optional, Regexp
 
 
@@ -26,6 +32,7 @@ class DocumentForm(FlaskForm):
     document_types = SelectMultipleField(
         "Select one or more document types", validators=[Optional()]
     )
+    for_publication = BooleanField("For publication", validators=[Optional()])
 
 
 class EditDocumentForm(DocumentForm):

@@ -57,6 +57,8 @@ def add(local_plan_reference):
             documentation_url=form.documentation_url.data,
             document_url=form.document_url.data,
         )
+        if form.for_publication.data:
+            doc.status = Status.FOR_PUBLICATION
         if form.organisations.data:
             set_organisations(doc, form.organisations.data)
         if form.document_types.data:
