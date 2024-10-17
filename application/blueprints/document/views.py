@@ -45,7 +45,8 @@ def add(local_plan_reference):
     form.organisations.data = organisation__string
 
     form.document_types.choices = [
-        (dt.name, dt.value) for dt in DocumentType.query.all()
+        (dt.name, dt.value)
+        for dt in DocumentType.query.order_by(DocumentType.value).all()
     ]
     if form.validate_on_submit():
         reference = _make_reference(form, plan.reference)
@@ -113,7 +114,8 @@ def edit(local_plan_reference, reference):
     form.organisations.choices = organisation_choices
     form.status.choices = [(s.name, s.value) for s in Status if s != Status.PUBLISHED]
     form.document_types.choices = [
-        (dt.name, dt.value) for dt in DocumentType.query.all()
+        (dt.name, dt.value)
+        for dt in DocumentType.query.order_by(DocumentType.value).all()
     ]
 
     if form.validate_on_submit():
