@@ -11,7 +11,9 @@
             Document
           </h2>
           <div class="app-summary-card__actions">
-            <a href="{{ url_for('document.edit', local_plan_reference=plan.reference, reference=document.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> document</span></a>
+            {%- if not config.AUTHENTICATION_ON or session["user"] %}
+              <a href="{{ url_for('document.edit', local_plan_reference=plan.reference, reference=document.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> document</span></a>
+            {% endif %}
           </div>
         </header>
         <div class="app-summary-card__body">
