@@ -3,7 +3,7 @@ import uuid
 from enum import Enum
 from typing import List, Optional
 
-from sqlalchemy import Date, ForeignKey, Integer, Text
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, Text
 from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -145,6 +145,10 @@ class LocalPlan(BaseModel):
         back_populates="plan", lazy="joined"
     )
 
+    timetable: Mapped[Optional["LocalPlanTimetable"]] = relationship(
+        back_populates="local_plan_obj", uselist=False
+    )
+
     def unprocessed_canidate_documents(self):
         return CandidateDocument.query.filter(
             CandidateDocument.local_plan == self.reference,
@@ -175,6 +179,8 @@ class LocalPlanDocument(BaseModel):
 
 
 class CandidateDocument(db.Model):
+    __tablename__ = "candidate_document"
+
     id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
@@ -227,3 +233,39 @@ class Organisation(DateModel):
         lazy="select",
         back_populates="organisations",
     )
+
+
+class TimetableEventType(db.Model):
+    __tablename__ = "timetable_event_type"
+
+    reference: Mapped[str] = mapped_column(Text, primary_key=True)
+    name: Mapped[Optional[str]] = mapped_column(Text)
+    description: Mapped[Optional[str]] = mapped_column(Text)
+
+
+class TimetableEvent(db.Model):
+    __tablename__ = "timetable_event"
+
+    id: Mapped[uuid.uuid4] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    event_type: Mapped[str] = mapped_column(
+        ForeignKey("timetable_event_type.reference")
+    )
+    event_date: Mapped[Optional[str]] = mapped_column(Text)
+    created_date: Mapped[datetime.datetime] = mapped_column(
+        DateTime, default=datetime.datetime.now
+    )
+    local_plan_timetable: Mapped[str] = mapped_column(
+        ForeignKey("local_plan_timetable.reference")
+    )
+
+
+class LocalPlanTimetable(DateModel):
+    __tablename__ = "local_plan_timetable"
+
+    reference: Mapped[str] = mapped_column(Text, primary_key=True)
+    name: Mapped[Optional[str]] = mapped_column(Text)
+    local_plan: Mapped[str] = mapped_column(ForeignKey("local_plan.reference"))
+    local_plan_obj: Mapped["LocalPlan"] = relationship(back_populates="timetable")
+    events: Mapped[List["TimetableEvent"]] = relationship(lazy="joined")

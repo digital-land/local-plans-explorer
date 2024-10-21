@@ -1,12 +1,15 @@
 import base64
 import csv
 import os
+from datetime import datetime
 from pathlib import Path
 
 import click
 import github
 import requests
+from flask import current_app
 from flask.cli import AppGroup
+from slugify import slugify
 from sqlalchemy import not_, select, text
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import joinedload
@@ -21,8 +24,11 @@ from application.models import (
     LocalPlan,
     LocalPlanBoundary,
     LocalPlanDocument,
+    LocalPlanTimetable,
     Organisation,
     Status,
+    TimetableEvent,
+    TimetableEventType,
     document_organisation,
 )
 
@@ -480,8 +486,6 @@ def load_db_backup():
     import sys
     import tempfile
 
-    from flask import current_app
-
     # check heroku cli installed
     result = subprocess.run(["which", "heroku"], capture_output=True, text=True)
 
@@ -575,3 +579,126 @@ def set_org_websites():
         except Exception as e:
             print(f"Error fetching data for {org.organisation}: {e}")
             continue
+
+
+@data_cli.command("timetable-events")
+def load_timetable_events():
+    current_file_path = Path(__file__).resolve()
+    data_directory = os.path.join(current_file_path.parent.parent, "data")
+    file_path = os.path.join(data_directory, "timetable-event.csv")
+    insert = "INSERT INTO timetable_event_type (name, reference, description) VALUES (:name, :reference, :description)"
+    insert = f"{insert} ON CONFLICT DO NOTHING"
+    with open(file_path, mode="r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            sql = text(insert)
+            db.session.execute(sql, row)
+    db.session.commit()
+
+
+@data_cli.command("housing-numbers-data")
+def load_housing_numbers_data():
+    current_file_path = Path(__file__).resolve()
+    data_directory = os.path.join(current_file_path.parent.parent, "data")
+    file_path = os.path.join(data_directory, "local-plan-housing-numbers-prototype.csv")
+
+    with open(file_path, mode="r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            documentation_url = row.get("documentation_url")
+            if documentation_url.endswith("/"):
+                documentation_url = documentation_url[:-1]
+            if documentation_url:
+                plan = LocalPlan.query.filter(
+                    LocalPlan.documentation_url == documentation_url
+                ).first()
+                if plan is None:
+                    org = Organisation.query.filter_by(
+                        organisation=row["organisation"]
+                    ).one_or_none()
+                    if org is not None:
+                        reference = _make_reference(
+                            row.get("name"),
+                            row.get("period_start_date"),
+                            row.get("period_end_date"),
+                            org,
+                        )
+                        plan = LocalPlan(
+                            reference=reference,
+                            documentation_url=documentation_url,
+                            name=row.get("name"),
+                            period_start_date=(
+                                row.get("period_start_date")
+                                if row.get("period_start_date")
+                                else None
+                            ),
+                            period_end_date=(
+                                row.get("period_end_date")
+                                if row.get("period_end_date")
+                                else None
+                            ),
+                            adopted_date=(
+                                row.get("adopted_date")
+                                if row.get("adopted_date")
+                                else None
+                            ),
+                            organisations=[org],
+                        )
+                        db.session.add(plan)
+                        dates = [
+                            "published_date",
+                            "sound_date",
+                            "submitted_date",
+                            "adopted_date",
+                        ]
+                        event_types = {
+                            "published_date": "reg-19-publication-local-plan-published",
+                            "sound_date": "planning‑inspectorate‑found‑sound",
+                            "submitted_date": "submit‑plan‑for‑examination",
+                            "adopted_date": "plan‑adopted",
+                        }
+
+                        events = []
+                        for date_field in dates:
+                            date_value = row.get(date_field)
+                            if date_value:
+                                event_type = TimetableEventType.query.filter(
+                                    TimetableEventType.reference
+                                    == event_types[date_field]
+                                ).one_or_none()
+                                if event_type:
+                                    event = TimetableEvent(
+                                        event_type=event_type.reference,
+                                        event_date=date_value,
+                                    )
+                                    events.append(event)
+                        if events:
+                            reference = f"{plan.reference}-timetable"
+                            timetable = LocalPlanTimetable(
+                                reference=reference,
+                                events=events,
+                                local_plan=plan.reference,
+                            )
+                            plan.timetable = timetable
+                            db.session.add(timetable)
+                        db.session.commit()
+
+
+def _make_reference(name, period_start_date, period_end_date, organisation):
+    reference = slugify(name)
+    if LocalPlan.query.get(reference) is None:
+        return reference
+
+    reference = slugify(f"{organisation.name}-{name}")
+    if LocalPlan.query.get(reference) is None:
+        return reference
+
+    reference = slugify(f"{reference}-{period_start_date}-{period_end_date}")
+    if LocalPlan.query.get(reference) is None:
+        return reference
+
+    reference = f"{reference}-{datetime.now().strftime('%Y-%m-%d')}"
+    if LocalPlan.query.get(reference) is None:
+        return reference
+
+    return reference
