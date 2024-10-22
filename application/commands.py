@@ -441,12 +441,15 @@ def set_default_boundaries():
             )
             boundary.organisations.append(org)
 
-            for plan in org.local_plans:
+        for plan in org.local_plans:
+            if plan.local_plan_boundary is None:
+                plan.local_plan_boundary = boundary.reference
+                plan.boundary_status = Status.FOR_REVIEW
                 boundary.local_plans.append(plan)
+                print("Boundary set for plan", plan.reference)
 
-            db.session.add(boundary)
-            db.session.commit()
-            print("Boundary created for", org.organisation)
+        db.session.add(boundary)
+        db.session.commit()
 
     print("Default boundaries set")
 
