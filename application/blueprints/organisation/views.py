@@ -22,8 +22,8 @@ def organisations():
         orgs = (
             Organisation.query.options(
                 load_only(
-                    Organisation.name, Organisation.end_date
-                ),  # Only load name and end_date
+                    Organisation.name, Organisation.end_date, Organisation.organisation
+                ),
                 joinedload(Organisation.local_plans),
                 noload(Organisation.local_plan_boundaries),
                 noload(Organisation.local_plan_documents),
