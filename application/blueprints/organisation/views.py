@@ -1,4 +1,5 @@
 from flask import Blueprint, abort, redirect, render_template, request, url_for
+from sqlalchemy.orm import joinedload, load_only, noload
 
 from application.models import LocalPlan, Organisation, Status
 
@@ -19,15 +20,31 @@ def organisations():
     if plan_status_filter and plan_status_filter != "all":
         status = Status[plan_status_filter]
         orgs = (
-            Organisation.query.filter(Organisation.end_date.is_(None))
+            Organisation.query.options(
+                load_only(
+                    Organisation.name, Organisation.end_date
+                ),  # Only load name and end_date
+                joinedload(Organisation.local_plans),
+                noload(Organisation.local_plan_boundaries),
+                noload(Organisation.local_plan_documents),
+            )
+            .filter(Organisation.end_date.is_(None))
             .filter(Organisation.local_plans.any(LocalPlan.status == status))
             .order_by(Organisation.name)
             .all()
         )
     else:
         orgs = (
-            Organisation.query.filter(Organisation.end_date.is_(None))
-            .order_by(Organisation.name)
+            Organisation.query.options(
+                load_only(
+                    Organisation.name, Organisation.end_date, Organisation.organisation
+                ),
+                joinedload(Organisation.local_plans),
+                noload(Organisation.local_plan_boundaries),
+                noload(Organisation.local_plan_documents),
+            )
+            .filter(Organisation.end_date.is_(None))  # Filter on end_date
+            .order_by(Organisation.name)  # Order by name
             .all()
         )
 

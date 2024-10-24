@@ -37,14 +37,24 @@ class DateModel(db.Model):
         Date, default=datetime.datetime.today
     )
     start_date: Mapped[Optional[datetime.date]] = mapped_column(Date)
-    end_date: Mapped[Optional[datetime.date]] = mapped_column(Date)
+    end_date: Mapped[Optional[datetime.date]] = mapped_column(Date, index=True)
 
 
 local_plan_organisation = db.Table(
     "local_plan_organisation",
-    db.Column("local_plan", Text, ForeignKey("local_plan.reference"), primary_key=True),
     db.Column(
-        "organisation", Text, ForeignKey("organisation.organisation"), primary_key=True
+        "local_plan",
+        Text,
+        ForeignKey("local_plan.reference"),
+        primary_key=True,
+        index=True,
+    ),
+    db.Column(
+        "organisation",
+        Text,
+        ForeignKey("organisation.organisation"),
+        primary_key=True,
+        index=True,
     ),
 )
 
@@ -205,7 +215,7 @@ class Organisation(DateModel):
 
     organisation: Mapped[str] = mapped_column(Text, primary_key=True)
     local_authority_type: Mapped[Optional[str]] = mapped_column(Text)
-    name: Mapped[Optional[dict]] = mapped_column(Text)
+    name: Mapped[Optional[dict]] = mapped_column(Text, index=True)
     official_name: Mapped[Optional[dict]] = mapped_column(Text)
     geometry: Mapped[Optional[str]] = mapped_column(Text)
     geojson: Mapped[Optional[dict]] = mapped_column(JSONB)
@@ -223,7 +233,7 @@ class Organisation(DateModel):
     local_plans = db.relationship(
         "LocalPlan",
         secondary=local_plan_organisation,
-        lazy="joined",
+        lazy="select",
         back_populates="organisations",
     )
 
