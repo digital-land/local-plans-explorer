@@ -22,14 +22,6 @@ class DocumentStatus(Enum):
     REJECT = "Reject"
 
 
-class DocumentType(db.Model):
-    __tablename__ = "document_type"
-
-    name: Mapped[str] = mapped_column(Text, primary_key=True)
-    value: Mapped[str] = mapped_column(Text)
-    description: Mapped[Optional[str]] = mapped_column(Text)
-
-
 class DateModel(db.Model):
     __abstract__ = True
 
