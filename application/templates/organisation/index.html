@@ -83,7 +83,7 @@
                   {% for plan in organisation.local_plans %}
                     {% if not plan_status_filter or plan_status_filter == plan.status.name or plan_status_filter == 'all' %}
                         <li>
-                          <a href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}" class="govuk-link">{{ plan.name }}</a>
+                          <a href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}" class="govuk-link">{{ plan.name | truncate(55) }}</a>
                           <span class="govuk-tag govuk-tag--{{plan.status | status_colour }}">{{plan.status.value}}</span>
                         </li>
                     {% endif %}
