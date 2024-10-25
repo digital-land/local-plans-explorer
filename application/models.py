@@ -99,6 +99,10 @@ class BaseModel(DateModel):
     description: Mapped[Optional[str]] = mapped_column(Text)
 
 
+class LocalPlanDocumentType(BaseModel):
+    __tablename__ = "local_plan_document_type"
+
+
 class LocalPlanBoundary(BaseModel):
     __tablename__ = "local_plan_boundary"
 
@@ -245,22 +249,18 @@ class Organisation(DateModel):
     )
 
 
-class TimetableEventType(db.Model):
-    __tablename__ = "timetable_event_type"
-
-    reference: Mapped[str] = mapped_column(Text, primary_key=True)
-    name: Mapped[Optional[str]] = mapped_column(Text)
-    description: Mapped[Optional[str]] = mapped_column(Text)
+class LocalPlanEventType(BaseModel):
+    __tablename__ = "local_plan_event_type"
 
 
-class TimetableEvent(db.Model):
-    __tablename__ = "timetable_event"
+class LocalPlanEvent(db.Model):
+    __tablename__ = "local_plan_event"
 
     id: Mapped[uuid.uuid4] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     event_type: Mapped[str] = mapped_column(
-        ForeignKey("timetable_event_type.reference")
+        ForeignKey("local_plan_event_type.reference")
     )
     event_date: Mapped[Optional[str]] = mapped_column(Text)
     created_date: Mapped[datetime.datetime] = mapped_column(
@@ -278,4 +278,4 @@ class LocalPlanTimetable(DateModel):
     name: Mapped[Optional[str]] = mapped_column(Text)
     local_plan: Mapped[str] = mapped_column(ForeignKey("local_plan.reference"))
     local_plan_obj: Mapped["LocalPlan"] = relationship(back_populates="timetable")
-    events: Mapped[List["TimetableEvent"]] = relationship(lazy="joined")
+    events: Mapped[List["LocalPlanEvent"]] = relationship(lazy="joined")

@@ -24,11 +24,11 @@ from application.models import (
     LocalPlan,
     LocalPlanBoundary,
     LocalPlanDocument,
+    LocalPlanEvent,
+    LocalPlanEventType,
     LocalPlanTimetable,
     Organisation,
     Status,
-    TimetableEvent,
-    TimetableEventType,
     document_organisation,
 )
 
@@ -456,20 +456,78 @@ def set_default_boundaries():
 
 @data_cli.command("load-doc-types")
 def load_doc_types():
-    current_file_path = Path(__file__).resolve()
-    data_directory = os.path.join(current_file_path.parent.parent, "data")
-    file_path = os.path.join(data_directory, "document-type.csv")
-
-    with open(file_path, mode="r") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            name = row["name"]
-            value = row["value"]
+    document_types_url = (
+        "https://dluhc-datasets.planning-data.dev/dataset/local-plan-document-type.json"
+    )
+    try:
+        resp = requests.get(document_types_url)
+        resp.raise_for_status()
+        data = resp.json()
+        for doc_type in data["records"]:
+            name = doc_type["name"]
+            reference = doc_type["reference"]
+            entry_date = doc_type["entry-date"]
+            end_date = doc_type.get("end-date") if doc_type.get("end-date") else None
             sql = text(
-                "INSERT INTO document_type (name, value) VALUES (:name, :value) ON CONFLICT DO NOTHING"
+                """
+                    INSERT INTO local_plan_document_type (name, reference, entry_date, end_date)
+                    VALUES (:name, :reference, :entry_date, :end_date)
+                    ON CONFLICT (reference)
+                    DO UPDATE
+                    SET end_date = EXCLUDED.end_date;
+                """
             )
-            db.session.execute(sql, {"name": name, "value": value})
-    db.session.commit()
+            db.session.execute(
+                sql,
+                {
+                    "name": name,
+                    "reference": reference,
+                    "entry_date": entry_date,
+                    "end_date": end_date,
+                },
+            )
+        db.session.commit()
+    except requests.exceptions.HTTPError as e:
+        print("Error fetching document types:", e)
+
+
+@data_cli.command("load-event-types")
+def load_event_types():
+    event_types_url = (
+        "https://dluhc-datasets.planning-data.dev/dataset/local-plan-event.json"
+    )
+    try:
+        resp = requests.get(event_types_url)
+        resp.raise_for_status()
+        data = resp.json()
+        for event_type in data["records"]:
+            name = event_type["name"]
+            reference = event_type["reference"]
+            entry_date = event_type["entry-date"]
+            end_date = (
+                event_type.get("end-date") if event_type.get("end-date") else None
+            )
+            sql = text(
+                """
+                    INSERT INTO local_plan_event_type (name, reference, entry_date, end_date)
+                    VALUES (:name, :reference, :entry_date, :end_date)
+                    ON CONFLICT (reference)
+                    DO UPDATE
+                    SET end_date = EXCLUDED.end_date;
+                """
+            )
+            db.session.execute(
+                sql,
+                {
+                    "name": name,
+                    "reference": reference,
+                    "entry_date": entry_date,
+                    "end_date": end_date,
+                },
+            )
+        db.session.commit()
+    except requests.exceptions.HTTPError as e:
+        print("Error fetching event types:", e)
 
 
 @data_cli.command("load-all")
@@ -480,6 +538,7 @@ def load_all(ctx):
     ctx.invoke(load_boundaries)
     ctx.invoke(set_default_boundaries)
     ctx.invoke(load_doc_types)
+    ctx.invoke(load_event_types)
     print("Data load complete")
 
 
@@ -584,23 +643,8 @@ def set_org_websites():
             continue
 
 
-@data_cli.command("timetable-events")
-def load_timetable_events():
-    current_file_path = Path(__file__).resolve()
-    data_directory = os.path.join(current_file_path.parent.parent, "data")
-    file_path = os.path.join(data_directory, "timetable-event.csv")
-    insert = "INSERT INTO timetable_event_type (name, reference, description) VALUES (:name, :reference, :description)"
-    insert = f"{insert} ON CONFLICT DO NOTHING"
-    with open(file_path, mode="r") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            sql = text(insert)
-            db.session.execute(sql, row)
-    db.session.commit()
-
-
-@data_cli.command("housing-numbers-data")
-def load_housing_numbers_data():
+@data_cli.command("housing-numbers-timetable-data")
+def load_housing_numbers_timetable_data():
     current_file_path = Path(__file__).resolve()
     data_directory = os.path.join(current_file_path.parent.parent, "data")
     file_path = os.path.join(data_directory, "local-plan-housing-numbers-prototype.csv")
@@ -615,76 +659,62 @@ def load_housing_numbers_data():
                 plan = LocalPlan.query.filter(
                     LocalPlan.documentation_url == documentation_url
                 ).first()
-                if plan is None:
-                    org = Organisation.query.filter_by(
-                        organisation=row["organisation"]
-                    ).one_or_none()
-                    if org is not None:
-                        reference = _make_reference(
-                            row.get("name"),
-                            row.get("period_start_date"),
-                            row.get("period_end_date"),
-                            org,
-                        )
-                        plan = LocalPlan(
-                            reference=reference,
-                            documentation_url=documentation_url,
-                            name=row.get("name"),
-                            period_start_date=(
-                                row.get("period_start_date")
-                                if row.get("period_start_date")
-                                else None
-                            ),
-                            period_end_date=(
-                                row.get("period_end_date")
-                                if row.get("period_end_date")
-                                else None
-                            ),
-                            adopted_date=(
-                                row.get("adopted_date")
-                                if row.get("adopted_date")
-                                else None
-                            ),
-                            organisations=[org],
-                        )
-                        db.session.add(plan)
-                        dates = [
-                            "published_date",
-                            "sound_date",
-                            "submitted_date",
-                            "adopted_date",
-                        ]
-                        event_types = {
-                            "published_date": "reg-19-publication-local-plan-published",
-                            "sound_date": "planning‑inspectorate‑found‑sound",
-                            "submitted_date": "submit‑plan‑for‑examination",
-                            "adopted_date": "plan‑adopted",
-                        }
+                if plan is not None and plan.timetable is None:
+                    print("Updating plan timetable", plan.reference)
+                    plan.period_start_date = (
+                        (
+                            row.get("period_start_date")
+                            if row.get("period_start_date")
+                            else None
+                        ),
+                    )
+                    plan.period_end_date = (
+                        (
+                            row.get("period_end_date")
+                            if row.get("period_end_date")
+                            else None
+                        ),
+                    )
+                    plan.adopted_date = (
+                        row.get("adopted_date") if row.get("adopted_date") else None
+                    )
+                    db.session.add(plan)
+                    dates = [
+                        "published_date",
+                        "sound_date",
+                        "submitted_date",
+                        "adopted_date",
+                    ]
+                    event_types = {
+                        "published_date": "reg-19-publication-local-plan-published",
+                        "sound_date": "planning‑inspectorate‑found‑sound",
+                        "submitted_date": "submit‑plan‑for‑examination",
+                        "adopted_date": "plan‑adopted",
+                    }
 
-                        events = []
-                        for date_field in dates:
-                            date_value = row.get(date_field)
-                            if date_value:
-                                event_type = TimetableEventType.query.filter(
-                                    TimetableEventType.reference
-                                    == event_types[date_field]
-                                ).one_or_none()
-                                if event_type:
-                                    event = TimetableEvent(
-                                        event_type=event_type.reference,
-                                        event_date=date_value,
-                                    )
-                                    events.append(event)
-                        if events:
-                            reference = f"{plan.reference}-timetable"
-                            timetable = LocalPlanTimetable(
-                                reference=reference,
-                                events=events,
-                                local_plan=plan.reference,
-                            )
-                            plan.timetable = timetable
-                            db.session.add(timetable)
-                        db.session.commit()
+                    events = []
+                    for date_field in dates:
+                        date_value = row.get(date_field)
+                        if date_value:
+                            event_type = LocalPlanEventType.query.filter(
+                                LocalPlanEventType.reference == event_types[date_field]
+                            ).one_or_none()
+                            if event_type:
+                                event = LocalPlanEvent(
+                                    event_type=event_type.reference,
+                                    event_date=date_value,
+                                )
+                                events.append(event)
+                    if events:
+                        reference = f"{plan.reference}-timetable"
+                        timetable = LocalPlanTimetable(
+                            reference=reference,
+                            events=events,
+                            local_plan=plan.reference,
+                        )
+                        plan.timetable = timetable
+                        db.session.add(timetable)
+                    db.session.commit()
 
 
 def _make_reference(name, period_start_date, period_end_date, organisation):
