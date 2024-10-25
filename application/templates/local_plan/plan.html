@@ -132,7 +132,7 @@
                 <dt class="govuk-summary-list__key">Document types</dt>
                 <dd class="govuk-summary-list__value">
                   {% if document.document_types %}
-                  {% for type in document.document_types %}{{ type }}{{ "" if loop.last else ", " }}{% endfor %}
+                    {% for document_type in document.get_document_types() %}{{ document_type.name }}{{ ", " if not loop.last }}{% endfor %}
                   {% endif %}
                 </dd>
               </div>

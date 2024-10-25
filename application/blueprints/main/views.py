@@ -2,6 +2,7 @@ import random
 
 from flask import Blueprint, redirect, render_template, request, url_for
 from sqlalchemy import not_
+from sqlalchemy.orm import joinedload, load_only, noload
 
 from application.models import LocalPlan, LocalPlanDocument, Organisation, Status
 from application.utils import adopted_plan_count, get_plans_query
@@ -32,7 +33,15 @@ def stats():
 @main.route("/randomiser")
 def randomiser():
     organisations = (
-        Organisation.query.filter(Organisation.end_date.is_(None))
+        Organisation.query.options(
+            load_only(
+                Organisation.name, Organisation.end_date, Organisation.organisation
+            ),
+            joinedload(Organisation.local_plans),
+            joinedload(Organisation.local_plan_documents),
+            noload(Organisation.local_plan_boundaries),
+        )
+        .filter(Organisation.end_date.is_(None))
         .order_by(Organisation.name)
         .all()
     )

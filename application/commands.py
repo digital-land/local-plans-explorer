@@ -24,6 +24,7 @@ from application.models import (
     LocalPlan,
     LocalPlanBoundary,
     LocalPlanDocument,
+    LocalPlanDocumentType,
     LocalPlanEvent,
     LocalPlanEventType,
     LocalPlanTimetable,
@@ -735,3 +736,28 @@ def _make_reference(name, period_start_date, period_end_date, organisation):
         return reference
 
     return reference
+
+
+@data_cli.command("migrate-doc-types")
+def migrate_doc_types():
+    documents = LocalPlanDocument.query.filter(
+        LocalPlanDocument.document_types.isnot(None)
+    ).all()
+    for document in documents:
+        updated_document_types = []
+        for doc_type in document.document_types:
+            ref = doc_type.lower().replace("_", "-")
+            if ref == "financial-viability-study":
+                ref = "viability-assessment"
+            document_type = LocalPlanDocumentType.query.get(ref)
+            if document_type is None:
+                print(
+                    f"No matching document type found for {ref} for document {document.reference}"
+                )
+            else:
+                updated_document_types.append(document_type.reference)
+        if updated_document_types:
+            document.document_types = updated_document_types
+            db.session.add(document)
+            db.session.commit()
+            print(f"Updated document types for {document.reference}")

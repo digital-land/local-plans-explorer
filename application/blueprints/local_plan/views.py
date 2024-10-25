@@ -11,10 +11,10 @@ from application.extensions import db
 from application.models import (
     CandidateDocument,
     DocumentStatus,
-    DocumentType,
     LocalPlan,
     LocalPlanBoundary,
     LocalPlanDocument,
+    LocalPlanDocumentType,
     Organisation,
     Status,
 )
@@ -145,7 +145,7 @@ def find_documents(reference):
     if plan is None:
         abort(404)
 
-    document_types = [doc.value for doc in DocumentType.query.all()]
+    document_types = [doc.name for doc in LocalPlanDocumentType.query.all()]
     document_links = extract_links_from_page(
         plan.documentation_url, plan, document_types
     )
@@ -164,7 +164,15 @@ def find_documents(reference):
                 CandidateDocument.local_plan == plan.reference,
             ).one_or_none()
             if existing_candidate is None:
+                doc_type = link.pop("document_type", None)
+                if doc_type is not None:
+                    doc_type = LocalPlanDocumentType.query.filter(
+                        LocalPlanDocumentType.name == doc_type
+                    ).one_or_none()
                 candidate_document = CandidateDocument(**link)
+                candidate_document.document_type = (
+                    doc_type.reference if doc_type else None
+                )
                 db.session.add(candidate_document)
                 db.session.commit()
 
@@ -191,9 +199,9 @@ def accept_document(reference, doc_id):
         abort(404)
 
     document_types = [
-        doc.name
-        for doc in DocumentType.query.filter(
-            DocumentType.value == candidate.document_type
+        doc_type.reference
+        for doc_type in LocalPlanDocumentType.query.filter(
+            LocalPlanDocumentType.reference == candidate.document_type
         ).all()
     ]
 
@@ -208,7 +216,7 @@ def accept_document(reference, doc_id):
     organisation__string = ";".join([org.organisation for org in plan.organisations])
     form.organisations.data = organisation__string
     form.document_types.choices = [
-        (dt.name, dt.value) for dt in DocumentType.query.all()
+        (dt.reference, dt.name) for dt in LocalPlanDocumentType.query.all()
     ]
     form.document_types.data = document_types
 

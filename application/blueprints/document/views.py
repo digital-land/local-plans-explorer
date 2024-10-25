@@ -6,9 +6,9 @@ from slugify import slugify
 from application.blueprints.document.forms import DocumentForm, EditDocumentForm
 from application.extensions import db
 from application.models import (
-    DocumentType,
     LocalPlan,
     LocalPlanDocument,
+    LocalPlanDocumentType,
     Organisation,
     Status,
 )
@@ -45,8 +45,12 @@ def add(local_plan_reference):
     form.organisations.data = organisation__string
 
     form.document_types.choices = [
-        (dt.name, dt.value)
-        for dt in DocumentType.query.order_by(DocumentType.value).all()
+        (dt.reference, dt.name)
+        for dt in LocalPlanDocumentType.query.filter(
+            LocalPlanDocumentType.end_date.is_(None)
+        )
+        .order_by(LocalPlanDocumentType.name)
+        .all()
     ]
     if form.validate_on_submit():
         reference = _make_reference(form, plan.reference)
@@ -116,8 +120,12 @@ def edit(local_plan_reference, reference):
     form.organisations.choices = organisation_choices
     form.status.choices = [(s.name, s.value) for s in Status if s != Status.EXPORTED]
     form.document_types.choices = [
-        (dt.name, dt.value)
-        for dt in DocumentType.query.order_by(DocumentType.value).all()
+        (dt.reference, dt.name)
+        for dt in LocalPlanDocumentType.query.filter(
+            LocalPlanDocumentType.end_date.is_(None)
+        )
+        .order_by(LocalPlanDocumentType.name)
+        .all()
     ]
 
     if form.validate_on_submit():

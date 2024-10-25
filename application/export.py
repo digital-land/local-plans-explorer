@@ -110,7 +110,7 @@ class LocalPlanDocumentModel(LocalPlanBaseModel):
         doc_types = []
         if value is not None:
             for val in value:
-                doc_types.append(val.replace("_", "-").lower())
+                doc_types.append(val)
         if doc_types:
             return ";".join(doc_types)
         return ""

@@ -191,6 +191,16 @@ class LocalPlanDocument(BaseModel):
 
     status: Mapped[Status] = mapped_column(ENUM(Status), default=Status.FOR_REVIEW)
 
+    def get_document_types(self):
+        doc_types = (
+            LocalPlanDocumentType.query.filter(
+                LocalPlanDocumentType.reference.in_(self.document_types)
+            )
+            .order_by(LocalPlanDocumentType.name)
+            .all()
+        )
+        return doc_types
+
 
 class CandidateDocument(db.Model):
     __tablename__ = "candidate_document"
@@ -212,6 +222,12 @@ class CandidateDocument(db.Model):
     entry_date: Mapped[datetime.date] = mapped_column(
         Date, default=datetime.datetime.today
     )
+
+    def get_document_type(self):
+        doc_type = LocalPlanDocumentType.query.filter(
+            LocalPlanDocumentType.name == self.document_type
+        ).one_or_none()
+        return doc_type
 
 
 class Organisation(DateModel):

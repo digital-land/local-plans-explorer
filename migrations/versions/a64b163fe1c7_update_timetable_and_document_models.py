@@ -76,7 +76,7 @@ def downgrade():
     sa.ForeignKeyConstraint(['local_plan_timetable'], ['local_plan_timetable.reference'], name='timetable_event_local_plan_timetable_fkey'),
     sa.PrimaryKeyConstraint('id', name='timetable_event_pkey')
     )
-    op.drop_table('loca_plan_event')
+    op.drop_table('local_plan_event')
     with op.batch_alter_table('local_plan_event_type', schema=None) as batch_op:
         batch_op.drop_index(batch_op.f('ix_local_plan_event_type_end_date'))
 
