@@ -89,8 +89,11 @@
                     {% endif %}
                   {% endfor %}
                 </ul>
+              {% else %}
+                {%- if not config.AUTHENTICATION_ON or session["user"] %}
+                  <a href="{{ url_for('local_plan.add', organisation=organisation.organisation) }}" class="govuk-button govuk-button--secondary app-button--s">Add plan</a>
+                {%- endif %}
               {% endif %}
-              <!-- <a href="#" class="govuk-button govuk-button--secondary app-button--s">Add plan</a>  -->
             </dd>
           </div>
 
