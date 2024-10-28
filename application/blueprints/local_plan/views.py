@@ -6,7 +6,7 @@ from flask import Blueprint, abort, redirect, render_template, request, url_for
 from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
-from application.blueprints.local_plan.forms import LocalPlanForm
+from application.blueprints.local_plan.forms import LocalPlanForm, Regulation18Form
 from application.extensions import db
 from application.models import (
     CandidateDocument,
@@ -25,6 +25,12 @@ from application.utils import (
     login_required,
     populate_object,
 )
+
+event_forms = {
+    "estimated-regulation-18": Regulation18Form,
+    "regulation-18": Regulation18Form,
+}
+
 
 local_plan = Blueprint("local_plan", __name__, url_prefix="/local-plan")
 
@@ -392,6 +398,47 @@ def add_geography(reference):
         missing_geographies=missing_geographies,
         bounding_box=bounding_box,
     )
+
+
+@local_plan.route("/<string:reference>/timetable/<string:event_type>/")
+@login_required
+def timetable_event(reference, event_type):
+    plan = LocalPlan.query.get(reference)
+    if plan is None:
+        return abort(404)
+
+    if plan.timetable is None:
+        return redirect(
+            url_for(
+                "local_plan.add_timetable_event",
+                reference=plan.reference,
+                event_type=event_type,
+            )
+        )
+
+    return render_template("local_plan/timetable-event.html", plan=plan)
+
+
+@local_plan.route(
+    "/<string:reference>/timetable/<string:event_type>/add", methods=["GET", "POST"]
+)
+@login_required
+def add_timetable_event(reference, event_type):
+    plan = LocalPlan.query.get(reference)
+    if plan.timetable is None:
+        estimated = True if "estimated" in event_type else False
+        Form = event_forms.get(event_type)
+        form = Form()
+        event_category = event_type.replace("estimated", " ").replace("-", " ").strip()
+        return render_template(
+            "local_plan/add-timetable-event.html",
+            plan=plan,
+            form=form,
+            event_category=event_category,
+            estimated=estimated,
+        )
+    else:
+        return redirect(url_for("local_plan.timetable", reference=plan.reference))
 
 
 def _get_document_counts(documents):
