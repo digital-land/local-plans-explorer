@@ -701,9 +701,13 @@ def load_housing_numbers_timetable_data():
                                 LocalPlanEventType.reference == event_types[date_field]
                             ).one_or_none()
                             if event_type:
+                                to_date = datetime.strptime(date_value, "%Y-%m-%d")
                                 event = LocalPlanEvent(
                                     event_type=event_type.reference,
                                     event_date=date_value,
+                                    event_day=to_date.day,
+                                    event_month=to_date.month,
+                                    event_year=to_date.year,
                                 )
                                 events.append(event)
                     if events:

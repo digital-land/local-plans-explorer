@@ -271,6 +271,9 @@ class LocalPlanEvent(db.Model):
         ForeignKey("local_plan_event_type.reference")
     )
     event_date: Mapped[Optional[str]] = mapped_column(Text)
+    event_day: Mapped[Optional[str]] = mapped_column(Text)
+    event_month: Mapped[Optional[str]] = mapped_column(Text)
+    event_year: Mapped[Optional[str]] = mapped_column(Text)
     created_date: Mapped[datetime.datetime] = mapped_column(
         DateTime, default=datetime.datetime.now
     )
