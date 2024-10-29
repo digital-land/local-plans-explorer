@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import render_template
+from flask import render_template, request
 from flask_wtf import FlaskForm
 from markupsafe import Markup
 from wtforms import (
@@ -62,33 +62,29 @@ class DatePartField(Field):
         return {"day": "", "month": "", "year": ""}
 
     def process_formdata(self, valuelist):
-        if len(valuelist) != 3:
-            raise ValidationError("Invalid date input.")
+        day_str = request.form.get(f"{self.name}_day", "")
+        month_str = request.form.get(f"{self.name}_month", "")
+        year_str = request.form.get(f"{self.name}_year", "")
 
-        day_str, month_str, year_str = valuelist
         day = int(day_str) if day_str else None
         month = int(month_str) if month_str else None
         year = int(year_str) if year_str else None
 
-        if year:
-            if month and day:
-                try:
+        # Validate and store the date
+        try:
+            if year:
+                if month and day:
                     self.data = datetime(year, month, day)
-                except ValueError:
-                    raise ValidationError(
-                        "Invalid date: year, month, or day is out of range."
-                    )
-            elif month:
-                try:
+                elif month:
                     self.data = datetime(year, month, 1)
-                except ValueError:
-                    raise ValidationError(
-                        "Invalid date: year or month is out of range."
-                    )
+                else:
+                    self.data = datetime(year, 1, 1)
             else:
-                self.data = datetime(year, 1, 1)
-        else:
-            raise ValidationError("Invalid date: at least a year is required.")
+                raise ValidationError("Invalid date: at least a year is required.")
+        except ValueError:
+            raise ValidationError(
+                "Invalid date input: please check day, month, and year."
+            )
 
     def process_data(self, value):
         if value:

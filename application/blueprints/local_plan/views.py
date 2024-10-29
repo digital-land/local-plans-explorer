@@ -430,12 +430,18 @@ def add_timetable_event(reference, event_type):
         Form = event_forms.get(event_type)
         form = Form()
         event_category = event_type.replace("estimated", " ").replace("-", " ").strip()
+
+        if form.validate_on_submit():
+            print(form.data)
+            # return redirect(url_for("local_plan.timetable", reference=plan.reference))
+
         return render_template(
             "local_plan/add-timetable-event.html",
             plan=plan,
             form=form,
             event_category=event_category,
             estimated=estimated,
+            event_type=event_type,
         )
     else:
         return redirect(url_for("local_plan.timetable", reference=plan.reference))
