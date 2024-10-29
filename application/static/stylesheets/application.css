@@ -10504,6 +10504,107 @@
   margin-right: 15px;
 }
 
+.app-timetable {
+  border: 1px solid #b1b4b6;
+  margin-bottom: 15px;
+}
+.app-timetable .app-timetable__header {
+  align-items: center;
+  background-color: #f3f2f1;
+  padding: 15px;
+}
+@media (min-width: 48.0625em) {
+  .app-timetable .app-timetable__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+  }
+}
+.app-timetable .app-timetable__footer {
+  background-color: #f3f2f1;
+  padding: 15px;
+}
+@media (min-width: 48.0625em) {
+  .app-timetable .app-timetable__footer {
+    align-items: start;
+  }
+}
+.app-timetable .app-timetable__title {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 16px;
+  font-size: 1rem;
+  line-height: 1.25;
+  margin: 0;
+}
+@media print {
+  .app-timetable .app-timetable__title {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .app-timetable .app-timetable__title {
+    font-size: 19px;
+    font-size: 1.1875rem;
+    line-height: 1.3157894737;
+  }
+}
+@media print {
+  .app-timetable .app-timetable__title {
+    font-size: 14pt;
+    line-height: 1.15;
+  }
+}
+.app-timetable .app-timetable__body span {
+  float: right;
+}
+.app-timetable .app-timetable__actions-list-item:first-child {
+  margin-left: 0;
+}
+.app-timetable .app-timetable__body {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 16px;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+@media print {
+  .app-timetable .app-timetable__body {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .app-timetable .app-timetable__body {
+    font-size: 19px;
+    font-size: 1.1875rem;
+    line-height: 1.3157894737;
+  }
+}
+@media print {
+  .app-timetable .app-timetable__body {
+    font-size: 14pt;
+    line-height: 1.15;
+  }
+}
+.app-timetable .app-timetable__list {
+  margin: 0;
+}
+.app-timetable .app-timetable__list ul {
+  margin: 0;
+}
+.app-timetable .app-timetable__list li {
+  border-bottom: solid 1px #b1b4b6;
+  margin: 0;
+  padding: 15px;
+}
+.app-timetable .app-timetable__list li:last-child {
+  border-bottom: none;
+}
+
 .js-hidden {
   display: none !important;
 }

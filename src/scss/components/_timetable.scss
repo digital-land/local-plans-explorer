@@ -1,0 +1,61 @@
+.app-timetable {
+  border: 1px solid $govuk-border-colour;
+  margin-bottom: govuk-spacing(3);
+
+  .app-timetable__header {
+    align-items: center;
+    background-color: govuk-colour('light-grey');
+    padding: govuk-spacing(3);
+
+    @include govuk-media-query($from: desktop) {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+    }
+  }
+
+  .app-timetable__footer {
+    background-color: govuk-colour('light-grey');
+    padding: govuk-spacing(3);
+
+    @include govuk-media-query($from: desktop) {
+      align-items: start;
+    }
+  }
+
+  .app-timetable__title {
+    @include govuk-font($size: 19);
+    margin: 0;
+  }
+
+  .app-timetable__body span {
+    float: right;
+  }
+
+  .app-timetable__actions-list-item:first-child {
+    margin-left: 0;
+  }
+
+  .app-timetable__body {
+    @include govuk-font($size: 19);
+  }
+
+  .app-timetable__list {
+    margin: 0;
+  }
+
+  .app-timetable__list ul {
+    margin: 0;
+  }
+
+  .app-timetable__list li {
+    border-bottom: solid 1px $govuk-border-colour;
+    margin: 0;
+    padding: govuk-spacing(3);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+}

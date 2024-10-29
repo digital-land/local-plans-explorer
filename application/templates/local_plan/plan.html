@@ -84,16 +84,18 @@
   </div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <section class="app-summary-card">
-        <header class="app-summary-card__header">
-          <h2 class="app-summary-card__title">
+      <section class="app-timetable">
+        <header class="app-timetable__header">
+          <h2 class="app-timetable__title">
             Estimated timetable
           </h2>
         </header>
-        <div class="app-summary-card__body">
-            <p><a href="{{ url_for('local_plan.add_timetable_event', reference=plan.reference, event_type='estimated-regulation-18') }}">Regulation 18</a></p>
-            <p><a href="#">Regulation 19</a></p>
-            <p><a href="#">Examination and adoption</a></p>
+        <div class="app-timetable__body">
+          <ul class="govuk-list app-timetable__list">
+            <li><a href="{{ url_for('local_plan.add_timetable_event', reference=plan.reference, event_type='estimated-regulation-18') }}">Regulation 18</a><span class="govuk-tag govuk-tag--grey">Not started</span></li>
+            <li><a href="#">Regulation 19</a><span class="govuk-tag govuk-tag--grey">Not started</span></li>
+            <li><a href="#">Examination and adoption</a><span class="govuk-tag govuk-tag--grey">Not started</span></li>
+          </ul>
          </div>
       </section>
     </div>
