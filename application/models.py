@@ -259,6 +259,7 @@ class Organisation(DateModel):
 
 class LocalPlanEventType(BaseModel):
     __tablename__ = "local_plan_event_type"
+    event_category: Mapped[Optional[str]] = mapped_column(Text)
 
 
 class LocalPlanEvent(db.Model):
@@ -270,7 +271,6 @@ class LocalPlanEvent(db.Model):
     event_type: Mapped[str] = mapped_column(
         ForeignKey("local_plan_event_type.reference")
     )
-    event_date: Mapped[Optional[str]] = mapped_column(Text)
     event_day: Mapped[Optional[str]] = mapped_column(Text)
     event_month: Mapped[Optional[str]] = mapped_column(Text)
     event_year: Mapped[Optional[str]] = mapped_column(Text)

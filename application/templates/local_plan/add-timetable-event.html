@@ -14,7 +14,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <form class="govuk-form" method="POST" action="{{ url_for('local_plan.add_timetable_event', reference=plan.reference, event_type=event_type) }}">
+    <form class="govuk-form" method="POST" action="{{ url_for('local_plan.add_timetable_event', reference=plan.reference, event_category=event_category) }}">
       {{ form.hidden_tag() }}
       <fieldset class="govuk-fieldset">
         <div class="govuk-form-group">

@@ -55,9 +55,9 @@ class DatePartField(Field):
     def _value(self):
         if self.data:
             return {
-                "day": self.data.day,
-                "month": self.data.month,
-                "year": self.data.year,
+                "day": self.data.get("day", ""),
+                "month": self.data.get("month", ""),
+                "year": self.data.get("year", ""),
             }
         return {"day": "", "month": "", "year": ""}
 
@@ -86,11 +86,17 @@ class DatePartField(Field):
                 "Invalid date input: please check day, month, and year."
             )
 
+        self.data = {
+            "day": day_str,
+            "month": month_str,
+            "year": year_str,
+        }
+
     def process_data(self, value):
-        if value:
+        if isinstance(value, dict):
             self.data = value
         else:
-            self.data = None
+            self.data = {"day": "", "month": "", "year": ""}
 
 
 class Regulation18Form(FlaskForm):

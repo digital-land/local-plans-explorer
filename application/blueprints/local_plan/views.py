@@ -15,6 +15,9 @@ from application.models import (
     LocalPlanBoundary,
     LocalPlanDocument,
     LocalPlanDocumentType,
+    LocalPlanEvent,
+    LocalPlanEventType,
+    LocalPlanTimetable,
     Organisation,
     Status,
 )
@@ -400,51 +403,103 @@ def add_geography(reference):
     )
 
 
-@local_plan.route("/<string:reference>/timetable/<string:event_type>/")
+@local_plan.route(
+    "/<string:reference>/timetable/<string:timetable_reference>/<string:event_category>"
+)
 @login_required
-def timetable_event(reference, event_type):
-    plan = LocalPlan.query.get(reference)
-    if plan is None:
+def timetable_event(reference, timetable_reference, event_category):
+    timetable = LocalPlanTimetable.query.filter(
+        LocalPlanTimetable.local_plan == reference,
+        LocalPlanTimetable.reference == timetable_reference,
+    ).one_or_none()
+
+    if timetable is None:
         return abort(404)
 
-    if plan.timetable is None:
-        return redirect(
-            url_for(
-                "local_plan.add_timetable_event",
-                reference=plan.reference,
-                event_type=event_type,
-            )
-        )
+    event_types = LocalPlanEventType.query.filter(
+        LocalPlanEventType.event_category == event_category
+    ).all()
 
-    return render_template("local_plan/timetable-event.html", plan=plan)
+    event_type_references = [event_type.reference for event_type in event_types]
+
+    estimated = True if "estimated" in event_category else False
+
+    events = [
+        event for event in timetable.events if event.event_type in event_type_references
+    ]
+    event_category_name = (
+        event_category.replace("estimated", " ").replace("-", " ").strip()
+    )
+
+    return render_template(
+        "local_plan/timetable-event.html",
+        events=events,
+        estimated=estimated,
+        event_category_name=event_category_name,
+    )
 
 
 @local_plan.route(
-    "/<string:reference>/timetable/<string:event_type>/add", methods=["GET", "POST"]
+    "/<string:reference>/timetable/<string:event_category>/add", methods=["GET", "POST"]
 )
 @login_required
-def add_timetable_event(reference, event_type):
+def add_timetable_event(reference, event_category):
     plan = LocalPlan.query.get(reference)
     if plan.timetable is None:
-        estimated = True if "estimated" in event_type else False
-        Form = event_forms.get(event_type)
+        estimated = True if "estimated" in event_category else False
+        Form = event_forms.get(event_category)
         form = Form()
-        event_category = event_type.replace("estimated", " ").replace("-", " ").strip()
+        event_category_name = (
+            event_category.replace("estimated", " ").replace("-", " ").strip()
+        )
 
         if form.validate_on_submit():
-            print(form.data)
-            # return redirect(url_for("local_plan.timetable", reference=plan.reference))
+            if form.draft_local_plan_published:
+                data = form.draft_local_plan_published.data
+                event_type = "estimated-reg-18-draft-local-plan-published"
+                event = LocalPlanEvent(
+                    event_type=event_type,
+                    event_day=data.get("day") if data.get("day") else None,
+                    event_month=data.get("month") if data.get("month") else None,
+                    event_year=data.get("year") if data.get("year") else None,
+                )
+                if plan.timetable is not None:
+                    plan.timetable.append(event)
+                else:
+                    plan.timetable = LocalPlanTimetable(
+                        reference=f"{plan.reference}-timetable",
+                        name=f"{plan.name} timetable",
+                        local_plan=plan.reference,
+                        events=[event],
+                    )
+                db.session.add(event)
+                db.session.add(plan)
+                db.session.commit()
+                return redirect(
+                    url_for(
+                        "local_plan.timetable_event",
+                        reference=plan.reference,
+                        timetable_reference=plan.timetable.reference,
+                        event_category=event_category,
+                    )
+                )
 
         return render_template(
             "local_plan/add-timetable-event.html",
             plan=plan,
             form=form,
-            event_category=event_category,
+            event_category_name=event_category_name,
             estimated=estimated,
-            event_type=event_type,
+            event_category=event_category,
         )
     else:
-        return redirect(url_for("local_plan.timetable", reference=plan.reference))
+        return redirect(
+            url_for(
+                "local_plan.timetable_event",
+                reference=plan.reference,
+                event_category=event_category,
+            )
+        )
 
 
 def _get_document_counts(documents):

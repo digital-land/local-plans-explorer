@@ -1,0 +1,21 @@
+{% extends 'layouts/base-with-map.html' %}
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-m">{%if estimated %}Estimated{% else %}Actual{% endif %} dates</span>
+    <h1 class="govuk-heading-l">{{ event_category | capitalize }}</h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% for event in events %}
+      <p>{{ event}}</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock content %}
