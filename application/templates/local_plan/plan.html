@@ -63,210 +63,211 @@
       </section>
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     </div>
-    <div class="govuk-grid-column-one-third">
-      <div class="app-summary-list" role="complementary">
-        <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
-          Local plan actions
-        </h2>
-        <p class="govuk-hint govuk-!-font-size-14">Edit the plan record to add/correct information or change it's status.</p>
-        <p class="govuk-hint govuk-!-font-size-14">To include the plan in the local-plan.csv export for the data platform, set it's status to "For pl".</p>
-        {% if not plan.documents and not plan.unprocessed_canidate_documents() %}
-          <p  class="govuk-hint govuk-!-font-size-14">Click here to find and select relevant documents from the plan web page</p>
-            <a href="{{ url_for('local_plan.find_documents', reference=plan.reference) }}" class="govuk-button govuk-button--primary">
-            <span class="govuk-!-margin-right-1">✚ </span> find documents</a>
-        {% elif plan.unprocessed_canidate_documents() %}
-          <p  class="govuk-hint govuk-!-font-size-14">Click here to select documents found on plan homepage</p>
-            <a href="{{ url_for('local_plan.find_documents', reference=plan.reference) }}" class="govuk-button govuk-button--primary">
-            <span class="govuk-!-margin-right-1">✚ </span> select documents found</a>
-        {% endif %}
-    </div>
-  </div>
-  </div>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <section class="app-timetable">
-        <header class="app-timetable__header">
-          <h2 class="app-timetable__title">
-            Estimated timetable
+    {% if plan.status.name != "NOT_FOR_PLATFORM" %}
+      <div class="govuk-grid-column-one-third">
+        <div class="app-summary-list" role="complementary">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
+            Local plan actions
           </h2>
-        </header>
-        <div class="app-timetable__body">
-          <ul class="govuk-list app-timetable__list">
-            <li><a href="{{ stage_urls[event_category.ESTIMATED_REGULATION_18] }}">Regulation 18</a>
-              {% if plan.timetable %}
-                {% set progress = plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_18) %}
-                <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
-              {% else %}
-                <span class="govuk-tag govuk-tag--grey">Not started</span>
-              {% endif %}
-            </li>
-            <li><a href="{{ stage_urls[event_category.ESTIMATED_REGULATION_19] }}">Regulation 19</a>
-              {% if plan.timetable %}
-              {% set progress = plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_19) %}
-                <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
-              {% else %}
-                <span class="govuk-tag govuk-tag--grey">Not started</span>
-              {% endif %}
-            </li>
-            <li><a href="#">Examination and adoption</a><span class="govuk-tag govuk-tag--grey">Not started</span></li>
-          </ul>
-         </div>
-      </section>
-    </div>
-    <div class="govuk-grid-column-one-third">
-      <div class="app-summary-list" role="complementary">
-        <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
-          Estimated timetable
-        </h2>
-        <p class="govuk-hint govuk-!-font-size-14">You can use the local plan development scheme to add or edit events in the timetable.</p>
-    </div>
-  </div>
-  </div>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      {% for document in plan.documents %}
-        <section class="app-summary-card">
-          <header class="app-summary-card__header">
-            <h2 class="app-summary-card__title">
-              Document
-            </h2>
-            <div class="app-summary-card__actions">
-              {%- if not config.AUTHENTICATION_ON or session["user"] %}
-                <a href="{{ url_for('document.edit', local_plan_reference=plan.reference, reference=document.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> document</span></a>
-              {% endif %}
-            </div>
-          </header>
-          <div class="app-summary-card__body">
-            <dl class="govuk-summary-list govuk-!-margin-bottom-0">
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Reference</dt>
-                <dd class="govuk-summary-list__value"><a href="{{ url_for('document.get_document', local_plan_reference=plan.reference, reference=document.reference ) }}">{{ document.reference }}</a></dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Name</dt>
-                <dd class="govuk-summary-list__value">{{ document.name }}</dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Organisation</dt>
-                <dd class="govuk-summary-list__value">
-                  <ul class="govuk-list">
-                  {% for org in document.organisations %}
-                    <li>{{ org.name }}</li>
-                  {% endfor %}
-                  </ul>
-                </dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Documentation URL</dt>
-                <dd class="govuk-summary-list__value"><a href="{{ document.documentation_url }}" class="govuk-link">{{ document.documentation_url }}</a></dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Document URL</dt>
-                <dd class="govuk-summary-list__value"><a href="{{ document.document_url }}" class="govuk-link">{{ document.document_url }}</a></dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Description</dt>
-                <dd class="govuk-summary-list__value">{{ document.description if document.description }}</dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Document types</dt>
-                <dd class="govuk-summary-list__value">
-                  {% if document.document_types %}
-                    {% for document_type in document.get_document_types() %}{{ document_type.name }}{{ ", " if not loop.last }}{% endfor %}
-                  {% endif %}
-                </dd>
-              </div>
-            </dl>
-          </div>
-          <div class="app-summary-card__footer">
-            <p class="govuk-body">Status</p>
-            <span class="govuk-tag govuk-tag--{{document.status | status_colour }}">{{document.status.value}}</span>
-            {% if document.status.name == "FOR_PUBLICATION" and plan.status.name != "FOR_PUBLICATION" and plan.status.name != "PUBLISHED" %}
-              <p class="govuk-hint govuk-!-font-size-14">Note: This document will only be published when the local plan is also selected for publication</p>
-            {% endif %}
-          </div>
-        </section>
-      {% endfor %}
-      {%- if not config.AUTHENTICATION_ON or session["user"] %}
-        <a href="{{ url_for('document.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary">
-          <span class="govuk-!-margin-right-1">✚ </span> add document</a>
-      {%- endif %}
-      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    </div>
-    <div class="govuk-grid-column-one-third">
-      <div class="app-summary-list" role="complementary">
-        <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
-          Documents
-        </h2>
-        <p class="govuk-hint govuk-!-font-size-14">You can check/edit documents that are marked as for review.</p>
-        <p class="govuk-hint govuk-!-font-size-14">Documents that you update to "For publication" will be published if/when the local plan above is also selected for publication.</p>
-        <p class="govuk-hint govuk-!-font-size-14">The document records will be exported to the local-plan-document.csv.</p>
-        <ul class="govuk-list govuk-!-font-size-16">
-          {% for status, count in document_counts.items() %}
-            <li>{{ status }}: {{ count }}</li>
-          {% endfor %}
-        </ul>
-    </div>
-  </div>
-  </div>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <section class="app-summary-card govuk-!-margin-top-6">
-        <header class="app-summary-card__header">
-          <h2 class="app-summary-card__title">
-            Plan boundary
-          </h2>
-          <div class="app-summary-card__actions">
-              {%- if not config.AUTHENTICATION_ON or session["user"] %}
-                {%- if geography %}
-                  <a href="{{ url_for('boundary.edit', local_plan_reference=plan.reference, reference=plan.boundary.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> boundary</span></a>
-                {% else %}
-                  <a href="{{ url_for('boundary.add', local_plan_reference=plan.reference) }}" class="govuk-link">Add<span class="govuk-visually-hidden"> boundary</span></a>
-                {% endif -%}
-            {%- endif -%}
-          </div>
-        </header>
-        <div class="app-summary-card__body">
-        {%- if geography %}
-            {%- set map_id = "map-" + geography["reference"] %}
-            <p class="govuk-hint govuk-!-margin-top-0">Reference: {{ geography["reference"] }}</p>
-            <div class="app-map-wrapper">
-              <div id="{{ map_id }}" style="height: 400px;">
-            </div>
-            <script>
-              const AppMap = {}
-              AppMap.mapID = '{{map_id}}';
-              AppMap.geography = {
-                'featureCollection': {{ geography["features"] | tojson }},
-                'centrePoint': {
-                  'lat':  {{ geography['coords']['lat'] }},
-                  'long': {{ geography['coords']['long'] }}
-                }
-              }
-            </script>
-        {%- else %}
-          <p class="govuk-hint govuk-!-margin-bottom-0">No boundary recorded for this plan</p>
-        {% endif -%}
-        </div>
-        <div class="app-summary-card__footer">
-          <p class="govuk-body">Status</p>
-          <span class="govuk-tag govuk-tag--{{plan.boundary_status | status_colour }}">{{plan.boundary_status .value}}</span>
-          {% if plan.boundary_status.name == "FOR_PUBLICATION" and plan.status.name != "FOR_PUBLICATION"  and plan.status.name != "PUBLISHED"%}
-            <p class="govuk-hint govuk-!-font-size-14">Note: This boundary will only be published when the local plan is also selected for publication</p>
+          <p class="govuk-hint govuk-!-font-size-14">Edit the plan record to add/correct information or change it's status.</p>
+          <p class="govuk-hint govuk-!-font-size-14">To include the plan in the local-plan.csv export for the data platform, set it's status to "For pl".</p>
+          {% if not plan.documents and not plan.unprocessed_canidate_documents() %}
+            <p  class="govuk-hint govuk-!-font-size-14">Click here to find and select relevant documents from the plan web page</p>
+              <a href="{{ url_for('local_plan.find_documents', reference=plan.reference) }}" class="govuk-button govuk-button--primary">
+              <span class="govuk-!-margin-right-1">✚ </span> find documents</a>
+          {% elif plan.unprocessed_canidate_documents() %}
+            <p  class="govuk-hint govuk-!-font-size-14">Click here to select documents found on plan homepage</p>
+              <a href="{{ url_for('local_plan.find_documents', reference=plan.reference) }}" class="govuk-button govuk-button--primary">
+              <span class="govuk-!-margin-right-1">✚ </span> select documents found</a>
           {% endif %}
         </div>
       </div>
-      </section>
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-    </div>
+    {% endif %}
   </div>
-
-
-
+  {% if plan.status.name != "NOT_FOR_PLATFORM" %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <section class="app-timetable">
+          <header class="app-timetable__header">
+            <h2 class="app-timetable__title">
+              Estimated timetable
+            </h2>
+          </header>
+          <div class="app-timetable__body">
+            <ul class="govuk-list app-timetable__list">
+              <li><a href="{{ stage_urls[event_category.ESTIMATED_REGULATION_18] }}">Regulation 18</a>
+                {% if plan.timetable %}
+                  {% set progress = plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_18) %}
+                  <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
+                {% else %}
+                  <span class="govuk-tag govuk-tag--grey">Not started</span>
+                {% endif %}
+              </li>
+              <li><a href="{{ stage_urls[event_category.ESTIMATED_REGULATION_19] }}">Regulation 19</a>
+                {% if plan.timetable %}
+                {% set progress = plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_19) %}
+                  <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
+                {% else %}
+                  <span class="govuk-tag govuk-tag--grey">Not started</span>
+                {% endif %}
+              </li>
+              <li><a href="#">Examination and adoption</a><span class="govuk-tag govuk-tag--grey">Not started</span></li>
+            </ul>
+          </div>
+        </section>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <div class="app-summary-list" role="complementary">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
+            Estimated timetable
+          </h2>
+          <p class="govuk-hint govuk-!-font-size-14">You can use the local plan development scheme to add or edit events in the timetable.</p>
+      </div>
+    </div>
+    </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {% for document in plan.documents %}
+          <section class="app-summary-card">
+            <header class="app-summary-card__header">
+              <h2 class="app-summary-card__title">
+                Document
+              </h2>
+              <div class="app-summary-card__actions">
+                {%- if not config.AUTHENTICATION_ON or session["user"] %}
+                  <a href="{{ url_for('document.edit', local_plan_reference=plan.reference, reference=document.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> document</span></a>
+                {% endif %}
+              </div>
+            </header>
+            <div class="app-summary-card__body">
+              <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">Reference</dt>
+                  <dd class="govuk-summary-list__value"><a href="{{ url_for('document.get_document', local_plan_reference=plan.reference, reference=document.reference ) }}">{{ document.reference }}</a></dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">Name</dt>
+                  <dd class="govuk-summary-list__value">{{ document.name }}</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">Organisation</dt>
+                  <dd class="govuk-summary-list__value">
+                    <ul class="govuk-list">
+                    {% for org in document.organisations %}
+                      <li>{{ org.name }}</li>
+                    {% endfor %}
+                    </ul>
+                  </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">Documentation URL</dt>
+                  <dd class="govuk-summary-list__value"><a href="{{ document.documentation_url }}" class="govuk-link">{{ document.documentation_url }}</a></dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">Document URL</dt>
+                  <dd class="govuk-summary-list__value"><a href="{{ document.document_url }}" class="govuk-link">{{ document.document_url }}</a></dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">Description</dt>
+                  <dd class="govuk-summary-list__value">{{ document.description if document.description }}</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">Document types</dt>
+                  <dd class="govuk-summary-list__value">
+                    {% if document.document_types %}
+                      {% for document_type in document.get_document_types() %}{{ document_type.name }}{{ ", " if not loop.last }}{% endfor %}
+                    {% endif %}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+            <div class="app-summary-card__footer">
+              <p class="govuk-body">Status</p>
+              <span class="govuk-tag govuk-tag--{{document.status | status_colour }}">{{document.status.value}}</span>
+              {% if document.status.name == "FOR_PUBLICATION" and plan.status.name != "FOR_PUBLICATION" and plan.status.name != "PUBLISHED" %}
+                <p class="govuk-hint govuk-!-font-size-14">Note: This document will only be published when the local plan is also selected for publication</p>
+              {% endif %}
+            </div>
+          </section>
+        {% endfor %}
+        {%- if not config.AUTHENTICATION_ON or session["user"] %}
+          <a href="{{ url_for('document.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary">
+            <span class="govuk-!-margin-right-1">✚ </span> add document</a>
+        {%- endif %}
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <div class="app-summary-list" role="complementary">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
+            Documents
+          </h2>
+          <p class="govuk-hint govuk-!-font-size-14">You can check/edit documents that are marked as for review.</p>
+          <p class="govuk-hint govuk-!-font-size-14">Documents that you update to "For publication" will be published if/when the local plan above is also selected for publication.</p>
+          <p class="govuk-hint govuk-!-font-size-14">The document records will be exported to the local-plan-document.csv.</p>
+          <ul class="govuk-list govuk-!-font-size-16">
+            {% for status, count in document_counts.items() %}
+              <li>{{ status }}: {{ count }}</li>
+            {% endfor %}
+          </ul>
+      </div>
+    </div>
+    </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <section class="app-summary-card govuk-!-margin-top-6">
+          <header class="app-summary-card__header">
+            <h2 class="app-summary-card__title">
+              Plan boundary
+            </h2>
+            <div class="app-summary-card__actions">
+                {%- if not config.AUTHENTICATION_ON or session["user"] %}
+                  {%- if geography %}
+                    <a href="{{ url_for('boundary.edit', local_plan_reference=plan.reference, reference=plan.boundary.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> boundary</span></a>
+                  {% else %}
+                    <a href="{{ url_for('boundary.add', local_plan_reference=plan.reference) }}" class="govuk-link">Add<span class="govuk-visually-hidden"> boundary</span></a>
+                  {% endif -%}
+              {%- endif -%}
+            </div>
+          </header>
+          <div class="app-summary-card__body">
+          {%- if geography %}
+              {%- set map_id = "map-" + geography["reference"] %}
+              <p class="govuk-hint govuk-!-margin-top-0">Reference: {{ geography["reference"] }}</p>
+              <div class="app-map-wrapper">
+                <div id="{{ map_id }}" style="height: 400px;">
+              </div>
+              <script>
+                const AppMap = {}
+                AppMap.mapID = '{{map_id}}';
+                AppMap.geography = {
+                  'featureCollection': {{ geography["features"] | tojson }},
+                  'centrePoint': {
+                    'lat':  {{ geography['coords']['lat'] }},
+                    'long': {{ geography['coords']['long'] }}
+                  }
+                }
+              </script>
+          {%- else %}
+            <p class="govuk-hint govuk-!-margin-bottom-0">No boundary recorded for this plan</p>
+          {% endif -%}
+          </div>
+          <div class="app-summary-card__footer">
+            <p class="govuk-body">Status</p>
+            <span class="govuk-tag govuk-tag--{{plan.boundary_status | status_colour }}">{{plan.boundary_status .value}}</span>
+            {% if plan.boundary_status.name == "FOR_PUBLICATION" and plan.status.name != "FOR_PUBLICATION"  and plan.status.name != "PUBLISHED"%}
+              <p class="govuk-hint govuk-!-font-size-14">Note: This boundary will only be published when the local plan is also selected for publication</p>
+            {% endif %}
+          </div>
+        </div>
+        </section>
+        <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      </div>
+    </div>
+{% endif %}
 {% endblock content %}
 
 {% block pageScripts %}
-  {% if geography %}
+  {% if geography and plan.status.name != "NOT_FOR_PLATFORM" %} %}
     <script>
 
       function onEachFeature(feature, layer) {
