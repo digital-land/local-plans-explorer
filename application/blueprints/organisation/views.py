@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, redirect, render_template, request, url_for
+from flask import Blueprint, abort, render_template, request
 from sqlalchemy.orm import joinedload, load_only, noload
 
 from application.models import LocalPlan, Organisation, Status
@@ -8,14 +8,6 @@ organisation = Blueprint("organisation", __name__, url_prefix="/organisation")
 
 @organisation.route("/")
 def organisations():
-    if "organisation" in request.args:
-        lpa = request.args.get("organisation")
-        return redirect(
-            url_for(
-                "organisation.get_organisation", reference=f"local-authority-eng:{lpa}"
-            )
-        )
-
     plan_status_filter = request.args.get("planStatusFilter", None)
     if plan_status_filter and plan_status_filter != "all":
         status = Status[plan_status_filter]
@@ -43,8 +35,8 @@ def organisations():
                 noload(Organisation.local_plan_boundaries),
                 noload(Organisation.local_plan_documents),
             )
-            .filter(Organisation.end_date.is_(None))  # Filter on end_date
-            .order_by(Organisation.name)  # Order by name
+            .filter(Organisation.end_date.is_(None))
+            .order_by(Organisation.name)
             .all()
         )
 

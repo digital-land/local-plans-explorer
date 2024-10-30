@@ -695,7 +695,10 @@ def _collect_date_fields(data, key):
 
 def _collate_events_data(events, category):
     match category:
-        case EventCategory.ESTIMATED_REGULATION_18 | EventCategory.ESTIMATED_REGULATION_19:
+        case (
+            EventCategory.ESTIMATED_REGULATION_18
+            | EventCategory.ESTIMATED_REGULATION_19
+        ):
             return [
                 {
                     "draft_local_plan_published": _collect_date_fields(
