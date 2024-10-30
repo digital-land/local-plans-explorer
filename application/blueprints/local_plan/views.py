@@ -64,6 +64,23 @@ def get_plan(reference):
 
     document_counts = _get_document_counts(plan.documents)
 
+    if plan.timetable and plan.timetable.estimated_reg_18_status() in [
+        "started",
+        "completed",
+    ]:
+        reg_18_url = url_for(
+            "local_plan.timetable_events",
+            reference=plan.reference,
+            timetable_reference=plan.timetable.reference,
+            event_category=EventCategory.ESTIMATED_REGULATION_18,
+        )
+    else:
+        reg_18_url = url_for(
+            "local_plan.add_timetable_event",
+            reference=plan.reference,
+            event_category=EventCategory.ESTIMATED_REGULATION_18,
+        )
+
     return render_template(
         "local_plan/plan.html",
         plan=plan,
@@ -71,6 +88,7 @@ def get_plan(reference):
         bounding_box=bounding_box,
         document_counts=document_counts,
         event_category=EventCategory,
+        reg_18_url=reg_18_url,
     )
 
 
@@ -444,6 +462,7 @@ def timetable_event(reference, timetable_reference, event_id):
         "local_plan/timetable-event.html",
         event=event,
         estimated=estimated,
+        event_category=event_category,
         event_category_title=event_category_title,
         draft_plan_published=draft_plan_published,
         public_consultation_start=public_consultation_start,
@@ -481,6 +500,7 @@ def timetable_events(reference, timetable_reference, event_category):
         events=events,
         events_data=events_data,
         estimated=estimated,
+        event_category=event_category,
         event_category_title=event_category_title,
     )
 
@@ -491,17 +511,6 @@ def timetable_events(reference, timetable_reference, event_category):
 @login_required
 def add_timetable_event(reference, event_category):
     plan = LocalPlan.query.get(reference)
-
-    if plan.timetable is not None:
-        return redirect(
-            url_for(
-                "local_plan.timetable_events",
-                reference=plan.reference,
-                timetable_reference=plan.timetable.reference,
-                event_category=event_category,
-            )
-        )
-
     estimated = True if event_category.value.lower().startswith("estimated") else False
     Form = event_forms.get(event_category)
     form = Form()
@@ -509,7 +518,7 @@ def add_timetable_event(reference, event_category):
     if form.validate_on_submit():
         event = LocalPlanEvent(event_category=event_category, event_data=form.data)
         if plan.timetable is not None:
-            plan.timetable.append(event)
+            plan.timetable.events.append(event)
         else:
             plan.timetable = LocalPlanTimetable(
                 reference=f"{plan.reference}-timetable",
@@ -517,22 +526,30 @@ def add_timetable_event(reference, event_category):
                 local_plan=plan.reference,
                 events=[event],
             )
-            db.session.add(event)
-            db.session.add(plan)
-            db.session.commit()
-            return redirect(
-                url_for(
-                    "local_plan.timetable_event",
-                    reference=plan.reference,
-                    timetable_reference=plan.timetable.reference,
-                    event_id=event.id,
-                )
+        db.session.add(event)
+        db.session.add(plan)
+        db.session.commit()
+        return redirect(
+            url_for(
+                "local_plan.timetable_event",
+                reference=plan.reference,
+                timetable_reference=plan.timetable.reference,
+                event_id=event.id,
             )
+        )
 
     if estimated:
         event_category_title = event_category.value.replace("Estimated", "").strip()
     else:
         event_category_title = event_category.value
+
+    if plan.timetable and plan.timetable.estimated_reg_18_status() in [
+        "started",
+        "completed",
+    ]:
+        include_draft_plan_published = False
+    else:
+        include_draft_plan_published = True
 
     action_url = url_for(
         "local_plan.add_timetable_event",
@@ -548,6 +565,7 @@ def add_timetable_event(reference, event_category):
         action_url=action_url,
         event_category=event_category,
         event_category_title=event_category_title,
+        include_draft_plan_published=include_draft_plan_published,
     )
 
 
@@ -584,6 +602,10 @@ def edit_timetable_event(reference, timetable_reference, event_id):
         timetable_reference=timetable_reference,
         event_id=event_id,
     )
+
+    include_draft_plan_published = _is_first_event_of_category(event)
+    estimated = True if "estimated" in event.event_category.value.lower() else False
+
     return render_template(
         "local_plan/timetable-event-form.html",
         form=form,
@@ -592,6 +614,8 @@ def edit_timetable_event(reference, timetable_reference, event_id):
         plan=event.timetable.local_plan_obj,
         timetable=event.timetable,
         event_category=event.event_category,
+        include_draft_plan_published=include_draft_plan_published,
+        estimated=estimated,
     )
 
 
@@ -688,3 +712,12 @@ def _collate_events_data(events, category):
             ]
         case _:
             return None
+
+
+def _is_first_event_of_category(event):
+    earlier_events = LocalPlanEvent.query.filter(
+        LocalPlanEvent.timetable == event.timetable,
+        LocalPlanEvent.event_category == event.event_category,
+        LocalPlanEvent.created_date < event.created_date,
+    ).all()
+    return True if not earlier_events else False

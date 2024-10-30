@@ -14,20 +14,23 @@
   <div class="govuk-grid-column-two-thirds">
     {% for data in events_data %}
       {% set event = data.event %}
-      {% set r = {'reference': plan.reference, 'event_category': event_category, 'event': event} %}
       <section class="govuk-section">
         <dl class="govuk-summary-list">
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Draft local plan published
-            </dt>
-            <dd class="govuk-summary-list__value">
-              {{ data.draft_plan_published }}
-            </dd>
-            <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="{{ url_for('local_plan.edit_timetable_event', reference=plan, timetable_reference=timetable.reference, event_id=event.id) }}">Change<span class="govuk-visually-hidden"> draft local plan published</span></a>
-            </dd>
-          </div>
+
+          {% if data.draft_local_plan_published %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Draft local plan published
+              </dt>
+              <dd class="govuk-summary-list__value">
+                {{ data.draft_local_plan_published }}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="{{ url_for('local_plan.edit_timetable_event', reference=plan, timetable_reference=timetable.reference, event_id=event.id) }}">Change<span class="govuk-visually-hidden"> draft local plan published</span></a>
+              </dd>
+            </div>
+          {% endif %}
+
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
               Consultation period
@@ -52,7 +55,13 @@
           </div>
         </dl>
       </section>
+
   {% endfor %}
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <a href="{{ url_for('local_plan.add_timetable_event', reference=plan, timetable_reference=timetable.reference, event_category=event_category) }}" class="govuk-button govuk-button--secondary">Add another</a>
   </div>
 </div>
 

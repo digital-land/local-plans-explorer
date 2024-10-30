@@ -11,14 +11,30 @@
     {% endif %}
   </div>
 </div>
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+
+    {% if form.errors %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There was a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+              {{ form.get_error_summary() }}
+          </div>
+        </div>
+      </div>
+
+    {% endif %}
+
     <form class="govuk-form" method="POST" action="{{ action_url }}">
       {{ form.hidden_tag() }}
       <fieldset class="govuk-fieldset">
         <div class="govuk-form-group">
-           {{ form.draft_local_plan_published() }}
+          {% if include_draft_plan_published %}
+            {{ form.draft_local_plan_published() }}
+          {% endif %}
            {{ form.regulation_18_start() }}
            {{ form.regulation_18_end() }}
         </div>
@@ -30,9 +46,12 @@
         </legend>
         {{ form.consultation_covers(class='govuk-input') }}
         </div>
-        <button type="submit" class="govuk-button" data-module="govuk-button">
-          Save and continue
-        </button>
+        <div class="govuk-button-group">
+          <button type="submit" class="govuk-button" data-module="govuk-button">
+            Continue
+          </button>
+          <a href="{{ url_for('local_plan.get_plan', reference=plan.reference ) }}" class="govuk-button govuk-button--secondary">Cancel</a>
+        </div>
       </fieldset>
     </form>
   </div>

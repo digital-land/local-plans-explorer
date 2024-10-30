@@ -70,6 +70,11 @@ class DatePartField(Field):
         month = int(month_str) if month_str else None
         year = int(year_str) if year_str else None
 
+        if (day or month) and not year:
+            raise ValidationError(
+                "Invalid date: a year is required if day or month is provided."
+            )
+
         try:
             if year:
                 if month and day:
@@ -125,6 +130,35 @@ class Regulation18Form(FlaskForm):
             self.regulation_18_start.process_data(obj.get("regulation_18_start"))
             self.regulation_18_end.process_data(obj.get("regulation_18_end"))
             self.consultation_covers.data = obj.get("consultation_covers", "")
+
+    def validate(self, extra_validators=None):
+        if not super().validate(extra_validators=extra_validators):
+            return False
+
+        date_fields = [
+            self.draft_local_plan_published,
+            self.regulation_18_start,
+            self.regulation_18_end,
+        ]
+        if not any(field.data.get("year") for field in date_fields if field.data):
+            date_error = "At least one of the dates should have at least a year"
+            self.draft_local_plan_published.errors.append(date_error)
+            self.regulation_18_start.errors.append(date_error)
+            self.regulation_18_end.errors.append(date_error)
+            return False
+
+        return True
+
+    def get_error_summary(self):
+        errors = []
+        for field in [
+            self.draft_local_plan_published,
+            self.regulation_18_start,
+            self.regulation_18_end,
+        ]:
+            if field.errors:
+                errors.extend(field.errors)
+        return errors[0] if errors else None
 
 
 class Regulation19Form(FlaskForm):

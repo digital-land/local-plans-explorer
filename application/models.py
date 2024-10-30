@@ -293,7 +293,7 @@ class LocalPlanEvent(db.Model):
         for key, value in self.event_data.items():
             if key == "consultation_covers":
                 continue
-            if all(value.get(k) for k in ["day", "month", "year"]):
+            if all(value.get(k, "").strip() != "" for k in ["day", "month", "year"]):
                 return "completed"
         return "started"
 
