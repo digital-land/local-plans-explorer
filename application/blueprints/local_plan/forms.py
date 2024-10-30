@@ -70,7 +70,6 @@ class DatePartField(Field):
         month = int(month_str) if month_str else None
         year = int(year_str) if year_str else None
 
-        # Validate and store the date
         try:
             if year:
                 if month and day:
