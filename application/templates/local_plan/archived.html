@@ -1,0 +1,62 @@
+{% extends 'layouts/base.html' %}
+
+{% block beforeContent %}
+{{ super() }}
+<a href="{{ url_for('organisation.organisations') }}" class="govuk-back-link">Back to organisations</a>
+{% endblock beforeContent %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Archived plans</h1>
+      <p class="govuk-body-m">Update plans status to retrieve them from the archive.
+      </p>
+    </div>
+  </div>
+  {% for plan in plans %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <section class="app-summary-card">
+          <header class="app-summary-card__header">
+            <h2 class="app-summary-card__title">
+              Local plan
+            </h2>
+            <div class="app-summary-card__actions">
+              {%- if not config.AUTHENTICATION_ON or session["user"] %}
+              <a href="{{ url_for('local_plan.edit', reference=plan.reference) }}" class="govuk-link">Edit<span
+                  class="govuk-visually-hidden"> plan</span></a>
+              {%- endif %}
+            </div>
+          </header>
+          <div class="app-summary-card__body">
+            <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Reference</dt>
+                <dd class="govuk-summary-list__value"><a href="{{ url_for('local_plan.get_plan', reference=plan.reference ) }}">{{ plan.reference }}</a></dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Name</dt>
+                <dd class="govuk-summary-list__value">{{ plan.name }}</dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Organisation</dt>
+                <dd class="govuk-summary-list__value">
+                  <ul class="govuk-list">
+                    {% for org in plan.organisations %}
+                    <li>{{ org.name }}</li>
+                    {% endfor %}
+                  </ul>
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <div class="app-summary-card__footer">
+            <p class="govuk-body">Status</p>
+            <span class="govuk-tag govuk-tag--{{plan.status | status_colour }}">{{plan.status.value}}</span>
+          </div>
+        </section>
+      </div>
+    </div>
+  {% endfor %}
+
+{% endblock content %}

@@ -59,6 +59,11 @@ def organisations():
 @organisation.route("/<string:reference>")
 def get_organisation(reference):
     org = Organisation.query.get(reference)
+    has_archived = any(
+        plan.status == Status.NOT_FOR_PLATFORM for plan in org.local_plans
+    )
     if org is None:
         return abort(404)
-    return render_template("organisation/organisation.html", organisation=org)
+    return render_template(
+        "organisation/organisation.html", organisation=org, has_archived=has_archived
+    )

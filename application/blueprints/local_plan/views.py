@@ -165,6 +165,24 @@ def edit(reference):
     return render_template("local_plan/edit.html", plan=plan, form=form)
 
 
+@local_plan.route("/archived")
+def archived_plans():
+    if request.args.get("organisation"):
+        organisation = request.args.get("organisation")
+        plans = (
+            LocalPlan.query.filter(LocalPlan.status == Status.NOT_FOR_PLATFORM)
+            .filter(
+                LocalPlan.organisations.any(Organisation.organisation == organisation)
+            )
+            .all()
+        )
+    else:
+        plans = LocalPlan.query.filter(
+            LocalPlan.status == Status.NOT_FOR_PLATFORM
+        ).all()
+    return render_template("local_plan/archived.html", plans=plans)
+
+
 @local_plan.route("/<string:reference>/find-documents")
 @login_required
 def find_documents(reference):

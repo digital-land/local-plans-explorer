@@ -42,12 +42,14 @@
               </label>
             </div>
             {% for status in statuses %}
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="planStatusFilter-{{loop.index}}" name="planStatusFilter" type="radio" value="{{status.name}}" {% if plan_status_filter ==  status.name %}checked{% endif %}>
-                <label class="govuk-label govuk-radios__label" for="planStatusFilter-{{loop.index}}">
-                  {{ status.value }}
-                </label>
-              </div>
+              {% if status.name != 'NOT_FOR_PLATFORM' %}
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="planStatusFilter-{{loop.index}}" name="planStatusFilter" type="radio" value="{{status.name}}" {% if plan_status_filter ==  status.name %}checked{% endif %}>
+                  <label class="govuk-label govuk-radios__label" for="planStatusFilter-{{loop.index}}">
+                    {{ status.value }}
+                  </label>
+                </div>
+              {% endif %}
             {% endfor %}
         </fieldset>
         <div class="govuk-form-group">
@@ -81,11 +83,13 @@
               {% if organisation.local_plans | length > 0 %}
                 <ul class="govuk-list govuk-!-margin-bottom-3">
                   {% for plan in organisation.local_plans %}
-                    {% if not plan_status_filter or plan_status_filter == plan.status.name or plan_status_filter == 'all' %}
+                    {% if plan.status.name != "NOT_FOR_PLATFORM" %}
+                      {% if not plan_status_filter or plan_status_filter == plan.status.name or plan_status_filter == 'all' %}
                         <li>
                           <a href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}" class="govuk-link">{{ plan.name | truncate(55) }}</a>
                           <span class="govuk-tag govuk-tag--{{plan.status | status_colour }}">{{plan.status.value}}</span>
                         </li>
+                      {% endif %}
                     {% endif %}
                   {% endfor %}
                 </ul>
