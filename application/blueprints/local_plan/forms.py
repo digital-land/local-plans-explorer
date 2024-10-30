@@ -180,18 +180,3 @@ class ConsultationForm(FlaskForm):
             if field.errors:
                 errors.extend(field.errors)
         return errors[0] if errors else None
-
-
-# class Regulation19Form(FlaskForm):
-#     draft_local_plan_published = DatePartField(
-#         "Draft local plan published", validators=[Optional()]
-#     )
-#     regulation_19_start = DatePartField(
-#         "Regulation 19 consultation start", validators=[Optional()]
-#     )
-#     regulation_19_end = DatePartField(
-#         "Regulation 19 consultation end", validators=[Optional()]
-#     )
-#     consultation_covers = TextAreaField(
-#         "Consultation coverage", validators=[Optional()]
-#     )

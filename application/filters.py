@@ -24,10 +24,10 @@ def get_status_colour(status: Status) -> str:
 def timetable_status_colour(status: str) -> str:
     match status:
         case "completed":
-            return "light-blue"
+            return "green"
         case "not started":
             return "grey"
         case "started":
-            return "green"
+            return "yellow"
         case _:
             return "grey"

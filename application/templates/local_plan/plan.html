@@ -94,14 +94,16 @@
           <ul class="govuk-list app-timetable__list">
             <li><a href="{{ stage_urls[event_category.ESTIMATED_REGULATION_18] }}">Regulation 18</a>
               {% if plan.timetable %}
-                <span class="govuk-tag govuk-tag--{{ plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_18) | timetable_status_colour }}">{{ plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_18) | capitalize }}</span>
+                {% set progress = plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_18) %}
+                <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
               {% else %}
                 <span class="govuk-tag govuk-tag--grey">Not started</span>
               {% endif %}
             </li>
             <li><a href="{{ stage_urls[event_category.ESTIMATED_REGULATION_19] }}">Regulation 19</a>
               {% if plan.timetable %}
-                <span class="govuk-tag govuk-tag--{{ plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_19) | timetable_status_colour }}">{{ plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_19) | capitalize }}</span>
+              {% set progress = plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_19) %}
+                <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
               {% else %}
                 <span class="govuk-tag govuk-tag--grey">Not started</span>
               {% endif %}

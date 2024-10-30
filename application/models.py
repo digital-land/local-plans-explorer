@@ -289,6 +289,7 @@ class LocalPlanEvent(db.Model):
     )
     timetable: Mapped["LocalPlanTimetable"] = relationship(back_populates="events")
 
+    # TODO not sure this is correct at the moment - need to check
     def event_status(self):
         for key, value in self.event_data.items():
             if key == "consultation_covers":
