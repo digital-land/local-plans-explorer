@@ -1,0 +1,59 @@
+{% extends 'layouts/base.html' %}
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-m">{%if estimated %}Estimated{% else %}Actual{% endif %} dates</span>
+    <h1 class="govuk-heading-l">{{ event_category_title | capitalize }}</h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% for data in events_data %}
+      {% set event = data.event %}
+      {% set r = {'reference': plan.reference, 'event_category': event_category, 'event': event} %}
+      <section class="govuk-section">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Draft local plan published
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ data.draft_plan_published }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="{{ url_for('local_plan.edit_timetable_event', reference=plan, timetable_reference=timetable.reference, event_id=event.id) }}">Change<span class="govuk-visually-hidden"> draft local plan published</span></a>
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Consultation period
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ data.public_consultation_start }} - {{ data.public_consultation_end }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="{{ url_for('local_plan.edit_timetable_event', reference=plan, timetable_reference=timetable.reference, event_id=event.id) }}">Change<span class="govuk-visually-hidden"> consultation period</span></a>
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              What does the consultation cover?
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ data.consultation_covers }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="{{ url_for('local_plan.edit_timetable_event', reference=plan, timetable_reference=timetable.reference, event_id=event.id) }}">Change<span class="govuk-visually-hidden"> consultation covers</span></a>
+            </dd>
+          </div>
+        </dl>
+      </section>
+  {% endfor %}
+  </div>
+</div>
+
+{% endblock content %}

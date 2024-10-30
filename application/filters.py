@@ -19,3 +19,15 @@ def get_status_colour(status: Status) -> str:
         return "green"
     if status == Status.NOT_FOR_PLATFORM:
         return "red"
+
+
+def timetable_status_colour(status: str) -> str:
+    match status:
+        case "completed":
+            return "light-blue"
+        case "not started":
+            return "grey"
+        case "started":
+            return "green"
+        case _:
+            return "grey"

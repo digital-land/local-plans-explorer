@@ -13,6 +13,7 @@ load_dotenv()
 def create_app(config_filename):
     app = Flask(__name__)
     app.config.from_object(config_filename)
+    register_converters(app)
     register_errorhandlers(app)
     register_blueprints(app)
     register_extensions(app)
@@ -127,13 +128,24 @@ def register_commands(app):
 
 
 def register_filters(app):
-    from application.filters import get_date_part, get_status_colour
+    from application.filters import (
+        get_date_part,
+        get_status_colour,
+        timetable_status_colour,
+    )
 
     app.add_template_filter(get_date_part, name="date_part")
     app.add_template_filter(get_status_colour, name="status_colour")
+    app.add_template_filter(timetable_status_colour, name="timetable_status_colour")
 
 
 def register_globals(app):
     from digital_land_frontend.globals import random_int
 
     app.jinja_env.globals.update(random_int=random_int)
+
+
+def register_converters(app):
+    from application.utils import EventCategoryConverter
+
+    app.url_map.converters["event_category"] = EventCategoryConverter

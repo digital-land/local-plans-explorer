@@ -92,7 +92,13 @@
         </header>
         <div class="app-timetable__body">
           <ul class="govuk-list app-timetable__list">
-            <li><a href="{{ url_for('local_plan.add_timetable_event', reference=plan.reference, event_category='estimated-regulation-18') }}">Regulation 18</a><span class="govuk-tag govuk-tag--grey">Not started</span></li>
+            <li><a href="{{ url_for('local_plan.add_timetable_event', reference=plan.reference, event_category=event_category.ESTIMATED_REGULATION_18) }}">Regulation 18</a>
+              {% if plan.timetable %}
+                <span class="govuk-tag govuk-tag--{{ plan.timetable.estimated_reg_18_status() | timetable_status_colour }}">{{ plan.timetable.estimated_reg_18_status() | capitalize }}</span>
+              {% else %}
+                <span class="govuk-tag govuk-tag--grey">Not started</span>
+              {% endif %}
+            </li>
             <li><a href="#">Regulation 19</a><span class="govuk-tag govuk-tag--grey">Not started</span></li>
             <li><a href="#">Examination and adoption</a><span class="govuk-tag govuk-tag--grey">Not started</span></li>
           </ul>

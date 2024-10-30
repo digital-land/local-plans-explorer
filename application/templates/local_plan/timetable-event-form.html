@@ -5,7 +5,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-m">{%if estimated %}Estimated{% else %}Actual{% endif %} dates</span>
-    <h1 class="govuk-heading-l">{{ event_category | capitalize }}</h1>
+    <h1 class="govuk-heading-l">{{ event_category_title | capitalize }}</h1>
     {% if estimated %}
       <p class="govuk-body-s">You can use your Local Development Scheme to add dates to your timetable. For estimated dates, a month and year is a valid entry.</p>
     {% endif %}
@@ -14,7 +14,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <form class="govuk-form" method="POST" action="{{ url_for('local_plan.add_timetable_event', reference=plan.reference, event_category=event_category) }}">
+    <form class="govuk-form" method="POST" action="{{ action_url }}">
       {{ form.hidden_tag() }}
       <fieldset class="govuk-fieldset">
         <div class="govuk-form-group">

@@ -11,12 +11,12 @@ from application.extensions import db
 from application.models import (
     CandidateDocument,
     DocumentStatus,
+    EventCategory,
     LocalPlan,
     LocalPlanBoundary,
     LocalPlanDocument,
     LocalPlanDocumentType,
     LocalPlanEvent,
-    LocalPlanEventType,
     LocalPlanTimetable,
     Organisation,
     Status,
@@ -30,8 +30,7 @@ from application.utils import (
 )
 
 event_forms = {
-    "estimated-regulation-18": Regulation18Form,
-    "regulation-18": Regulation18Form,
+    EventCategory.ESTIMATED_REGULATION_18: Regulation18Form,
 }
 
 
@@ -71,6 +70,7 @@ def get_plan(reference):
         geography=geography,
         bounding_box=bounding_box,
         document_counts=document_counts,
+        event_category=EventCategory,
     )
 
 
@@ -404,10 +404,60 @@ def add_geography(reference):
 
 
 @local_plan.route(
-    "/<string:reference>/timetable/<string:timetable_reference>/<string:event_category>"
+    "/<string:reference>/timetable/<string:timetable_reference>/event/<string:event_id>"
 )
 @login_required
-def timetable_event(reference, timetable_reference, event_category):
+def timetable_event(reference, timetable_reference, event_id):
+    event = LocalPlanEvent.query.get(event_id)
+    if event is None:
+        return abort(404)
+    event_category = event.event_category
+    if "estimated" in event_category.value.lower():
+        estimated = True
+    else:
+        estimated = False
+    event_category_title = event_category.value.replace("Estimated", "").strip()
+
+    if "draft_local_plan_published" in event.event_data:
+        draft_plan_published = _collect_date_fields(
+            event.event_data, "draft_local_plan_published"
+        )
+    else:
+        draft_plan_published = None
+
+    public_consultation_start = _collect_date_fields(
+        event.event_data, "regulation_18_start"
+    )
+    public_consultation_end = _collect_date_fields(
+        event.event_data, "regulation_18_end"
+    )
+    consultation_covers = event.event_data.get("consultation_covers", None)
+
+    edit_url = url_for(
+        "local_plan.edit_timetable_event",
+        reference=event.timetable.local_plan,
+        timetable_reference=event.timetable.reference,
+        event_id=event.id,
+    )
+
+    return render_template(
+        "local_plan/timetable-event.html",
+        event=event,
+        estimated=estimated,
+        event_category_title=event_category_title,
+        draft_plan_published=draft_plan_published,
+        public_consultation_start=public_consultation_start,
+        public_consultation_end=public_consultation_end,
+        consultation_covers=consultation_covers,
+        edit_url=edit_url,
+    )
+
+
+@local_plan.route(
+    "/<string:reference>/timetable/<string:timetable_reference>/<event_category:event_category>"
+)
+@login_required
+def timetable_events(reference, timetable_reference, event_category):
     timetable = LocalPlanTimetable.query.filter(
         LocalPlanTimetable.local_plan == reference,
         LocalPlanTimetable.reference == timetable_reference,
@@ -416,90 +466,133 @@ def timetable_event(reference, timetable_reference, event_category):
     if timetable is None:
         return abort(404)
 
-    event_types = LocalPlanEventType.query.filter(
-        LocalPlanEventType.event_category == event_category
-    ).all()
+    estimated = True if "estimated" in event_category.value.lower() else False
 
-    event_type_references = [event_type.reference for event_type in event_types]
+    events = timetable.get_events_by_category(event_category)
 
-    estimated = True if "estimated" in event_category else False
+    events_data = _collate_events_data(events, event_category)
 
-    events = [
-        event for event in timetable.events if event.event_type in event_type_references
-    ]
-    event_category_name = (
-        event_category.replace("estimated", " ").replace("-", " ").strip()
-    )
+    event_category_title = event_category.value.replace("Estimated", "").strip()
 
     return render_template(
-        "local_plan/timetable-event.html",
+        "local_plan/timetable-events.html",
+        plan=timetable.local_plan,
+        timetable=timetable,
         events=events,
+        events_data=events_data,
         estimated=estimated,
-        event_category_name=event_category_name,
+        event_category_title=event_category_title,
     )
 
 
 @local_plan.route(
-    "/<string:reference>/timetable/<string:event_category>/add", methods=["GET", "POST"]
+    "/<string:reference>/<event_category:event_category>/add", methods=["GET", "POST"]
 )
 @login_required
 def add_timetable_event(reference, event_category):
     plan = LocalPlan.query.get(reference)
-    if plan.timetable is None:
-        estimated = True if "estimated" in event_category else False
-        Form = event_forms.get(event_category)
-        form = Form()
-        event_category_name = (
-            event_category.replace("estimated", " ").replace("-", " ").strip()
-        )
 
-        if form.validate_on_submit():
-            if form.draft_local_plan_published:
-                data = form.draft_local_plan_published.data
-                event_type = "estimated-reg-18-draft-local-plan-published"
-                event = LocalPlanEvent(
-                    event_type=event_type,
-                    event_day=data.get("day") if data.get("day") else None,
-                    event_month=data.get("month") if data.get("month") else None,
-                    event_year=data.get("year") if data.get("year") else None,
-                )
-                if plan.timetable is not None:
-                    plan.timetable.append(event)
-                else:
-                    plan.timetable = LocalPlanTimetable(
-                        reference=f"{plan.reference}-timetable",
-                        name=f"{plan.name} timetable",
-                        local_plan=plan.reference,
-                        events=[event],
-                    )
-                db.session.add(event)
-                db.session.add(plan)
-                db.session.commit()
-                return redirect(
-                    url_for(
-                        "local_plan.timetable_event",
-                        reference=plan.reference,
-                        timetable_reference=plan.timetable.reference,
-                        event_category=event_category,
-                    )
-                )
-
-        return render_template(
-            "local_plan/add-timetable-event.html",
-            plan=plan,
-            form=form,
-            event_category_name=event_category_name,
-            estimated=estimated,
-            event_category=event_category,
-        )
-    else:
+    if plan.timetable is not None:
         return redirect(
             url_for(
-                "local_plan.timetable_event",
+                "local_plan.timetable_events",
                 reference=plan.reference,
+                timetable_reference=plan.timetable.reference,
                 event_category=event_category,
             )
         )
+
+    estimated = True if event_category.value.lower().startswith("estimated") else False
+    Form = event_forms.get(event_category)
+    form = Form()
+
+    if form.validate_on_submit():
+        event = LocalPlanEvent(event_category=event_category, event_data=form.data)
+        if plan.timetable is not None:
+            plan.timetable.append(event)
+        else:
+            plan.timetable = LocalPlanTimetable(
+                reference=f"{plan.reference}-timetable",
+                name=f"{plan.name} timetable",
+                local_plan=plan.reference,
+                events=[event],
+            )
+            db.session.add(event)
+            db.session.add(plan)
+            db.session.commit()
+            return redirect(
+                url_for(
+                    "local_plan.timetable_event",
+                    reference=plan.reference,
+                    timetable_reference=plan.timetable.reference,
+                    event_id=event.id,
+                )
+            )
+
+    if estimated:
+        event_category_title = event_category.value.replace("Estimated", "").strip()
+    else:
+        event_category_title = event_category.value
+
+    action_url = url_for(
+        "local_plan.add_timetable_event",
+        reference=reference,
+        event_category=event_category,
+    )
+
+    return render_template(
+        "local_plan/timetable-event-form.html",
+        plan=plan,
+        form=form,
+        estimated=estimated,
+        action_url=action_url,
+        event_category=event_category,
+        event_category_title=event_category_title,
+    )
+
+
+@local_plan.route(
+    "/<string:reference>/timetable/<string:timetable_reference>/event/<string:event_id>/edit",
+    methods=["GET", "POST"],
+)
+@login_required
+def edit_timetable_event(reference, timetable_reference, event_id):
+    event = LocalPlanEvent.query.get(event_id)
+    if event is None:
+        return abort(404)
+
+    Form = event_forms.get(event.event_category)
+
+    form = Form(obj=event.event_data)
+
+    if form.validate_on_submit():
+        event.event_data = form.data
+        db.session.add(event)
+        db.session.commit()
+        return redirect(
+            url_for(
+                "local_plan.timetable_event",
+                reference=reference,
+                timetable_reference=timetable_reference,
+                event_id=event.id,
+            )
+        )
+
+    action_url = url_for(
+        "local_plan.edit_timetable_event",
+        reference=reference,
+        timetable_reference=timetable_reference,
+        event_id=event_id,
+    )
+    return render_template(
+        "local_plan/timetable-event-form.html",
+        form=form,
+        event=event,
+        action_url=action_url,
+        plan=event.timetable.local_plan_obj,
+        timetable=event.timetable,
+        event_category=event.event_category,
+    )
 
 
 def _get_document_counts(documents):
@@ -540,3 +633,58 @@ def _allowed_file(filename):
 
     ALLOWED_EXTENSIONS = current_app.config["ALLOWED_EXTENSIONS"]
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def _collect_date_fields(data, key):
+    dates = data.get(key, None)
+    if dates is None:
+        return ""
+    date_parts = []
+    if dates.get("day", None):
+        date_parts.append(dates["day"])
+    if dates.get("month", None):
+        date_parts.append(dates["month"])
+    if dates.get("year", None):
+        date_parts.append(dates["year"])
+    return "/".join(date_parts)
+
+
+def _collate_events_data(events, category):
+    match category:
+        case EventCategory.ESTIMATED_REGULATION_18:
+            return [
+                {
+                    "draft_local_plan_published": _collect_date_fields(
+                        event.event_data, "draft_local_plan_published"
+                    ),
+                    "public_consultation_start": _collect_date_fields(
+                        event.event_data, "regulation_18_start"
+                    ),
+                    "public_consultation_end": _collect_date_fields(
+                        event.event_data, "regulation_18_end"
+                    ),
+                    "consultation_covers": event.event_data.get(
+                        "consultation_covers", ""
+                    ),
+                    "event": event,
+                }
+                for event in events
+            ]
+        case EventCategory.ESTIMATED_REGULATION_19:
+            return [
+                {
+                    "public_consultation_start": _collect_date_fields(
+                        event.event_data, "regulation_19_start"
+                    ),
+                    "public_consultation_end": _collect_date_fields(
+                        event.event_data, "regulation_19_start"
+                    ),
+                    "consultation_covers": event.event_data.get(
+                        "consultation_covers", ""
+                    ),
+                    "event": event,
+                }
+                for event in events
+            ]
+        case _:
+            return None

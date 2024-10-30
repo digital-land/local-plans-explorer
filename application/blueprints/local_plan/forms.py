@@ -74,11 +74,11 @@ class DatePartField(Field):
         try:
             if year:
                 if month and day:
-                    self.data = datetime(year, month, day)
+                    datetime(year, month, day)
                 elif month:
-                    self.data = datetime(year, month, 1)
+                    datetime(year, month, 1)
                 else:
-                    self.data = datetime(year, 1, 1)
+                    datetime(year, 1, 1)
             else:
                 raise ValidationError("Invalid date: at least a year is required.")
         except ValueError:
@@ -94,7 +94,11 @@ class DatePartField(Field):
 
     def process_data(self, value):
         if isinstance(value, dict):
-            self.data = value
+            self.data = {
+                "day": value.get("day", ""),
+                "month": value.get("month", ""),
+                "year": value.get("year", ""),
+            }
         else:
             self.data = {"day": "", "month": "", "year": ""}
 
@@ -112,6 +116,16 @@ class Regulation18Form(FlaskForm):
     consultation_covers = TextAreaField(
         "What does the consultation cover?", validators=[Optional()]
     )
+
+    def __init__(self, obj=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if request.method == "GET" and obj:
+            self.draft_local_plan_published.process_data(
+                obj.get("draft_local_plan_published")
+            )
+            self.regulation_18_start.process_data(obj.get("regulation_18_start"))
+            self.regulation_18_end.process_data(obj.get("regulation_18_end"))
+            self.consultation_covers.data = obj.get("consultation_covers", "")
 
 
 class Regulation19Form(FlaskForm):

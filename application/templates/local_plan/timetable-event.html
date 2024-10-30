@@ -1,4 +1,4 @@
-{% extends 'layouts/base-with-map.html' %}
+{% extends 'layouts/base.html' %}
 
 
 {% block content %}
@@ -6,15 +6,49 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-m">{%if estimated %}Estimated{% else %}Actual{% endif %} dates</span>
-    <h1 class="govuk-heading-l">{{ event_category | capitalize }}</h1>
+    <h1 class="govuk-heading-l">{{ event_category_title | capitalize }}</h1>
   </div>
 </div>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    {% for event in events %}
-      <p>{{ event}}</p>
-    {% endfor %}
+    <dl class="govuk-summary-list">
+      {% if draft_plan_published %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Draft local plan published
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ draft_plan_published }}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="{{ edit_url }}">Change<span class="govuk-visually-hidden"> draft local plan published</span></a>
+          </dd>
+        </div>
+      {% endif %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Consultation period
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ public_consultation_start }} - {{ public_consultation_end }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="{{ edit_url }}">Change<span class="govuk-visually-hidden"> consultation period</span></a>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          What does the consultation cover?
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ consultation_covers }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="{{ edit_url }}">Change<span class="govuk-visually-hidden"> consultation covers</span></a>
+        </dd>
+      </div>
+    </dl>
   </div>
 </div>
 

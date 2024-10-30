@@ -3,8 +3,9 @@ from functools import wraps
 import geopandas as gpd
 from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
+from werkzeug.routing import BaseConverter
 
-from application.models import LocalPlan, Organisation, Status
+from application.models import EventCategory, LocalPlan, Organisation, Status
 
 
 def login_required(f):
@@ -165,3 +166,18 @@ def generate_random_string(length=6):
     )  # Contains both letters and digits
     random_string = "".join(random.choice(characters) for _ in range(length))
     return random_string
+
+
+class EventCategoryConverter(BaseConverter):
+    def to_python(self, event_category):
+        event_category = event_category.upper()
+        event_category = event_category.replace("-", "_")
+        try:
+            return EventCategory[event_category]
+        except KeyError:
+            return event_category
+
+    def to_url(self, event_category):
+        event_category = event_category.name.lower()
+        event_category = event_category.replace("_", "-")
+        return event_category

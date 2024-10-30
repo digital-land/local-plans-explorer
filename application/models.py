@@ -5,6 +5,7 @@ from typing import List, Optional
 
 from sqlalchemy import Date, DateTime, ForeignKey, Integer, Text
 from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB, UUID
+from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from application.extensions import db
@@ -257,9 +258,17 @@ class Organisation(DateModel):
     )
 
 
+class EventCategory(Enum):
+    ESTIMATED_REGULATION_18 = "Estimated regulation 18"
+    ESTIMATED_REGULATION_19 = "Estimated regulation 19"
+    ESTIMATED_EXAMINATION_AND_ADOPTION = "Estimated examination and adoption"
+    REGULATION_18 = "Regulation 18"
+    REGULATION_19 = "Regulation 19"
+    EXAMINATION_AND_ADOPTION = "Examination and adoption"
+
+
 class LocalPlanEventType(BaseModel):
     __tablename__ = "local_plan_event_type"
-    event_category: Mapped[Optional[str]] = mapped_column(Text)
 
 
 class LocalPlanEvent(db.Model):
@@ -268,18 +277,25 @@ class LocalPlanEvent(db.Model):
     id: Mapped[uuid.uuid4] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-    event_type: Mapped[str] = mapped_column(
-        ForeignKey("local_plan_event_type.reference")
-    )
-    event_day: Mapped[Optional[str]] = mapped_column(Text)
-    event_month: Mapped[Optional[str]] = mapped_column(Text)
-    event_year: Mapped[Optional[str]] = mapped_column(Text)
+    event_category: Mapped[EventCategory] = mapped_column(ENUM(EventCategory))
+
+    event_data: Mapped[Optional[dict]] = mapped_column(MutableDict.as_mutable(JSONB))
+
     created_date: Mapped[datetime.datetime] = mapped_column(
         DateTime, default=datetime.datetime.now
     )
     local_plan_timetable: Mapped[str] = mapped_column(
         ForeignKey("local_plan_timetable.reference")
     )
+    timetable: Mapped["LocalPlanTimetable"] = relationship(back_populates="events")
+
+    def event_status(self):
+        for key, value in self.event_data.items():
+            if key == "consultation_covers":
+                continue
+            if all(value.get(k) for k in ["day", "month", "year"]):
+                return "completed"
+        return "started"
 
 
 class LocalPlanTimetable(DateModel):
@@ -290,3 +306,20 @@ class LocalPlanTimetable(DateModel):
     local_plan: Mapped[str] = mapped_column(ForeignKey("local_plan.reference"))
     local_plan_obj: Mapped["LocalPlan"] = relationship(back_populates="timetable")
     events: Mapped[List["LocalPlanEvent"]] = relationship(lazy="joined")
+
+    def estimated_reg_18_status(self):
+        # reg18_events = [
+        #     event
+        #     for event in self.events
+        #     if event.event_category == EventCategory.ESTIMATED_REGULATION_18
+        # ]
+        # if not reg18_events:
+        #     return "not started"
+        # if all(event.event_status() == "completed" for event in reg18_events):
+        #     return "completed"
+        # if any(event.event_status() == "started" for event in reg18_events):
+        #     return "started"
+        return "not started"
+
+    def get_events_by_category(self, category):
+        return [event for event in self.events if event.event_category == category]
