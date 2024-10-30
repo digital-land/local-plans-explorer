@@ -61,7 +61,19 @@
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <a href="{{ url_for('local_plan.add_timetable_event', reference=plan, timetable_reference=timetable.reference, event_category=event_category) }}" class="govuk-button govuk-button--secondary">Add another</a>
+    <div class="govuk-button-group">
+      <a href="{{ url_for('local_plan.add_timetable_event', reference=plan, timetable_reference=timetable.reference, event_category=event_category) }}" class="govuk-button govuk-button--secondary">Add another</a>
+    </div>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-button-group">
+      {% if continue_url %}
+        <a href="{{ continue_url }}" class="govuk-button">Continue</a>
+      {% endif %}
+      <a href="{{ url_for('local_plan.get_plan', reference=plan) }}" class="govuk-button govuk-button--secondary">Close</a>
+    </div>
   </div>
 </div>
 

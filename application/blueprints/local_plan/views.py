@@ -6,7 +6,7 @@ from flask import Blueprint, abort, redirect, render_template, request, url_for
 from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
-from application.blueprints.local_plan.forms import LocalPlanForm, Regulation18Form
+from application.blueprints.local_plan.forms import ConsultationForm, LocalPlanForm
 from application.extensions import db
 from application.models import (
     CandidateDocument,
@@ -28,11 +28,6 @@ from application.utils import (
     login_required,
     populate_object,
 )
-
-event_forms = {
-    EventCategory.ESTIMATED_REGULATION_18: Regulation18Form,
-}
-
 
 local_plan = Blueprint("local_plan", __name__, url_prefix="/local-plan")
 
@@ -64,22 +59,29 @@ def get_plan(reference):
 
     document_counts = _get_document_counts(plan.documents)
 
-    if plan.timetable and plan.timetable.estimated_reg_18_status() in [
-        "started",
-        "completed",
+    stage_urls = {}
+    for event_category in [
+        EventCategory.ESTIMATED_REGULATION_18,
+        EventCategory.ESTIMATED_REGULATION_19,
     ]:
-        reg_18_url = url_for(
-            "local_plan.timetable_events",
-            reference=plan.reference,
-            timetable_reference=plan.timetable.reference,
-            event_category=EventCategory.ESTIMATED_REGULATION_18,
-        )
-    else:
-        reg_18_url = url_for(
-            "local_plan.add_timetable_event",
-            reference=plan.reference,
-            event_category=EventCategory.ESTIMATED_REGULATION_18,
-        )
+        if plan.timetable and plan.timetable.event_category_progress(
+            event_category
+        ) in [
+            "started",
+            "completed",
+        ]:
+            stage_urls[event_category] = url_for(
+                "local_plan.timetable_events",
+                reference=plan.reference,
+                timetable_reference=plan.timetable.reference,
+                event_category=event_category,
+            )
+        else:
+            stage_urls[event_category] = url_for(
+                "local_plan.add_timetable_event",
+                reference=plan.reference,
+                event_category=event_category,
+            )
 
     return render_template(
         "local_plan/plan.html",
@@ -88,7 +90,7 @@ def get_plan(reference):
         bounding_box=bounding_box,
         document_counts=document_counts,
         event_category=EventCategory,
-        reg_18_url=reg_18_url,
+        stage_urls=stage_urls,
     )
 
 
@@ -443,12 +445,8 @@ def timetable_event(reference, timetable_reference, event_id):
     else:
         draft_plan_published = None
 
-    public_consultation_start = _collect_date_fields(
-        event.event_data, "regulation_18_start"
-    )
-    public_consultation_end = _collect_date_fields(
-        event.event_data, "regulation_18_end"
-    )
+    consultation_start = _collect_date_fields(event.event_data, "consultation_start")
+    consultation_end = _collect_date_fields(event.event_data, "consultation_end")
     consultation_covers = event.event_data.get("consultation_covers", None)
 
     edit_url = url_for(
@@ -457,6 +455,8 @@ def timetable_event(reference, timetable_reference, event_id):
         timetable_reference=event.timetable.reference,
         event_id=event.id,
     )
+    plan_reference = event.timetable.local_plan
+    continue_url = _get_save_and_continue_url(plan_reference, event_category)
 
     return render_template(
         "local_plan/timetable-event.html",
@@ -465,10 +465,11 @@ def timetable_event(reference, timetable_reference, event_id):
         event_category=event_category,
         event_category_title=event_category_title,
         draft_plan_published=draft_plan_published,
-        public_consultation_start=public_consultation_start,
-        public_consultation_end=public_consultation_end,
+        consultation_start=consultation_start,
+        consultation_end=consultation_end,
         consultation_covers=consultation_covers,
         edit_url=edit_url,
+        continue_url=continue_url,
     )
 
 
@@ -493,6 +494,9 @@ def timetable_events(reference, timetable_reference, event_category):
 
     event_category_title = event_category.value.replace("Estimated", "").strip()
 
+    plan_reference = timetable.local_plan
+    continue_url = _get_save_and_continue_url(plan_reference, event_category)
+
     return render_template(
         "local_plan/timetable-events.html",
         plan=timetable.local_plan,
@@ -502,6 +506,7 @@ def timetable_events(reference, timetable_reference, event_category):
         estimated=estimated,
         event_category=event_category,
         event_category_title=event_category_title,
+        continue_url=continue_url,
     )
 
 
@@ -512,8 +517,7 @@ def timetable_events(reference, timetable_reference, event_category):
 def add_timetable_event(reference, event_category):
     plan = LocalPlan.query.get(reference)
     estimated = True if event_category.value.lower().startswith("estimated") else False
-    Form = event_forms.get(event_category)
-    form = Form()
+    form = _get_event_form(event_category=event_category)
 
     if form.validate_on_submit():
         event = LocalPlanEvent(event_category=event_category, event_data=form.data)
@@ -543,7 +547,7 @@ def add_timetable_event(reference, event_category):
     else:
         event_category_title = event_category.value
 
-    if plan.timetable and plan.timetable.estimated_reg_18_status() in [
+    if plan.timetable and plan.timetable.event_category_progress(event_category) in [
         "started",
         "completed",
     ]:
@@ -579,9 +583,7 @@ def edit_timetable_event(reference, timetable_reference, event_id):
     if event is None:
         return abort(404)
 
-    Form = event_forms.get(event.event_category)
-
-    form = Form(obj=event.event_data)
+    form = _get_event_form(obj=event.event_data, event_category=event.event_category)
 
     if form.validate_on_submit():
         event.event_data = form.data
@@ -675,33 +677,17 @@ def _collect_date_fields(data, key):
 
 def _collate_events_data(events, category):
     match category:
-        case EventCategory.ESTIMATED_REGULATION_18:
+        case EventCategory.ESTIMATED_REGULATION_18 | EventCategory.ESTIMATED_REGULATION_19:
             return [
                 {
                     "draft_local_plan_published": _collect_date_fields(
                         event.event_data, "draft_local_plan_published"
                     ),
                     "public_consultation_start": _collect_date_fields(
-                        event.event_data, "regulation_18_start"
+                        event.event_data, "consultation_start"
                     ),
                     "public_consultation_end": _collect_date_fields(
-                        event.event_data, "regulation_18_end"
-                    ),
-                    "consultation_covers": event.event_data.get(
-                        "consultation_covers", ""
-                    ),
-                    "event": event,
-                }
-                for event in events
-            ]
-        case EventCategory.ESTIMATED_REGULATION_19:
-            return [
-                {
-                    "public_consultation_start": _collect_date_fields(
-                        event.event_data, "regulation_19_start"
-                    ),
-                    "public_consultation_end": _collect_date_fields(
-                        event.event_data, "regulation_19_start"
+                        event.event_data, "consultation_end"
                     ),
                     "consultation_covers": event.event_data.get(
                         "consultation_covers", ""
@@ -721,3 +707,25 @@ def _is_first_event_of_category(event):
         LocalPlanEvent.created_date < event.created_date,
     ).all()
     return True if not earlier_events else False
+
+
+def _get_save_and_continue_url(plan_reference, event_category):
+    match event_category:
+        case EventCategory.ESTIMATED_REGULATION_18:
+            return url_for(
+                "local_plan.add_timetable_event",
+                reference=plan_reference,
+                event_category=EventCategory.ESTIMATED_REGULATION_19,
+            )
+        case EventCategory.ESTIMATED_REGULATION_19:
+            return url_for(
+                "local_plan.add_timetable_event",
+                reference=plan_reference,
+                event_category=EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
+            )
+        case _:
+            return None
+
+
+def _get_event_form(obj=None, event_category=None):
+    return ConsultationForm(obj=obj, event_category=event_category)

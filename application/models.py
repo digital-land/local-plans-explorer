@@ -307,17 +307,15 @@ class LocalPlanTimetable(DateModel):
     local_plan_obj: Mapped["LocalPlan"] = relationship(back_populates="timetable")
     events: Mapped[List["LocalPlanEvent"]] = relationship(lazy="joined")
 
-    def estimated_reg_18_status(self):
-        reg18_events = [
-            event
-            for event in self.events
-            if event.event_category == EventCategory.ESTIMATED_REGULATION_18
+    def event_category_progress(self, event_category):
+        events = [
+            event for event in self.events if event.event_category == event_category
         ]
-        if not reg18_events:
+        if not events:
             return "not started"
-        if all(event.event_status() == "completed" for event in reg18_events):
+        if all(event.event_status() == "completed" for event in events):
             return "completed"
-        if any(event.event_status() == "started" for event in reg18_events):
+        if any(event.event_status() == "started" for event in events):
             return "started"
 
     def get_events_by_category(self, category):
