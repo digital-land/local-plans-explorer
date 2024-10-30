@@ -127,12 +127,10 @@ class ConsultationForm(FlaskForm):
         self.consultation_stage = ConsultationForm.consultation_stage_number(
             self.category
         )
-        # self.stage_start_key = f"regulation_{self.consultation_stage}_start"
-        # self.stage_end_key = f"regulation_{self.consultation_stage}_end"
-        self.consultation_start.label = (
+        self.consultation_start.label.text = (
             f"Regulation {self.consultation_stage} consultation start"
         )
-        self.consultation_end.label = (
+        self.consultation_end.label.text = (
             f"Regulation {self.consultation_stage} consultation end"
         )
 
