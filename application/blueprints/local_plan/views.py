@@ -6,7 +6,11 @@ from flask import Blueprint, abort, redirect, render_template, request, url_for
 from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
-from application.blueprints.local_plan.forms import ConsultationForm, LocalPlanForm
+from application.blueprints.local_plan.forms import (
+    ConsultationForm,
+    ExaminationAndAdoptionForm,
+    LocalPlanForm,
+)
 from application.extensions import db
 from application.models import (
     CandidateDocument,
@@ -63,6 +67,7 @@ def get_plan(reference):
     for event_category in [
         EventCategory.ESTIMATED_REGULATION_18,
         EventCategory.ESTIMATED_REGULATION_19,
+        EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
     ]:
         if plan.timetable and plan.timetable.event_category_progress(
             event_category
@@ -456,39 +461,17 @@ def timetable_event(reference, timetable_reference, event_id):
         estimated = False
     event_category_title = event_category.value.replace("Estimated", "").strip()
 
-    if "draft_local_plan_published" in event.event_data:
-        draft_plan_published = _collect_date_fields(
-            event.event_data, "draft_local_plan_published"
+    if event_category in [
+        EventCategory.ESTIMATED_REGULATION_18,
+        EventCategory.ESTIMATED_REGULATION_19,
+    ]:
+        return _render_consultation_event_page(
+            event, event_category, estimated, event_category_title
         )
-    else:
-        draft_plan_published = None
-
-    consultation_start = _collect_date_fields(event.event_data, "consultation_start")
-    consultation_end = _collect_date_fields(event.event_data, "consultation_end")
-    consultation_covers = event.event_data.get("consultation_covers", None)
-
-    edit_url = url_for(
-        "local_plan.edit_timetable_event",
-        reference=event.timetable.local_plan,
-        timetable_reference=event.timetable.reference,
-        event_id=event.id,
-    )
-    plan_reference = event.timetable.local_plan
-    continue_url = _get_save_and_continue_url(plan_reference, event_category)
-
-    return render_template(
-        "local_plan/timetable-event.html",
-        event=event,
-        estimated=estimated,
-        event_category=event_category,
-        event_category_title=event_category_title,
-        draft_plan_published=draft_plan_published,
-        consultation_start=consultation_start,
-        consultation_end=consultation_end,
-        consultation_covers=consultation_covers,
-        edit_url=edit_url,
-        continue_url=continue_url,
-    )
+    elif event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
+        return _render_examination_and_adoption_event_page(
+            event, event_category, estimated, event_category_title
+        )
 
 
 @local_plan.route(
@@ -506,26 +489,38 @@ def timetable_events(reference, timetable_reference, event_category):
 
     estimated = True if "estimated" in event_category.value.lower() else False
 
-    events = timetable.get_events_by_category(event_category)
-
-    events_data = _collate_events_data(events, event_category)
-
-    event_category_title = event_category.value.replace("Estimated", "").strip()
-
-    plan_reference = timetable.local_plan
-    continue_url = _get_save_and_continue_url(plan_reference, event_category)
-
-    return render_template(
-        "local_plan/timetable-events.html",
-        plan=timetable.local_plan,
-        timetable=timetable,
-        events=events,
-        events_data=events_data,
-        estimated=estimated,
-        event_category=event_category,
-        event_category_title=event_category_title,
-        continue_url=continue_url,
-    )
+    if event_category in [
+        EventCategory.ESTIMATED_REGULATION_18,
+        EventCategory.ESTIMATED_REGULATION_19,
+    ]:
+        events = timetable.get_events_by_category(event_category)
+        events_data = _collate_events_data(events, event_category)
+        event_category_title = event_category.value.replace("Estimated", "").strip()
+        plan_reference = timetable.local_plan
+        continue_url = _get_save_and_continue_url(plan_reference, event_category)
+        return render_template(
+            "local_plan/timetable-consultations.html",
+            plan=timetable.local_plan,
+            timetable=timetable,
+            events=events,
+            events_data=events_data,
+            estimated=estimated,
+            event_category=event_category,
+            event_category_title=event_category_title,
+            continue_url=continue_url,
+        )
+    elif event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
+        event_category_title = event_category.value
+        events = timetable.get_events_by_category(event_category)
+        if events and len(events) == 1:
+            event = events[0]
+            return _render_examination_and_adoption_event_page(
+                event, event_category, estimated, event_category_title
+            )
+        else:
+            return abort(404)
+    else:
+        return abort(404)
 
 
 @local_plan.route(
@@ -536,6 +531,10 @@ def add_timetable_event(reference, event_category):
     plan = LocalPlan.query.get(reference)
     estimated = True if event_category.value.lower().startswith("estimated") else False
     form = _get_event_form(event_category=event_category)
+
+    redirect_url = _redirect_url_if_exam_and_adopt_exists(plan, event_category)
+    if redirect_url is not None:
+        return redirect(redirect_url)
 
     if form.validate_on_submit():
         event = LocalPlanEvent(event_category=event_category, event_data=form.data)
@@ -565,13 +564,7 @@ def add_timetable_event(reference, event_category):
     else:
         event_category_title = event_category.value
 
-    if plan.timetable and plan.timetable.event_category_progress(event_category) in [
-        "started",
-        "completed",
-    ]:
-        include_draft_plan_published = False
-    else:
-        include_draft_plan_published = True
+    include_draft_plan_published = _include_draft_plan_published(plan, event_category)
 
     action_url = url_for(
         "local_plan.add_timetable_event",
@@ -637,6 +630,90 @@ def edit_timetable_event(reference, timetable_reference, event_id):
         include_draft_plan_published=include_draft_plan_published,
         estimated=estimated,
     )
+
+
+def _render_consultation_event_page(
+    event, event_category, estimated, event_category_title
+):
+    if "draft_local_plan_published" in event.event_data:
+        draft_plan_published = _collect_date_fields(
+            event.event_data, "draft_local_plan_published"
+        )
+    else:
+        draft_plan_published = None
+
+    consultation_start = _collect_date_fields(event.event_data, "consultation_start")
+    consultation_end = _collect_date_fields(event.event_data, "consultation_end")
+    consultation_covers = event.event_data.get("consultation_covers", None)
+
+    edit_url = url_for(
+        "local_plan.edit_timetable_event",
+        reference=event.timetable.local_plan,
+        timetable_reference=event.timetable.reference,
+        event_id=event.id,
+    )
+    plan_reference = event.timetable.local_plan
+    continue_url = _get_save_and_continue_url(plan_reference, event_category)
+
+    return render_template(
+        "local_plan/timetable-consultation.html",
+        event=event,
+        estimated=estimated,
+        event_category=event_category,
+        event_category_title=event_category_title,
+        draft_plan_published=draft_plan_published,
+        consultation_start=consultation_start,
+        consultation_end=consultation_end,
+        consultation_covers=consultation_covers,
+        edit_url=edit_url,
+        continue_url=continue_url,
+    )
+
+
+def _render_examination_and_adoption_event_page(
+    event, event_category, estimated, event_category_title
+):
+    submit_for_examination = _collect_date_fields(
+        event.event_data, "submit_for_examination"
+    )
+    adoption = _collect_date_fields(event.event_data, "adoption")
+
+    edit_url = url_for(
+        "local_plan.edit_timetable_event",
+        reference=event.timetable.local_plan,
+        timetable_reference=event.timetable.reference,
+        event_id=event.id,
+    )
+
+    return render_template(
+        "local_plan/timetable-examination-and-adoption.html",
+        event=event,
+        estimated=estimated,
+        event_category=event_category,
+        event_category_title=event_category_title,
+        submit_for_examination=submit_for_examination,
+        adoption=adoption,
+        edit_url=edit_url,
+    )
+
+
+def _redirect_url_if_exam_and_adopt_exists(plan, event_category):
+    if (
+        event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION
+        and plan.timetable
+    ):
+        events = plan.timetable.get_events_by_category(
+            EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION
+        )
+        if events and len(events) == 1:
+            return url_for(
+                "local_plan.timetable_event",
+                reference=plan.reference,
+                timetable_reference=plan.timetable.reference,
+                event_id=events[0].id,
+            )
+
+    return None
 
 
 def _get_document_counts(documents):
@@ -749,4 +826,23 @@ def _get_save_and_continue_url(plan_reference, event_category):
 
 
 def _get_event_form(obj=None, event_category=None):
-    return ConsultationForm(obj=obj, event_category=event_category)
+    if event_category is None:
+        raise ValueError("event_category is required.")
+    if event_category in [
+        EventCategory.ESTIMATED_REGULATION_18,
+        EventCategory.ESTIMATED_REGULATION_19,
+    ]:
+        return ConsultationForm(obj=obj, event_category=event_category)
+    else:
+        return ExaminationAndAdoptionForm(obj=obj)
+
+
+def _include_draft_plan_published(plan, event_category):
+    if event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
+        return False
+    if plan.timetable and plan.timetable.event_category_progress(event_category) in [
+        "started",
+        "completed",
+    ]:
+        return False
+    return True

@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% import 'macros/timetable-form.html' as timetable_form %}
 
 {% block content %}
 
@@ -13,47 +14,7 @@
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-
-    {% if form.errors %}
-      <div class="govuk-error-summary" data-module="govuk-error-summary">
-        <div role="alert">
-          <h2 class="govuk-error-summary__title">
-            There was a problem
-          </h2>
-          <div class="govuk-error-summary__body">
-              {{ form.get_error_summary() }}
-          </div>
-        </div>
-      </div>
-
-    {% endif %}
-
-    <form class="govuk-form" method="POST" action="{{ action_url }}">
-      {{ form.hidden_tag() }}
-      <fieldset class="govuk-fieldset">
-        <div class="govuk-form-group">
-          {% if include_draft_plan_published %}
-            {{ form.draft_local_plan_published() }}
-          {% endif %}
-           {{ form.consultation_start() }}
-           {{ form.consultation_end() }}
-        </div>
-        <div class="govuk-form-group">
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-            <h1 class="govuk-fieldset__heading">
-                {{ form.consultation_covers.label }}
-            </h1>
-        </legend>
-        {{ form.consultation_covers(class='govuk-input') }}
-        </div>
-        <div class="govuk-button-group">
-          <button type="submit" class="govuk-button" data-module="govuk-button">
-            Continue
-          </button>
-          <a href="{{ url_for('local_plan.get_plan', reference=plan.reference ) }}" class="govuk-button govuk-button--secondary">Cancel</a>
-        </div>
-      </fieldset>
-    </form>
+    {{ timetable_form.render_form(form, plan, event_category, action_url, include_draft_plan_published=include_draft_plan_published) }}
   </div>
 </div>
 

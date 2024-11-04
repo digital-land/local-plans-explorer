@@ -1,0 +1,48 @@
+{% extends 'layouts/base.html' %}
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-m">{%if estimated %}Estimated{% else %}Actual{% endif %} dates</span>
+    <h1 class="govuk-heading-l">{{ event_category_title | capitalize }}</h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <dl class="govuk-summary-list">
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Submit plan for examination
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ submit_for_examination}}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="{{ edit_url }}">Change<span class="govuk-visually-hidden"> submit plan for examination</span></a>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Adoption of local plan
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ adoption }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="{{ edit_url }}">Change<span class="govuk-visually-hidden"> adoption</span></a>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <a href="{{ url_for('local_plan.get_plan', reference=event.timetable.local_plan) }}" class="govuk-button govuk-button--primary">Save and close</a>
+  </div>
+</div>
+
+{% endblock content %}
