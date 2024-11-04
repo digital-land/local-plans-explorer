@@ -17,6 +17,14 @@ from application.models import EventCategory
 
 
 class LocalPlanForm(FlaskForm):
+    def validate_period_start_date(form, field):
+        if field.data and not field.data.isdigit():
+            raise ValidationError("Start date must be numeric.")
+
+    def validate_period_end_date(form, field):
+        if field.data and not field.data.isdigit():
+            raise ValidationError("End date must be numeric.")
+
     name = StringField("Name of plan", validators=[DataRequired()])
     organisations = StringField("Organisation", validators=[DataRequired()])
     description = TextAreaField("Brief description of plan", validators=[Optional()])

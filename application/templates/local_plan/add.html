@@ -46,12 +46,17 @@
           {% endif %}{# end if organisation field #}
         {% endif -%}
         {% endfor %}
-        <div class="govuk-form-group">
+        <div class="govuk-form-group {% if form.period_start_date.errors %}govuk-form-group--error{% endif %}">
           <label class="govuk-label" for="period_date">Period covered by plan</label>
           <div class="govuk-hint">For example, 2016 to 2033</div>
-          <input class="govuk-input govuk-input--width-4" id="period_start_date" name="period_start_date" required="" type="text" value="{{ form.period_start_date.data if form.period_start_date.data }}">
+          <input class="govuk-input govuk-input--width-4 {% if form.period_start_date.errors  %}govuk-input--error{% endif %}" id="period_start_date" name="period_start_date" type="text" value="{{ form.period_start_date.data if form.period_start_date.data }}">
           <span class="app-govuk-text">to</span>
-          <input class="govuk-input govuk-input--width-4" id="period_end_date" name="period_end_date" required="" type="text" value="{{ form.period_end_date.data if form.period_end_date.data }}">
+          <input class="govuk-input govuk-input--width-4 {% if form.period_end_date.errors  %}govuk-input--error{% endif %}" id="period_end_date" name="period_end_date" type="text" value="{{ form.period_end_date.data if form.period_end_date.data }}">
+          {% if form.period_start_date.errors or form.period_end_date.errors %}
+            <p id="period_start_date-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> Period covered dates must be numeric
+            </p>
+          {% endif %}
         </div>
 
         <div class="govuk-form-group">
