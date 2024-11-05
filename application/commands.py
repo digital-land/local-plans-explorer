@@ -765,3 +765,26 @@ def migrate_doc_types():
             db.session.add(document)
             db.session.commit()
             print(f"Updated document types for {document.reference}")
+
+
+@data_cli.command("seed-timetable")
+def seed_timetable():
+    current_file_path = Path(__file__).resolve()
+    data_directory = os.path.join(current_file_path.parent.parent, "data")
+    file_path = os.path.join(data_directory, "timetable-seed-data.csv")
+
+    with open(file_path, mode="r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            local_plan_reference = row.get("local-plan", "").strip()
+            plan = LocalPlan.query.get(local_plan_reference)
+            if plan is None:
+                print(
+                    f"Skipping timetable seed data for {local_plan_reference} as local plan not found"
+                )
+                continue
+            if plan.timetable is not None:
+                print(
+                    f"Skipping timetable seed data for {local_plan_reference} as timetable already exists"
+                )
+                continue

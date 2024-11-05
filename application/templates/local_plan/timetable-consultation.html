@@ -26,6 +26,20 @@
           </dd>
         </div>
       {% endif %}
+      {% if publication_local_plan_published %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Publication local plan published
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ publication_local_plan_published }}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link
+            " href="{{ edit_url }}">Change<span class="govuk-visually-hidden"> publication local plan published</span></a>
+          </dd>
+        </div>
+      {% endif %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Consultation period
@@ -53,7 +67,7 @@
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <a href="{{ url_for('local_plan.add_timetable_event', reference=event.timetable.local_plan, event_category=event_category) }}" class="govuk-button govuk-button--secondary">Add another</a>
+    <a href="{{ url_for('local_plan.add_event_to_timetable', reference=event.timetable.local_plan, timetable_reference=event.timetable.reference, event_category=event_category) }}" class="govuk-button govuk-button--secondary">Add another</a>
   </div>
 </div>
 <div class="govuk-grid-row">

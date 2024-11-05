@@ -1,4 +1,4 @@
-{% macro render_form(form, plan, event_category, action_url, include_draft_plan_published=False) -%}
+{% macro render_form(form, plan, event_category, action_url, include_plan_published=False) -%}
 
   {% if form.errors %}
     <div class="govuk-error-summary" data-module="govuk-error-summary">
@@ -16,10 +16,13 @@
   <form class="govuk-form" method="POST" action="{{ action_url }}">
     {{ form.hidden_tag() }}
     <fieldset class="govuk-fieldset">
-      {% if event_category.name in ["ESTIMATED_REGULATION_18", "ESTIMATED_REGULATION_19"] %}
+      {% if "REGULATION_18" in event_category.name or "REGULATION_19" in event_category.name %}
         <div class="govuk-form-group">
-          {% if include_draft_plan_published %}
+          {% if include_plan_published and "REGULATION_18" in event_category.name %}
             {{ form.draft_local_plan_published() }}
+          {% endif %}
+          {% if include_plan_published and "REGULATION_19" in event_category.name %}
+            {{ form.publication_local_plan_published() }}
           {% endif %}
           {{ form.consultation_start() }}
           {{ form.consultation_end() }}
