@@ -675,6 +675,13 @@ def edit_timetable_event(reference, timetable_reference, event_id):
     include_plan_published = _is_first_event_of_category(event)
     estimated = True if "estimated" in event.event_category.value.lower() else False
 
+    if estimated:
+        event_category_title = event.event_category.value.replace(
+            "Estimated", ""
+        ).strip()
+    else:
+        event_category_title = event.event_category.value
+
     return render_template(
         "local_plan/timetable-event-form.html",
         form=form,
@@ -685,6 +692,7 @@ def edit_timetable_event(reference, timetable_reference, event_id):
         event_category=event.event_category,
         include_plan_published=include_plan_published,
         estimated=estimated,
+        event_category_title=event_category_title,
     )
 
 
@@ -692,11 +700,11 @@ def _render_consultation_event_page(
     event, event_category, estimated, event_category_title
 ):
     if "draft_local_plan_published" in event.event_data:
-        draft_plan_published = _collect_date_fields(
+        draft_local_plan_published = _collect_date_fields(
             event.event_data, "draft_local_plan_published"
         )
     else:
-        draft_plan_published = None
+        draft_local_plan_published = None
 
     if "publication_local_plan_published" in event.event_data:
         publication_local_plan_published = _collect_date_fields(
@@ -724,7 +732,7 @@ def _render_consultation_event_page(
         estimated=estimated,
         event_category=event_category,
         event_category_title=event_category_title,
-        draft_plan_published=draft_plan_published,
+        draft_local_plan_published=draft_local_plan_published,
         publication_local_plan_published=publication_local_plan_published,
         consultation_start=consultation_start,
         consultation_end=consultation_end,

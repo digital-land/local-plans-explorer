@@ -12,57 +12,57 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <dl class="govuk-summary-list">
-      {% if draft_plan_published %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Draft local plan published
-          </dt>
-          <dd class="govuk-summary-list__value">
-            {{ draft_plan_published }}
-          </dd>
-          <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="{{ edit_url }}">Change<span class="govuk-visually-hidden"> draft local plan published</span></a>
-          </dd>
+    <section class="app-summary-card">
+      <header class="app-summary-card__header">
+        <h2 class="app-summary-card__title">
+          {{ event.event_category.value }}
+        </h2>
+        <div class="app-summary-card__actions">
+          {%- if not config.AUTHENTICATION_ON or session["user"] %}
+            <a href="{{ edit_url }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
+          {%- endif %}
         </div>
-      {% endif %}
-      {% if publication_local_plan_published %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Publication local plan published
-          </dt>
-          <dd class="govuk-summary-list__value">
-            {{ publication_local_plan_published }}
-          </dd>
-          <dd class="govuk-summary-list__actions">
-            <a class="govuk-link
-            " href="{{ edit_url }}">Change<span class="govuk-visually-hidden"> publication local plan published</span></a>
-          </dd>
-        </div>
-      {% endif %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Consultation period
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {{ consultation_start }} - {{ consultation_end }}
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{{ edit_url }}">Change<span class="govuk-visually-hidden"> consultation period</span></a>
-        </dd>
+      </header>
+      <div class="app-summary-card__body">
+        <dl class="govuk-summary-list">
+          {% if draft_local_plan_published %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Draft local plan published
+              </dt>
+              <dd class="govuk-summary-list__value">
+                {{ draft_local_plan_published }}
+              </dd>
+            </div>
+          {% endif %}
+          {% if publication_local_plan_published %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Publication local plan published
+              </dt>
+              <dd class="govuk-summary-list__value">
+                {{ publication_local_plan_published }}
+              </dd>
+            </div>
+          {% endif %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Consultation period
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ consultation_start }} - {{ consultation_end }}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              What does the consultation cover?
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ consultation_covers }}
+            </dd>
+          </div>
       </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          What does the consultation cover?
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {{ consultation_covers }}
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{{ edit_url }}">Change<span class="govuk-visually-hidden"> consultation covers</span></a>
-        </dd>
-      </div>
-    </dl>
+  </section>
   </div>
 </div>
 <div class="govuk-grid-row">
