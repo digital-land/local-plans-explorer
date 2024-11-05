@@ -597,10 +597,6 @@ def add_event_to_timetable(reference, timetable_reference, event_category):
     estimated = True if event_category.value.lower().startswith("estimated") else False
     form = _get_event_form(event_category)
 
-    # redirect_url = _redirect_url_category_exists(plan, event_category)
-    # if redirect_url is not None:
-    #     return redirect(redirect_url)
-
     if form.validate_on_submit():
         event = LocalPlanEvent(event_category=event_category, event_data=form.data)
         timetable.events.append(event)
