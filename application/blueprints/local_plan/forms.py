@@ -228,29 +228,33 @@ class Regulation19Form(FlaskForm):
 
 
 class ExaminationAndAdoptionForm(FlaskForm):
-    submit_for_examination = DatePartField(
+    submit_plan_for_examination = DatePartField(
         "Submit plan for examination", validators=[Optional()]
     )
-    adoption = DatePartField("Adoption of local plan", validators=[Optional()])
+    plan_adoption_date = DatePartField(
+        "Adoption of local plan", validators=[Optional()]
+    )
 
     def __init__(self, obj=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if request.method == "GET" and obj:
-            self.submit_for_examination.process_data(obj.get("submit_for_examination"))
-            self.adoption.process_data(obj.get("adoption"))
+            self.submit_plan_for_examination.process_data(
+                obj.get("submit_plan_for_examination")
+            )
+            self.plan_adoption_date.process_data(obj.get("plan_adoption_date"))
 
     def validate(self, extra_validators=None):
         if not super().validate(extra_validators=extra_validators):
             return False
 
         date_fields = [
-            self.submit_for_examination,
-            self.adoption,
+            self.submit_plan_for_examination,
+            self.plan_adoption_date,
         ]
         if not any(field.data.get("year") for field in date_fields if field.data):
             date_error = "At least one of the dates should have at least a year"
-            self.submit_for_examination.errors.append(date_error)
-            self.adoption.errors.append(date_error)
+            self.submit_plan_for_examination.errors.append(date_error)
+            self.plan_adoption_date.errors.append(date_error)
             return False
 
         return True
@@ -258,8 +262,8 @@ class ExaminationAndAdoptionForm(FlaskForm):
     def get_error_summary(self):
         errors = []
         for field in [
-            self.submit_for_examination,
-            self.adoption,
+            self.submit_plan_for_examination,
+            self.plan_adoption_date,
         ]:
             if field.errors:
                 errors.extend(field.errors)

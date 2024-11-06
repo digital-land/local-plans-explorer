@@ -494,6 +494,14 @@ def timetable_events(reference, timetable_reference, event_category):
         EventCategory.ESTIMATED_REGULATION_18,
         EventCategory.ESTIMATED_REGULATION_19,
     ]:
+        stage = event_category.stage()
+        if stage == "18":
+            plan_published_text = "Draft local plan published"
+        elif stage == "19":
+            plan_published_text = "Publication local plan published"
+        else:
+            plan_published_text = None
+
         events = timetable.get_events_by_category(event_category)
         events_data = _collate_events_data(events, event_category)
         event_category_title = event_category.value.replace("Estimated", "").strip()
@@ -508,6 +516,7 @@ def timetable_events(reference, timetable_reference, event_category):
             estimated=estimated,
             event_category=event_category,
             event_category_title=event_category_title,
+            plan_published_text=plan_published_text,
             continue_url=continue_url,
         )
     elif event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
@@ -711,16 +720,12 @@ def _render_consultation_event_page(
     event, event_category, estimated, event_category_title
 ):
     stage = event_category.stage()
-    if "reg_18_draft_local_plan_published" in event.event_data:
+    if event.event_data.get("reg_18_draft_local_plan_published"):
         plan_published = _collect_date_fields(
             event.event_data, "reg_18_draft_local_plan_published"
         )
         plan_published_text = "Draft local plan published"
-    else:
-        plan_published = None
-        plan_published_text = None
-
-    if "reg_19_publication_local_plan_published" in event.event_data:
+    elif event.event_data.get("reg_19_publication_local_plan_published"):
         plan_published = _collect_date_fields(
             event.event_data, "reg_19_publication_local_plan_published"
         )
@@ -765,10 +770,10 @@ def _render_consultation_event_page(
 def _render_examination_and_adoption_event_page(
     event, event_category, estimated, event_category_title
 ):
-    submit_for_examination = _collect_date_fields(
-        event.event_data, "submit_for_examination"
+    submit_plan_for_examination = _collect_date_fields(
+        event.event_data, "submit_plan_for_examination"
     )
-    adoption = _collect_date_fields(event.event_data, "adoption")
+    plan_adoption_date = _collect_date_fields(event.event_data, "plan_adoption_date")
 
     edit_url = url_for(
         "local_plan.edit_timetable_event",
@@ -783,8 +788,8 @@ def _render_examination_and_adoption_event_page(
         estimated=estimated,
         event_category=event_category,
         event_category_title=event_category_title,
-        submit_for_examination=submit_for_examination,
-        adoption=adoption,
+        submit_plan_for_examination=submit_plan_for_examination,
+        plan_adoption_date=plan_adoption_date,
         edit_url=edit_url,
     )
 
@@ -860,7 +865,7 @@ def _allowed_file(filename):
 def _collect_date_fields(data, key):
     dates = data.get(key, None)
     if dates is None:
-        return ""
+        return None
     date_parts = []
     if dates.get("day", None):
         date_parts.append(dates["day"])
