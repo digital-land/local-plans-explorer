@@ -16,13 +16,13 @@
   <form class="govuk-form" method="POST" action="{{ action_url }}">
     {{ form.hidden_tag() }}
     <fieldset class="govuk-fieldset">
-      {% if "REGULATION_18" in event_category.name %}
+      {% if event_category.name == "ESTIMATED_REGULATION_18" %}
         <div class="govuk-form-group">
           {% if include_plan_published %}
-            {{ form.reg_18_draft_local_plan_published() }}
+            {{ form.estimated_reg_18_draft_local_plan_published() }}
           {% endif %}
-          {{ form.reg_18_public_consultation_start() }}
-          {{ form.reg_18_public_consultation_end() }}
+          {{ form.estimated_reg_18_public_consultation_start() }}
+          {{ form.estimated_reg_18_public_consultation_end() }}
         </div>
         <div class="govuk-form-group">
           <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -35,10 +35,10 @@
       {% elif "REGULATION_19" in event_category.name %}
         <div class="govuk-form-group">
           {% if include_plan_published %}
-            {{ form.reg_19_publication_local_plan_published() }}
+            {{ form.estimated_reg_19_publication_local_plan_published() }}
           {% endif %}
-          {{ form.reg_19_public_consultation_start() }}
-          {{ form.reg_19_public_consultation_end() }}
+          {{ form.estimated_reg_19_public_consultation_start() }}
+          {{ form.estimated_reg_19_public_consultation_end() }}
         </div>
         <div class="govuk-form-group">
           <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -50,8 +50,8 @@
         </div>
       {% else %}
         <div class="govuk-form-group">
-          {{ form.submit_plan_for_examination() }}
-          {{ form.plan_adoption_date() }}
+          {{ form.estimated_submit_plan_for_examination() }}
+          {{ form.estimated_plan_adoption_date() }}
         </div>
       {% endif %}
       <div class="govuk-button-group">

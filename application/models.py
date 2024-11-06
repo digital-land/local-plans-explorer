@@ -272,6 +272,11 @@ class EventCategory(Enum):
             return re.search(r"\d+", self.name).group()
         return None
 
+    def prefix(self):
+        if "ESTIMATED" in self.name:
+            return "estimated"
+        return ""
+
 
 class LocalPlanEventType(BaseModel):
     __tablename__ = "local_plan_event_type"
@@ -291,6 +296,7 @@ class LocalPlanEvent(BaseModel):
         ForeignKey("local_plan_timetable.reference")
     )
     timetable: Mapped["LocalPlanTimetable"] = relationship(back_populates="events")
+    notes: Mapped[Optional[str]] = mapped_column(Text)
 
     # TODO not sure this is correct at the moment - need to check
     def event_status(self):

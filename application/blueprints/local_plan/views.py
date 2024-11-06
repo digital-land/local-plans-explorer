@@ -7,10 +7,10 @@ from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
 from application.blueprints.local_plan.forms import (
-    ExaminationAndAdoptionForm,
+    EsitmatedExaminationAndAdoptionForm,
+    EstimatedRegulation18Form,
+    EstimatedRegulation19Form,
     LocalPlanForm,
-    Regulation18Form,
-    Regulation19Form,
 )
 from application.extensions import db
 from application.models import (
@@ -719,26 +719,26 @@ def edit_timetable_event(reference, timetable_reference, event_reference):
 def _render_consultation_event_page(
     event, event_category, estimated, event_category_title
 ):
+    prefix = "estimated_" if estimated else ""
     stage = event_category.stage()
-    if event.event_data.get("reg_18_draft_local_plan_published"):
+    if event.event_data.get(f"{prefix}reg_18_draft_local_plan_published"):
         plan_published = _collect_date_fields(
-            event.event_data, "reg_18_draft_local_plan_published"
+            event.event_data, f"{prefix}reg_18_draft_local_plan_published"
         )
         plan_published_text = "Draft local plan published"
-    elif event.event_data.get("reg_19_publication_local_plan_published"):
+    elif event.event_data.get(f"{prefix}reg_19_publication_local_plan_published"):
         plan_published = _collect_date_fields(
-            event.event_data, "reg_19_publication_local_plan_published"
+            event.event_data, f"{prefix}reg_19_publication_local_plan_published"
         )
         plan_published_text = "Publication local plan published"
     else:
         plan_published = None
         plan_published_text = None
-
     consultation_start = _collect_date_fields(
-        event.event_data, f"reg_{stage}_public_consultation_start"
+        event.event_data, f"{prefix}reg_{stage}_public_consultation_start"
     )
     consultation_end = _collect_date_fields(
-        event.event_data, f"reg_{stage}_public_consultation_end"
+        event.event_data, f"{prefix}reg_{stage}_public_consultation_end"
     )
     consultation_covers = event.event_data.get("notes", None)
 
@@ -770,10 +770,13 @@ def _render_consultation_event_page(
 def _render_examination_and_adoption_event_page(
     event, event_category, estimated, event_category_title
 ):
+    prefix = "estimated_" if estimated else ""
     submit_plan_for_examination = _collect_date_fields(
-        event.event_data, "submit_plan_for_examination"
+        event.event_data, f"{prefix}submit_plan_for_examination"
     )
-    plan_adoption_date = _collect_date_fields(event.event_data, "plan_adoption_date")
+    plan_adoption_date = _collect_date_fields(
+        event.event_data, f"{prefix}plan_adoption_date"
+    )
 
     edit_url = url_for(
         "local_plan.edit_timetable_event",
@@ -882,13 +885,13 @@ def _collate_events_data(events, category):
             return [
                 {
                     "plan_published": _collect_date_fields(
-                        event.event_data, "reg_18_draft_local_plan_published"
+                        event.event_data, "estimated_reg_18_draft_local_plan_published"
                     ),
                     "consultation_start": _collect_date_fields(
-                        event.event_data, "reg_18_public_consultation_start"
+                        event.event_data, "estimated_reg_18_public_consultation_start"
                     ),
                     "consultation_end": _collect_date_fields(
-                        event.event_data, "reg_18_public_consultation_end"
+                        event.event_data, "estimated_reg_18_public_consultation_end"
                     ),
                     "consultation_covers": event.event_data.get("notes", ""),
                     "event": event,
@@ -899,13 +902,14 @@ def _collate_events_data(events, category):
             return [
                 {
                     "plan_published": _collect_date_fields(
-                        event.event_data, "reg_19_publication_local_plan_published"
+                        event.event_data,
+                        "estimated_reg_19_publication_local_plan_published",
                     ),
                     "consultation_start": _collect_date_fields(
-                        event.event_data, "reg_19_public_consultation_start"
+                        event.event_data, "estimated_reg_19_public_consultation_start"
                     ),
                     "consultation_end": _collect_date_fields(
-                        event.event_data, "reg_19_public_consultation_end"
+                        event.event_data, "estimated_reg_19_public_consultation_end"
                     ),
                     "consultation_covers": event.event_data.get("notes", ""),
                     "event": event,
@@ -947,11 +951,11 @@ def _get_save_and_continue_url(plan_reference, event_category):
 def _get_event_form(event_category, obj=None):
     match event_category:
         case EventCategory.ESTIMATED_REGULATION_18:
-            return Regulation18Form(obj=obj)
+            return EstimatedRegulation18Form(obj=obj)
         case EventCategory.ESTIMATED_REGULATION_19:
-            return Regulation19Form(obj=obj)
+            return EstimatedRegulation19Form(obj=obj)
         case EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
-            return ExaminationAndAdoptionForm(obj=obj)
+            return EsitmatedExaminationAndAdoptionForm(obj=obj)
         case _:
             raise ValueError("Invalid event_category.")
 
