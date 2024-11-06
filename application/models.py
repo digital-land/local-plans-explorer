@@ -1,4 +1,5 @@
 import datetime
+import re
 import uuid
 from enum import Enum
 from typing import List, Optional
@@ -266,17 +267,19 @@ class EventCategory(Enum):
     REGULATION_19 = "Regulation 19"
     EXAMINATION_AND_ADOPTION = "Examination and adoption"
 
+    def stage(self):
+        if "REGULATION" in self.name:
+            return re.search(r"\d+", self.name).group()
+        return None
+
 
 class LocalPlanEventType(BaseModel):
     __tablename__ = "local_plan_event_type"
 
 
-class LocalPlanEvent(db.Model):
+class LocalPlanEvent(BaseModel):
     __tablename__ = "local_plan_event"
 
-    id: Mapped[uuid.uuid4] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
     event_category: Mapped[EventCategory] = mapped_column(ENUM(EventCategory))
 
     event_data: Mapped[Optional[dict]] = mapped_column(MutableDict.as_mutable(JSONB))
@@ -292,7 +295,7 @@ class LocalPlanEvent(db.Model):
     # TODO not sure this is correct at the moment - need to check
     def event_status(self):
         for key, value in self.event_data.items():
-            if key == "consultation_covers":
+            if key == "notes":
                 continue
             if all(value.get(k, "").strip() != "" for k in ["day", "month", "year"]):
                 return "completed"

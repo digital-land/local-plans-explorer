@@ -21,29 +21,19 @@
           </h2>
           <div class="app-summary-card__actions">
             {%- if not config.AUTHENTICATION_ON or session["user"] %}
-              <a href="{{ url_for('local_plan.edit_timetable_event', reference=plan, timetable_reference=timetable.reference, event_id=event.id) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
+              <a href="{{ url_for('local_plan.edit_timetable_event', reference=plan, timetable_reference=timetable.reference, event_reference=event.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
             {%- endif %}
           </div>
         </header>
         <div class="app-summary-card__body">
           <dl class="govuk-summary-list">
-            {% if data.draft_local_plan_published %}
+            {% if data.plan_published %}
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                   Draft local plan published
                 </dt>
                 <dd class="govuk-summary-list__value">
-                  {{ data.draft_local_plan_published }}
-                </dd>
-              </div>
-            {% endif %}
-            {% if data.publication_local_plan_published %}
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                  Publication local plan published
-                </dt>
-                <dd class="govuk-summary-list__value">
-                  {{ data.publication_local_plan_published }}
+                  {{ data.plan_published }}
                 </dd>
               </div>
             {% endif %}
@@ -52,7 +42,7 @@
                 Consultation period
               </dt>
               <dd class="govuk-summary-list__value">
-                {{ data.public_consultation_start }} - {{ data.public_consultation_end }}
+                {{ data.consultation_start }} - {{ data.consultation_end }}
               </dd>
             </div>
             <div class="govuk-summary-list__row">

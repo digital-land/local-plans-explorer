@@ -25,29 +25,19 @@
       </header>
       <div class="app-summary-card__body">
         <dl class="govuk-summary-list">
-          {% if draft_local_plan_published %}
+          {% if plan_published %}
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">
-                Draft local plan published
+                {{ plan_published_text}}
               </dt>
               <dd class="govuk-summary-list__value">
-                {{ draft_local_plan_published }}
-              </dd>
-            </div>
-          {% endif %}
-          {% if publication_local_plan_published %}
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">
-                Publication local plan published
-              </dt>
-              <dd class="govuk-summary-list__value">
-                {{ publication_local_plan_published }}
+                {{ plan_published }}
               </dd>
             </div>
           {% endif %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
-              Consultation period
+              Consultation period!!
             </dt>
             <dd class="govuk-summary-list__value">
               {{ consultation_start }} - {{ consultation_end }}

@@ -116,43 +116,45 @@ class DatePartField(Field):
 
 
 class Regulation18Form(FlaskForm):
-    draft_local_plan_published = DatePartField(
+    reg_18_draft_local_plan_published = DatePartField(
         "Draft local plan published", validators=[Optional()]
     )
-    consultation_start = DatePartField(
+    reg_18_public_consultation_start = DatePartField(
         "Regulation 18 consultation start", validators=[Optional()]
     )
-    consultation_end = DatePartField(
+    reg_18_public_consultation_end = DatePartField(
         "Regulation 18 consultation end", validators=[Optional()]
     )
-    consultation_covers = TextAreaField(
-        "What does the consultation cover?", validators=[Optional()]
-    )
+    notes = TextAreaField("What does the consultation cover?", validators=[Optional()])
 
     def __init__(self, obj=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if request.method == "GET" and obj:
-            self.draft_local_plan_published.process_data(
-                obj.get("draft_local_plan_published")
+            self.reg_18_draft_local_plan_published.process_data(
+                obj.get("reg_18_draft_local_plan_published")
             )
-            self.consultation_start.process_data(obj.get("consultation_start"))
-            self.consultation_end.process_data(obj.get("consultation_end"))
-            self.consultation_covers.data = obj.get("consultation_covers", "")
+            self.reg_18_public_consultation_start.process_data(
+                obj.get("reg_18_public_consultation_start")
+            )
+            self.reg_18_public_consultation_end.process_data(
+                obj.get("reg_18_public_consultation_end")
+            )
+            self.notes.data = obj.get("notes", "")
 
     def validate(self, extra_validators=None):
         if not super().validate(extra_validators=extra_validators):
             return False
 
         date_fields = [
-            self.draft_local_plan_published,
-            self.consultation_start,
-            self.consultation_end,
+            self.reg_18_draft_local_plan_published,
+            self.reg_18_public_consultation_start,
+            self.reg_18_public_consultation_end,
         ]
         if not any(field.data.get("year") for field in date_fields if field.data):
             date_error = "At least one of the dates should have at least a year"
-            self.draft_local_plan_published.errors.append(date_error)
-            self.consultation_start.errors.append(date_error)
-            self.consultation_end.errors.append(date_error)
+            self.reg_18_draft_local_plan_published.errors.append(date_error)
+            self.reg_18_public_consultation_start.errors.append(date_error)
+            self.reg_18_public_consultation_end.errors.append(date_error)
             return False
 
         return True
@@ -160,9 +162,9 @@ class Regulation18Form(FlaskForm):
     def get_error_summary(self):
         errors = []
         for field in [
-            self.draft_local_plan_published,
-            self.consultation_start,
-            self.consultation_end,
+            self.reg_18_draft_local_plan_published,
+            self.reg_18_public_consultation_start,
+            self.reg_18_public_consultation_end,
         ]:
             if field.errors:
                 errors.extend(field.errors)
@@ -170,43 +172,45 @@ class Regulation18Form(FlaskForm):
 
 
 class Regulation19Form(FlaskForm):
-    publication_local_plan_published = DatePartField(
+    reg_19_publication_local_plan_published = DatePartField(
         "Publication local plan published", validators=[Optional()]
     )
-    consultation_start = DatePartField(
+    reg_19_public_consultation_start = DatePartField(
         "Regulation 19 consultation start", validators=[Optional()]
     )
-    consultation_end = DatePartField(
+    reg_19_public_consultation_end = DatePartField(
         "Regulation 19 consultation end", validators=[Optional()]
     )
-    consultation_covers = TextAreaField(
-        "What does the consultation cover?", validators=[Optional()]
-    )
+    notes = TextAreaField("What does the consultation cover?", validators=[Optional()])
 
     def __init__(self, obj=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if request.method == "GET" and obj:
-            self.publication_local_plan_published.process_data(
-                obj.get("publication_local_plan_published")
+            self.reg_19_publication_local_plan_published.process_data(
+                obj.get("reg_19_publication_local_plan_published")
             )
-            self.consultation_start.process_data(obj.get("consultation_start"))
-            self.consultation_end.process_data(obj.get("consultation_end"))
-            self.consultation_covers.data = obj.get("consultation_covers", "")
+            self.reg_19_public_consultation_start.process_data(
+                obj.get("reg_19_public_consultation_start")
+            )
+            self.reg_19_public_consultation_end.process_data(
+                obj.get("reg_19_public_consultation_end")
+            )
+            self.notes.data = obj.get("notes", "")
 
     def validate(self, extra_validators=None):
         if not super().validate(extra_validators=extra_validators):
             return False
 
         date_fields = [
-            self.publication_local_plan_published,
-            self.consultation_start,
-            self.consultation_end,
+            self.reg_19_publication_local_plan_published,
+            self.reg_19_public_consultation_start,
+            self.reg_19_public_consultation_end,
         ]
         if not any(field.data.get("year") for field in date_fields if field.data):
             date_error = "At least one of the dates should have at least a year"
-            self.publication_local_plan_published.errors.append(date_error)
-            self.consultation_start.errors.append(date_error)
-            self.consultation_end.errors.append(date_error)
+            self.reg_19_publication_local_plan_published.errors.append(date_error)
+            self.reg_19_public_consultation_start.errors.append(date_error)
+            self.reg_19_public_consultation_end.errors.append(date_error)
             return False
 
         return True
@@ -214,9 +218,9 @@ class Regulation19Form(FlaskForm):
     def get_error_summary(self):
         errors = []
         for field in [
-            self.draft_local_plan_published,
-            self.consultation_start,
-            self.consultation_end,
+            self.reg_19_publication_local_plan_published,
+            self.reg_19_public_consultation_start,
+            self.reg_19_public_consultation_end,
         ]:
             if field.errors:
                 errors.extend(field.errors)

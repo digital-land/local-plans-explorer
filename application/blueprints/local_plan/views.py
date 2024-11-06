@@ -448,11 +448,11 @@ def add_geography(reference):
 
 
 @local_plan.route(
-    "/<string:reference>/timetable/<string:timetable_reference>/event/<string:event_id>"
+    "/<string:reference>/timetable/<string:timetable_reference>/event/<string:event_reference>"
 )
 @login_required
-def timetable_event(reference, timetable_reference, event_id):
-    event = LocalPlanEvent.query.get(event_id)
+def timetable_event(reference, timetable_reference, event_reference):
+    event = LocalPlanEvent.query.get(event_reference)
     if event is None:
         return abort(404)
     event_category = event.event_category
@@ -538,16 +538,20 @@ def add_new_timetable_event(reference, event_category):
         return redirect(redirect_url)
 
     if form.validate_on_submit():
-        event = LocalPlanEvent(event_category=event_category, event_data=form.data)
-        if plan.timetable is not None:
-            plan.timetable.events.append(event)
-        else:
+        if plan.timetable is None:
             plan.timetable = LocalPlanTimetable(
                 reference=f"{plan.reference}-timetable",
                 name=f"{plan.name} timetable",
                 local_plan=plan.reference,
-                events=[event],
+                events=[],
             )
+        event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
+        event = LocalPlanEvent(
+            reference=event_reference,
+            event_category=event_category,
+            event_data=form.data,
+        )
+        plan.timetable.events.append(event)
         db.session.add(event)
         db.session.add(plan)
         db.session.commit()
@@ -556,7 +560,7 @@ def add_new_timetable_event(reference, event_category):
                 "local_plan.timetable_event",
                 reference=plan.reference,
                 timetable_reference=plan.timetable.reference,
-                event_id=event.id,
+                event_reference=event.reference,
             )
         )
 
@@ -598,7 +602,12 @@ def add_event_to_timetable(reference, timetable_reference, event_category):
     form = _get_event_form(event_category)
 
     if form.validate_on_submit():
-        event = LocalPlanEvent(event_category=event_category, event_data=form.data)
+        if timetable.events is None:
+            timetable.events = []
+        reference = f"{timetable.reference}-{len(timetable.events)}"
+        event = LocalPlanEvent(
+            reference=reference, event_category=event_category, event_data=form.data
+        )
         timetable.events.append(event)
         db.session.add(event)
         db.session.add(timetable)
@@ -608,7 +617,7 @@ def add_event_to_timetable(reference, timetable_reference, event_category):
                 "local_plan.timetable_event",
                 reference=timetable.local_plan,
                 timetable_reference=timetable.reference,
-                event_id=event.id,
+                event_reference=event.reference,
             )
         )
 
@@ -641,14 +650,16 @@ def add_event_to_timetable(reference, timetable_reference, event_category):
 
 
 @local_plan.route(
-    "/<string:reference>/timetable/<string:timetable_reference>/event/<string:event_id>/edit",
+    "/<string:reference>/timetable/<string:timetable_reference>/event/<string:event_reference>/edit",
     methods=["GET", "POST"],
 )
 @login_required
-def edit_timetable_event(reference, timetable_reference, event_id):
-    event = LocalPlanEvent.query.get(event_id)
+def edit_timetable_event(reference, timetable_reference, event_reference):
+    event = LocalPlanEvent.query.get(event_reference)
     if event is None:
         return abort(404)
+
+    include_plan_published = _is_first_event_of_category(event)
 
     form = _get_event_form(event.event_category, obj=event.event_data)
 
@@ -661,7 +672,7 @@ def edit_timetable_event(reference, timetable_reference, event_id):
                 "local_plan.timetable_event",
                 reference=reference,
                 timetable_reference=timetable_reference,
-                event_id=event.id,
+                event_reference=event.reference,
             )
         )
 
@@ -669,7 +680,7 @@ def edit_timetable_event(reference, timetable_reference, event_id):
         "local_plan.edit_timetable_event",
         reference=reference,
         timetable_reference=timetable_reference,
-        event_id=event_id,
+        event_reference=event_reference,
     )
 
     include_plan_published = _is_first_event_of_category(event)
@@ -699,29 +710,38 @@ def edit_timetable_event(reference, timetable_reference, event_id):
 def _render_consultation_event_page(
     event, event_category, estimated, event_category_title
 ):
-    if "draft_local_plan_published" in event.event_data:
-        draft_local_plan_published = _collect_date_fields(
-            event.event_data, "draft_local_plan_published"
+    stage = event_category.stage()
+    if "reg_18_draft_local_plan_published" in event.event_data:
+        plan_published = _collect_date_fields(
+            event.event_data, "reg_18_draft_local_plan_published"
         )
+        plan_published_text = "Draft local plan published"
     else:
-        draft_local_plan_published = None
+        plan_published = None
+        plan_published_text = None
 
-    if "publication_local_plan_published" in event.event_data:
-        publication_local_plan_published = _collect_date_fields(
-            event.event_data, "publication_local_plan_published"
+    if "reg_19_publication_local_plan_published" in event.event_data:
+        plan_published = _collect_date_fields(
+            event.event_data, "reg_19_publication_local_plan_published"
         )
+        plan_published_text = "Publication local plan published"
     else:
-        publication_local_plan_published = None
+        plan_published = None
+        plan_published_text = None
 
-    consultation_start = _collect_date_fields(event.event_data, "consultation_start")
-    consultation_end = _collect_date_fields(event.event_data, "consultation_end")
-    consultation_covers = event.event_data.get("consultation_covers", None)
+    consultation_start = _collect_date_fields(
+        event.event_data, f"reg_{stage}_public_consultation_start"
+    )
+    consultation_end = _collect_date_fields(
+        event.event_data, f"reg_{stage}_public_consultation_end"
+    )
+    consultation_covers = event.event_data.get("notes", None)
 
     edit_url = url_for(
         "local_plan.edit_timetable_event",
         reference=event.timetable.local_plan,
         timetable_reference=event.timetable.reference,
-        event_id=event.id,
+        event_reference=event.reference,
     )
     plan_reference = event.timetable.local_plan
     continue_url = _get_save_and_continue_url(plan_reference, event_category)
@@ -732,8 +752,8 @@ def _render_consultation_event_page(
         estimated=estimated,
         event_category=event_category,
         event_category_title=event_category_title,
-        draft_local_plan_published=draft_local_plan_published,
-        publication_local_plan_published=publication_local_plan_published,
+        plan_published=plan_published,
+        plan_published_text=plan_published_text,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
         consultation_covers=consultation_covers,
@@ -754,7 +774,7 @@ def _render_examination_and_adoption_event_page(
         "local_plan.edit_timetable_event",
         reference=event.timetable.local_plan,
         timetable_reference=event.timetable.reference,
-        event_id=event.id,
+        event_reference=event.reference,
     )
 
     return render_template(
@@ -782,7 +802,7 @@ def _redirect_url_category_exists(plan, event_category):
                 "local_plan.timetable_event",
                 reference=plan.reference,
                 timetable_reference=plan.timetable.reference,
-                event_id=events[0].id,
+                event_reference=events[0].reference,
             )
     elif plan.timetable:
         events = plan.timetable.get_events_by_category(event_category)
@@ -856,18 +876,16 @@ def _collate_events_data(events, category):
         case EventCategory.ESTIMATED_REGULATION_18:
             return [
                 {
-                    "draft_local_plan_published": _collect_date_fields(
-                        event.event_data, "draft_local_plan_published"
+                    "plan_published": _collect_date_fields(
+                        event.event_data, "reg_18_draft_local_plan_published"
                     ),
-                    "public_consultation_start": _collect_date_fields(
-                        event.event_data, "consultation_start"
+                    "consultation_start": _collect_date_fields(
+                        event.event_data, "reg_18_public_consultation_start"
                     ),
-                    "public_consultation_end": _collect_date_fields(
-                        event.event_data, "consultation_end"
+                    "consultation_end": _collect_date_fields(
+                        event.event_data, "reg_18_public_consultation_end"
                     ),
-                    "consultation_covers": event.event_data.get(
-                        "consultation_covers", ""
-                    ),
+                    "consultation_covers": event.event_data.get("notes", ""),
                     "event": event,
                 }
                 for event in events
@@ -875,18 +893,16 @@ def _collate_events_data(events, category):
         case EventCategory.ESTIMATED_REGULATION_19:
             return [
                 {
-                    "publication_local_plan_published": _collect_date_fields(
-                        event.event_data, "publication_local_plan_published"
+                    "plan_published": _collect_date_fields(
+                        event.event_data, "reg_19_publication_local_plan_published"
                     ),
-                    "public_consultation_start": _collect_date_fields(
-                        event.event_data, "consultation_start"
+                    "consultation_start": _collect_date_fields(
+                        event.event_data, "reg_19_public_consultation_start"
                     ),
-                    "public_consultation_end": _collect_date_fields(
-                        event.event_data, "consultation_end"
+                    "consultation_end": _collect_date_fields(
+                        event.event_data, "reg_19_public_consultation_end"
                     ),
-                    "consultation_covers": event.event_data.get(
-                        "consultation_covers", ""
-                    ),
+                    "consultation_covers": event.event_data.get("notes", ""),
                     "event": event,
                 }
                 for event in events

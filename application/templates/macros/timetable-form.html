@@ -16,24 +16,37 @@
   <form class="govuk-form" method="POST" action="{{ action_url }}">
     {{ form.hidden_tag() }}
     <fieldset class="govuk-fieldset">
-      {% if "REGULATION_18" in event_category.name or "REGULATION_19" in event_category.name %}
+      {% if "REGULATION_18" in event_category.name %}
         <div class="govuk-form-group">
-          {% if include_plan_published and "REGULATION_18" in event_category.name %}
-            {{ form.draft_local_plan_published() }}
+          {% if include_plan_published %}
+            {{ form.reg_18_draft_local_plan_published() }}
           {% endif %}
-          {% if include_plan_published and "REGULATION_19" in event_category.name %}
-            {{ form.publication_local_plan_published() }}
-          {% endif %}
-          {{ form.consultation_start() }}
-          {{ form.consultation_end() }}
+          {{ form.reg_18_public_consultation_start() }}
+          {{ form.reg_18_public_consultation_end() }}
         </div>
         <div class="govuk-form-group">
           <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
             <h1 class="govuk-fieldset__heading">
-                {{ form.consultation_covers.label }}
+                {{ form.notes.label }}
             </h1>
         </legend>
-        {{ form.consultation_covers(class='govuk-input') }}
+        {{ form.notes(class='govuk-input') }}
+        </div>
+      {% elif "REGULATION_19" in event_category.name %}
+        <div class="govuk-form-group">
+          {% if include_plan_published %}
+            {{ form.reg_19_publication_local_plan_published() }}
+          {% endif %}
+          {{ form.reg_19_public_consultation_start() }}
+          {{ form.reg_19_public_consultation_end() }}
+        </div>
+        <div class="govuk-form-group">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+            <h1 class="govuk-fieldset__heading">
+                {{ form.notes.label }}
+            </h1>
+        </legend>
+        {{ form.notes(class='govuk-input') }}
         </div>
       {% else %}
         <div class="govuk-form-group">
