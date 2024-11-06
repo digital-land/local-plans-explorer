@@ -10,7 +10,10 @@ from application.blueprints.local_plan.forms import (
     EsitmatedExaminationAndAdoptionForm,
     EstimatedRegulation18Form,
     EstimatedRegulation19Form,
+    ExaminationAndAdoptionForm,
     LocalPlanForm,
+    Regulation18Form,
+    Regulation19Form,
 )
 from application.extensions import db
 from application.models import (
@@ -69,6 +72,9 @@ def get_plan(reference):
         EventCategory.ESTIMATED_REGULATION_18,
         EventCategory.ESTIMATED_REGULATION_19,
         EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
+        EventCategory.REGULATION_18,
+        EventCategory.REGULATION_19,
+        EventCategory.EXAMINATION_AND_ADOPTION,
     ]:
         if plan.timetable and plan.timetable.event_category_progress(
             event_category
@@ -493,6 +499,8 @@ def timetable_events(reference, timetable_reference, event_category):
     if event_category in [
         EventCategory.ESTIMATED_REGULATION_18,
         EventCategory.ESTIMATED_REGULATION_19,
+        EventCategory.REGULATION_18,
+        EventCategory.REGULATION_19,
     ]:
         stage = event_category.stage()
         if stage == "18":
@@ -880,36 +888,37 @@ def _collect_date_fields(data, key):
 
 
 def _collate_events_data(events, category):
+    prefix = "estimated_" if "estimated" in category.value.lower() else ""
     match category:
-        case EventCategory.ESTIMATED_REGULATION_18:
+        case EventCategory.ESTIMATED_REGULATION_18 | EventCategory.REGULATION_18:
             return [
                 {
                     "plan_published": _collect_date_fields(
-                        event.event_data, "estimated_reg_18_draft_local_plan_published"
+                        event.event_data, f"{prefix}reg_18_draft_local_plan_published"
                     ),
                     "consultation_start": _collect_date_fields(
-                        event.event_data, "estimated_reg_18_public_consultation_start"
+                        event.event_data, f"{prefix}reg_18_public_consultation_start"
                     ),
                     "consultation_end": _collect_date_fields(
-                        event.event_data, "estimated_reg_18_public_consultation_end"
+                        event.event_data, f"{prefix}reg_18_public_consultation_end"
                     ),
                     "consultation_covers": event.event_data.get("notes", ""),
                     "event": event,
                 }
                 for event in events
             ]
-        case EventCategory.ESTIMATED_REGULATION_19:
+        case EventCategory.ESTIMATED_REGULATION_19 | EventCategory.REGULATION_19:
             return [
                 {
                     "plan_published": _collect_date_fields(
                         event.event_data,
-                        "estimated_reg_19_publication_local_plan_published",
+                        f"{prefix}reg_19_publication_local_plan_published",
                     ),
                     "consultation_start": _collect_date_fields(
-                        event.event_data, "estimated_reg_19_public_consultation_start"
+                        event.event_data, f"{prefix}reg_19_public_consultation_start"
                     ),
                     "consultation_end": _collect_date_fields(
-                        event.event_data, "estimated_reg_19_public_consultation_end"
+                        event.event_data, f"{prefix}reg_19_public_consultation_end"
                     ),
                     "consultation_covers": event.event_data.get("notes", ""),
                     "event": event,
@@ -956,6 +965,12 @@ def _get_event_form(event_category, obj=None):
             return EstimatedRegulation19Form(obj=obj)
         case EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
             return EsitmatedExaminationAndAdoptionForm(obj=obj)
+        case EventCategory.REGULATION_18:
+            return Regulation18Form(obj=obj)
+        case EventCategory.REGULATION_19:
+            return Regulation19Form(obj=obj)
+        case EventCategory.EXAMINATION_AND_ADOPTION:
+            return ExaminationAndAdoptionForm(obj=obj)
         case _:
             raise ValueError("Invalid event_category.")
 

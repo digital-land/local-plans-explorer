@@ -122,16 +122,66 @@
           </div>
         </section>
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-      </div>
-      <div class="govuk-grid-column-one-third">
-        <div class="app-summary-list" role="complementary">
-          <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
-            Estimated timetable
-          </h2>
-          <p class="govuk-hint govuk-!-font-size-14">You can use the local plan development scheme to add or edit events in the timetable.</p>
+        </div>
+        <div class="govuk-grid-column-one-third">
+          <div class="app-summary-list" role="complementary">
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
+              Estimated timetable
+            </h2>
+            <p class="govuk-hint govuk-!-font-size-14">You can use the local plan development scheme to add or edit events in the timetable.</p>
+        </div>
       </div>
     </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <section class="app-timetable">
+          <header class="app-timetable__header">
+            <h2 class="app-timetable__title">
+              Actual timetable
+            </h2>
+          </header>
+          <div class="app-timetable__body">
+            <ul class="govuk-list app-timetable__list">
+              <li><a href="{{ stage_urls[event_category.REGULATION_18] }}">Regulation 18</a>
+                {% if plan.timetable %}
+                  {% set progress = plan.timetable.event_category_progress(event_category.REGULATION_18) %}
+                  <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
+                {% else %}
+                  <span class="govuk-tag govuk-tag--grey">Not started</span>
+                {% endif %}
+              </li>
+              <li><a href="{{ stage_urls[event_category.REGULATION_19] }}">Regulation 19</a>
+                {% if plan.timetable %}
+                {% set progress = plan.timetable.event_category_progress(event_category.REGULATION_19) %}
+                  <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
+                {% else %}
+                  <span class="govuk-tag govuk-tag--grey">Not started</span>
+                {% endif %}
+              </li>
+              <li><a href="{{ stage_urls[event_category.EXAMINATION_AND_ADOPTION] }}">Examination and adoption</a>
+                {% if plan.timetable %}
+                  {% set progress = plan.timetable.event_category_progress(event_category.EXAMINATION_AND_ADOPTION) %}
+                    <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
+                {% else %}
+                  <span class="govuk-tag govuk-tag--grey">Not started</span>
+                {% endif %}</li>
+            </ul>
+          </div>
+        </section>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        </div>
+        <div class="govuk-grid-column-one-third">
+          <div class="app-summary-list" role="complementary">
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
+              Estimated timetable
+            </h2>
+            <p class="govuk-hint govuk-!-font-size-14">You can use the local plan development scheme to add or edit events in the timetable.</p>
+        </div>
+      </div>
     </div>
+
+
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         {% for document in plan.documents %}

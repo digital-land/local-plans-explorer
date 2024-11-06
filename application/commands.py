@@ -21,6 +21,7 @@ from application.export import (
 )
 from application.extensions import db
 from application.models import (
+    EventCategory,
     LocalPlan,
     LocalPlanBoundary,
     LocalPlanDocument,
@@ -773,18 +774,82 @@ def seed_timetable():
     data_directory = os.path.join(current_file_path.parent.parent, "data")
     file_path = os.path.join(data_directory, "timetable-seed-data.csv")
 
+    records = {}
+
     with open(file_path, mode="r") as file:
         reader = csv.DictReader(file)
         for row in reader:
             local_plan_reference = row.get("local-plan", "").strip()
             plan = LocalPlan.query.get(local_plan_reference)
             if plan is None:
-                print(
-                    f"Skipping timetable seed data for {local_plan_reference} as local plan not found"
-                )
+                print(f"Local plan not found for reference {local_plan_reference}")
                 continue
-            if plan.timetable is not None:
-                print(
-                    f"Skipping timetable seed data for {local_plan_reference} as timetable already exists"
-                )
+            reference = row["reference"]
+            if reference not in records:
+                records[reference] = [row]
+            else:
+                records[reference].append(row)
+
+    for reference, rows in records.items():
+        local_plan_reference = rows[0]["local-plan"]
+        plan = LocalPlan.query.get(local_plan_reference)
+        if plan is None:
+            print(f"Local plan not found for reference {reference}")
+            continue
+        if plan.timetable is None:
+            print(f"Creating timetable for {local_plan_reference}")
+            timetable_name = f"{plan.name} timetable"
+            timetable_reference = f"{plan.reference}-timetable"
+            plan.timetable = LocalPlanTimetable(
+                reference=timetable_reference, name=timetable_name, events=[]
+            )
+            db.session.add(plan)
+            db.session.commit()
+
+        local_plan_event = LocalPlanEvent.query.get(reference)
+        if local_plan_event is not None:
+            print(f"Event {reference} already exists")
+            continue
+        event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
+        local_plan_event = LocalPlanEvent(reference=event_reference)
+        data = {}
+        for row in rows:
+            event_type = LocalPlanEventType.query.get(row["local-plan-event"])
+            if event_type is None:
+                print(f"Event type not found for reference {row['event-type']}")
                 continue
+            date_fields = row.get("event-date").split("-")
+            if len(date_fields) == 3:
+                year, month, day = date_fields
+            if len(date_fields) == 2:
+                year, month = date_fields
+                day = ""
+            if len(date_fields) == 1 and date_fields[0] != "":
+                year = date_fields[0]
+                month, day = "", ""
+            data[event_type.reference.replace("-", "_")] = {
+                "day": day,
+                "month": month,
+                "year": year,
+            }
+        event_category = _get_event_category(event_type.reference)
+        local_plan_event.event_category = event_category
+        local_plan_event.event_data = data
+        plan.timetable.events.append(local_plan_event)
+        db.session.add(plan.timetable)
+        db.session.commit()
+
+
+def _get_event_category(event_type):
+    if "estimated" in event_type and "reg-18" in event_type:
+        return EventCategory.ESTIMATED_REGULATION_18
+    elif "estimated" in event_type and "reg-19" in event_type:
+        return EventCategory.ESTIMATED_REGULATION_19
+    elif "estimated" in event_type:
+        return EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION
+    elif "reg-18" in event_type:
+        return EventCategory.REGULATION_18
+    elif "reg-19" in event_type:
+        return EventCategory.REGULATION_19
+    else:
+        return EventCategory.EXAMINATION_AND_ADOPTION

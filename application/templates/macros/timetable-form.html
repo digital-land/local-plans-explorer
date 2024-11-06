@@ -32,7 +32,7 @@
         </legend>
         {{ form.notes(class='govuk-input') }}
         </div>
-      {% elif "REGULATION_19" in event_category.name %}
+      {% elif event_category.name == "ESTIMATED_REGULATION_19" %}
         <div class="govuk-form-group">
           {% if include_plan_published %}
             {{ form.estimated_reg_19_publication_local_plan_published() }}
@@ -48,10 +48,63 @@
         </legend>
         {{ form.notes(class='govuk-input') }}
         </div>
-      {% else %}
+        {% elif event_category.name == "REGULATION_18" %}
+          <div class="govuk-form-group">
+            {% if include_plan_published %}
+              {{ form.reg_18_draft_local_plan_published() }}
+            {% endif %}
+            {{ form.reg_18_public_consultation_start() }}
+            {{ form.reg_18_public_consultation_end() }}
+          </div>
+          <div class="govuk-form-group">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+              <h1 class="govuk-fieldset__heading">
+                  {{ form.notes.label }}
+              </h1>
+          </legend>
+          {{ form.notes(class='govuk-input') }}
+          </div>
+        {% elif event_category.name == "REGULATION_18" %}
+          <div class="govuk-form-group">
+            {% if include_plan_published %}
+              {{ form.reg_18_draft_local_plan_published() }}
+            {% endif %}
+            {{ form.reg_18_public_consultation_start() }}
+            {{ form.reg_18_public_consultation_end() }}
+          </div>
+          <div class="govuk-form-group">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+              <h1 class="govuk-fieldset__heading">
+                  {{ form.notes.label }}
+              </h1>
+          </legend>
+          {{ form.notes(class='govuk-input') }}
+          </div>
+        {% elif event_category.name == "REGULATION_19" %}
+          <div class="govuk-form-group">
+            {% if include_plan_published %}
+              {{ form.reg_19_draft_local_plan_published() }}
+            {% endif %}
+            {{ form.reg_19_public_consultation_start() }}
+            {{ form.reg_19_public_consultation_end() }}
+          </div>
+          <div class="govuk-form-group">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+              <h1 class="govuk-fieldset__heading">
+                  {{ form.notes.label }}
+              </h1>
+          </legend>
+          {{ form.notes(class='govuk-input') }}
+          </div>
+      {% elif event_category.name == "ESTIMATED_EXAMINATION_AND_ADOPTION" %}
         <div class="govuk-form-group">
           {{ form.estimated_submit_plan_for_examination() }}
           {{ form.estimated_plan_adoption_date() }}
+        </div>
+      {% elif event_category.name == "EXAMINATION_AND_ADOPTION" %}
+        <div class="govuk-form-group">
+          {{ form.submit_plan_for_examination() }}
+          {{ form.plan_adopted() }}
         </div>
       {% endif %}
       <div class="govuk-button-group">
