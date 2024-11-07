@@ -956,6 +956,18 @@ def _get_save_and_continue_url(plan_reference, event_category):
                 reference=plan_reference,
                 event_category=EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
             )
+        case EventCategory.REGULATION_18:
+            return url_for(
+                "local_plan.add_new_timetable_event",
+                reference=plan_reference,
+                event_category=EventCategory.REGULATION_19,
+            )
+        case EventCategory.REGULATION_19:
+            return url_for(
+                "local_plan.add_new_timetable_event",
+                reference=plan_reference,
+                event_category=EventCategory.EXAMINATION_AND_ADOPTION,
+            )
         case _:
             return None
 
