@@ -527,7 +527,10 @@ def timetable_events(reference, timetable_reference, event_category):
             plan_published_text=plan_published_text,
             continue_url=continue_url,
         )
-    elif event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
+    elif event_category in [
+        EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
+        EventCategory.EXAMINATION_AND_ADOPTION,
+    ]:
         event_category_title = event_category.value
         events = timetable.get_events_by_category(event_category)
         if events and len(events) == 1:
