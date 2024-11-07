@@ -1,5 +1,6 @@
 entry-date,start-date,end-date,reference,name,organisations,description,period-start-date,period-end-date,local-plan-boundary,documentation-url,adopted-date
 2024-10-02,,,arun-district-council-local-plan-2011,Arun District Council Local Plan 2011 - 2031,local-authority:ARU,,2011,2031,E07000224,https://www.arun.gov.uk/adopted-local-plan/,2018-07-18
+2024-10-02,,,ashford-borough-council-local-plan-2019,Ashford Borough Council Local Plan 2019,local-authority:ASF,,2019,2030,E07000105,https://www.ashford.gov.uk/planning-and-development/planning-policy/adopted-development-plan-documents/adopted-local-plan-to-2030/,2019-02-01
 2024-10-15,,,camden-local-plan-2026,Camden local plan 2026,local-authority:CMD,,2026,2041,E09000007,https://www.camden.gov.uk/draft-new-local-plan,--
 2024-10-02,,,darlington-borough-council-local-plan-2016,Darlington Local Plan 2016 - 2036,local-authority:DAL,,2016,2036,E06000005,https://www.darlington.gov.uk/environment-and-planning/planning/planning-and-environmental-policy/adopted-local-plan-2016-2036/,2022-02-17
 2024-10-21,,,development-strategy-2026,Development Plan 2026,local-authority:EAL,,2011,2026,E09000009,https://www.ealing.gov.uk/info/201162/planning_policy/3124/development_plan,2012-04-03
@@ -7,7 +8,11 @@ entry-date,start-date,end-date,reference,name,organisations,description,period-s
 2024-10-02,,,london-borough-of-camden-local-plan-2017,Camden Local Plan 2017,local-authority:CMD,,2016,2031,E09000007,https://www.camden.gov.uk/camden-local-plan1,2017-07-03
 2024-10-02,,,london-borough-of-ealing-local-plan-2011,Ealing's Local Plan 2024-2039,local-authority:EAL,,2024,2039,E09000009,https://www.ealing.gov.uk/info/201164/local_plan/3125/new_local_plan,--
 2024-10-02,,,london-borough-of-islington-local-plan-2023,London Borough of Islington Local Plan 2023,local-authority:ISL,,2020,2037,E09000019,https://www.islington.gov.uk/planning/planning-policy/islington-local-plan,2023-09-28
+2024-10-02,,,london-borough-of-lewisham-local-plan-2020,London Borough of Lewisham Local Plan 2020,local-authority:LEW,,2023,2038,E09000023,https://lewisham.gov.uk/myservices/planning/policy/planning/current-and-future-consultations,--
+2024-11-04,,,new-ashford-local-plan-to-2042,New Ashford Local Plan to 2042,local-authority:ASF,,2024,2042,,https://www.ashford.gov.uk/planning-and-development/planning-policy/emerging-local-plan/,--
+2024-11-04,,,new-local-plan-0-0,New Local Plan,local-authority:TAN,,,,,https://www.tandridge.gov.uk/Planning-and-building/Planning-strategies-and-policies/New-Local-Plan,--
 2024-10-02,,,south-cambridgeshire-district-council-local-plan-2018,South Cambridgeshire Local Plan 2018,local-authority:SCA,,2018,2031,E07000012,https://www.scambs.gov.uk/planning/local-plan-and-neighbourhood-planning/the-adopted-development-plan/south-cambridgeshire-local-plan-2018,2018-09-27
 2024-10-02,,,staffordshire-moorlands-district-council-local-plan-2014,Staffordshire Moorlands Local Plan,local-authority:STF,,2014,2033,E07000198,https://www.staffsmoorlands.gov.uk/localplan,2020-09-09
 2024-10-02,,,thurrock-council-local-plan-2015,Core Strategy Local Plan,local-authority:THR,,2015,2026,E06000034,https://www.thurrock.gov.uk/current-development-plan/core-strategy-local-plan,2015-01-28
+2024-10-21,,,thurrock-local-plan-2040,Thurrock Local Plan 2040,local-authority:THR,,2025,2040,E06000034,https://consult.thurrock.gov.uk/local-plan-initial-proposals,--
 2024-10-02,,,vale-of-white-horse-district-council-local-plan-2016,Vale of White Horse District Council Local Plan 2016,local-authority:VAL,,2011,2031,E07000180,https://www.whitehorsedc.gov.uk/vale-of-white-horse-district-council/planning-and-development/local-plan-and-planning-policies/local-plan-2031/,2016-12-01
