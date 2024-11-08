@@ -161,10 +161,10 @@ def push_export():
     print("Done")
 
 
-@export_cli.command("run-all")
+@export_cli.command("all")
 @click.pass_context
-def export(ctx):
-    update_needed = ctx.invoke(export)
+def export_all(ctx):
+    update_needed = ctx.invoke(export_data)
     if update_needed:
         ctx.invoke(push_export)
         print("Export complete")
