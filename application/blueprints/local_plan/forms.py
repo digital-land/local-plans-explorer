@@ -13,6 +13,8 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, Optional, Regexp
 
+from application.models import EventCategory
+
 
 class LocalPlanForm(FlaskForm):
     def validate_period_start_date(form, field):
@@ -425,3 +427,21 @@ class ExaminationAndAdoptionForm(FlaskForm):
             if field.errors:
                 errors.extend(field.errors)
         return errors[0] if errors else None
+
+
+def get_event_form(event_category, obj=None):
+    match event_category:
+        case EventCategory.ESTIMATED_REGULATION_18:
+            return EstimatedRegulation18Form(obj=obj)
+        case EventCategory.ESTIMATED_REGULATION_19:
+            return EstimatedRegulation19Form(obj=obj)
+        case EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
+            return EsitmatedExaminationAndAdoptionForm(obj=obj)
+        case EventCategory.REGULATION_18:
+            return Regulation18Form(obj=obj)
+        case EventCategory.REGULATION_19:
+            return Regulation19Form(obj=obj)
+        case EventCategory.EXAMINATION_AND_ADOPTION:
+            return ExaminationAndAdoptionForm(obj=obj)
+        case _:
+            raise ValueError("Invalid event_category.")

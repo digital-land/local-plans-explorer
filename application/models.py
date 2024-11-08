@@ -1,6 +1,7 @@
 import datetime
 import re
 import uuid
+from collections import OrderedDict
 from enum import Enum
 from typing import List, Optional
 
@@ -306,6 +307,127 @@ class LocalPlanEvent(BaseModel):
             if all(value.get(k, "").strip() != "" for k in ["day", "month", "year"]):
                 return "completed"
         return "started"
+
+    def plan_published(self):
+        prefix = (
+            "estimated_" if "estimated" in self.event_category.value.lower() else ""
+        )
+        match self.event_category:
+            case EventCategory.ESTIMATED_REGULATION_18 | EventCategory.REGULATION_18:
+                return self.collect_date_fields(
+                    f"{prefix}reg_18_draft_local_plan_published"
+                )
+            case EventCategory.ESTIMATED_REGULATION_19 | EventCategory.REGULATION_19:
+                return self.collect_date_fields(
+                    f"{prefix}reg_19_publication_local_plan_published"
+                )
+            case _:
+                return None
+
+    def plan_published_text(self):
+        stage = self.event_category.stage()
+        if stage == "18":
+            plan_published_text = "Draft local plan published"
+        elif stage == "19":
+            plan_published_text = "Publication local plan published"
+        else:
+            plan_published_text = None
+        return plan_published_text
+
+    def consultation_start(self):
+        prefix = (
+            "estimated_" if "estimated" in self.event_category.value.lower() else ""
+        )
+        stage = self.event_category.stage()
+        match self.event_category:
+            case (
+                EventCategory.ESTIMATED_REGULATION_18
+                | EventCategory.REGULATION_18
+                | EventCategory.ESTIMATED_REGULATION_19
+                | EventCategory.REGULATION_19
+            ):
+                return self.collect_date_fields(
+                    f"{prefix}reg_{stage}_public_consultation_start"
+                )
+            case _:
+                return None
+
+    def consultation_end(self):
+        prefix = (
+            "estimated_" if "estimated" in self.event_category.value.lower() else ""
+        )
+        stage = self.event_category.stage()
+        match self.event_category:
+            case (
+                EventCategory.ESTIMATED_REGULATION_18
+                | EventCategory.REGULATION_18
+                | EventCategory.ESTIMATED_REGULATION_19
+                | EventCategory.REGULATION_19
+            ):
+                return self.collect_date_fields(
+                    f"{prefix}reg_{stage}_public_consultation_end"
+                )
+            case _:
+                return None
+
+    def submit_plan_for_examination(self):
+        prefix = (
+            "estimated_" if "estimated" in self.event_category.value.lower() else ""
+        )
+        return self.collect_date_fields(f"{prefix}submit_plan_for_examination")
+
+    def plan_adoption_date(self):
+        prefix = (
+            "estimated_" if "estimated" in self.event_category.value.lower() else ""
+        )
+        return self.collect_date_fields(f"{prefix}plan_adoption_date")
+
+    def collect_date_fields(self, key):
+        dates = self.event_data.get(key, None)
+        if dates is None:
+            return None
+        date_parts = []
+        if dates.get("day", None):
+            date_parts.append(dates["day"])
+        if dates.get("month", None):
+            date_parts.append(dates["month"])
+        if dates.get("year", None):
+            date_parts.append(dates["year"])
+        return "/".join(date_parts)
+
+    def get_event_type_name(self, key):
+        if key not in self.event_data:
+            return ""
+        event_type_refererence = key.replace("_", "-")
+        event_type = LocalPlanEventType.query.get(event_type_refererence)
+        if event_type is None:
+            return ""
+        return event_type.name
+
+    def ordered_event_data(self):
+        if self.event_category in [EventCategory.EXAMINATION_AND_ADOPTION]:
+            ordered = OrderedDict()
+            if "submit_plan_for_examination" in self.event_data:
+                ordered["submit_plan_for_examination"] = self.event_data[
+                    "submit_plan_for_examination"
+                ]
+                ordered["planning_inspectorate_examination_start"] = self.event_data[
+                    "planning_inspectorate_examination_start"
+                ]
+                ordered["planning_inspectorate_examination_end"] = self.event_data[
+                    "planning_inspectorate_examination_end"
+                ]
+
+            if "planning_inspectorate_found_sound" in self.event_data:
+                ordered["planning_inspectorate_found_sound"] = self.event_data[
+                    "planning_inspectorate_found_sound"
+                ]
+                ordered["inspector_report_published"] = self.event_data[
+                    "inspector_report_published"
+                ]
+                ordered["plan_adopted"] = self.event_data["plan_adopted"]
+            return ordered
+        return self.event_data
 
 
 class LocalPlanTimetable(DateModel):

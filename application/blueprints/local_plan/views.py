@@ -6,15 +6,7 @@ from flask import Blueprint, abort, redirect, render_template, request, url_for
 from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
-from application.blueprints.local_plan.forms import (
-    EsitmatedExaminationAndAdoptionForm,
-    EstimatedRegulation18Form,
-    EstimatedRegulation19Form,
-    ExaminationAndAdoptionForm,
-    LocalPlanForm,
-    Regulation18Form,
-    Regulation19Form,
-)
+from application.blueprints.local_plan.forms import LocalPlanForm, get_event_form
 from application.extensions import db
 from application.models import (
     CandidateDocument,
@@ -392,33 +384,6 @@ def add_geography(reference):
             return redirect(url_for("local_plan.get_plan", reference=plan.reference))
         else:
             return redirect(url_for("local_plan.get_plan", reference=plan.reference))
-    # Don't include file upload at this stage
-    # else:
-    #     if "fileUpload" in request.files:
-    #         file = request.files["fileUpload"]
-    #         reference = (
-    #             request.form["designated-plan-area"].replace(" ", "-").lower()
-    #         )
-    #         if file and _allowed_file(file.filename):
-    #             with TemporaryDirectory() as tempdir:
-    #                 filename = secure_filename(file.filename)
-    #                 shapefile_path = os.path.join(tempdir, filename)
-    #                 file.save(shapefile_path)
-    #                 gdf = gpd.read_file(shapefile_path)
-    #                 geojson = gdf.to_crs(epsg="4326").to_json()
-    #                 boundary = LocalPlanBoundary(
-    #                     reference=reference,
-    #                     geojson=json.loads(geojson),
-    #                     plan_boundary_type="combined-planning-authority-district"
-    #                 )
-    #                 plan.geography = boundary
-    #                 boundary.local_plans.append(plan)
-    #                 db.session.add(plan)
-    #                 db.session.add(boundary)
-    #                 db.session.commit()
-    #
-    #         return redirect(url_for("development_plan.plan", reference=plan.reference))
-    #
 
     geographies = []
     references = []
@@ -476,7 +441,7 @@ def timetable_event(reference, timetable_reference, event_reference):
             event, event_category, estimated, event_category_title
         )
     elif event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
-        return _render_examination_and_adoption_event_page(
+        return _render_estimated_examination_and_adoption_event_page(
             event, event_category, estimated, event_category_title
         )
 
@@ -502,16 +467,7 @@ def timetable_events(reference, timetable_reference, event_category):
         EventCategory.REGULATION_18,
         EventCategory.REGULATION_19,
     ]:
-        stage = event_category.stage()
-        if stage == "18":
-            plan_published_text = "Draft local plan published"
-        elif stage == "19":
-            plan_published_text = "Publication local plan published"
-        else:
-            plan_published_text = None
-
         events = timetable.get_events_by_category(event_category)
-        events_data = _collate_events_data(events, event_category)
         event_category_title = event_category.value.replace("Estimated", "").strip()
         plan_reference = timetable.local_plan
         continue_url = _get_save_and_continue_url(plan_reference, event_category)
@@ -520,26 +476,26 @@ def timetable_events(reference, timetable_reference, event_category):
             plan=timetable.local_plan,
             timetable=timetable,
             events=events,
-            events_data=events_data,
             estimated=estimated,
             event_category=event_category,
             event_category_title=event_category_title,
-            plan_published_text=plan_published_text,
             continue_url=continue_url,
         )
-    elif event_category in [
-        EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
-        EventCategory.EXAMINATION_AND_ADOPTION,
-    ]:
+    elif event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
         event_category_title = event_category.value
         events = timetable.get_events_by_category(event_category)
         if events and len(events) == 1:
             event = events[0]
-            return _render_examination_and_adoption_event_page(
+            return _render_estimated_examination_and_adoption_event_page(
                 event, event_category, estimated, event_category_title
             )
-        else:
-            return abort(404)
+    elif event_category == EventCategory.EXAMINATION_AND_ADOPTION:
+        event_category_title = event_category.value
+        events = timetable.get_events_by_category(event_category)
+        if events:
+            return _render_examination_and_adoption_event_page(
+                timetable, events, event_category, estimated, event_category_title
+            )
     else:
         return abort(404)
 
@@ -551,7 +507,7 @@ def timetable_events(reference, timetable_reference, event_category):
 def add_new_timetable_event(reference, event_category):
     plan = LocalPlan.query.get(reference)
     estimated = True if event_category.value.lower().startswith("estimated") else False
-    form = _get_event_form(event_category)
+    form = get_event_form(event_category)
 
     redirect_url = _redirect_url_category_exists(plan, event_category)
     if redirect_url is not None:
@@ -566,10 +522,15 @@ def add_new_timetable_event(reference, event_category):
                 events=[],
             )
         event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
+        if hasattr(form, "notes"):
+            notes = form.notes.data
+        else:
+            notes = None
         event = LocalPlanEvent(
             reference=event_reference,
             event_category=event_category,
             event_data=form.data,
+            notes=notes,
         )
         plan.timetable.events.append(event)
         db.session.add(event)
@@ -619,14 +580,21 @@ def add_event_to_timetable(reference, timetable_reference, event_category):
     if timetable is None:
         return abort(404)
     estimated = True if event_category.value.lower().startswith("estimated") else False
-    form = _get_event_form(event_category)
+    form = get_event_form(event_category)
 
     if form.validate_on_submit():
         if timetable.events is None:
             timetable.events = []
         reference = f"{timetable.reference}-{len(timetable.events)}"
+        if hasattr(form, "notes"):
+            notes = form.notes.data
+        else:
+            notes = None
         event = LocalPlanEvent(
-            reference=reference, event_category=event_category, event_data=form.data
+            reference=reference,
+            event_category=event_category,
+            event_data=form.data,
+            notes=notes,
         )
         timetable.events.append(event)
         db.session.add(event)
@@ -681,7 +649,7 @@ def edit_timetable_event(reference, timetable_reference, event_reference):
 
     include_plan_published = _is_first_event_of_category(event)
 
-    form = _get_event_form(event.event_category, obj=event.event_data)
+    form = get_event_form(event.event_category, obj=event.event_data)
 
     if form.validate_on_submit():
         event.event_data = form.data
@@ -728,31 +696,8 @@ def edit_timetable_event(reference, timetable_reference, event_reference):
 
 
 def _render_consultation_event_page(
-    event, event_category, estimated, event_category_title
+    event: LocalPlanEvent, event_category, estimated, event_category_title
 ):
-    prefix = "estimated_" if estimated else ""
-    stage = event_category.stage()
-    if event.event_data.get(f"{prefix}reg_18_draft_local_plan_published"):
-        plan_published = _collect_date_fields(
-            event.event_data, f"{prefix}reg_18_draft_local_plan_published"
-        )
-        plan_published_text = "Draft local plan published"
-    elif event.event_data.get(f"{prefix}reg_19_publication_local_plan_published"):
-        plan_published = _collect_date_fields(
-            event.event_data, f"{prefix}reg_19_publication_local_plan_published"
-        )
-        plan_published_text = "Publication local plan published"
-    else:
-        plan_published = None
-        plan_published_text = None
-    consultation_start = _collect_date_fields(
-        event.event_data, f"{prefix}reg_{stage}_public_consultation_start"
-    )
-    consultation_end = _collect_date_fields(
-        event.event_data, f"{prefix}reg_{stage}_public_consultation_end"
-    )
-    consultation_covers = event.event_data.get("notes", None)
-
     edit_url = url_for(
         "local_plan.edit_timetable_event",
         reference=event.timetable.local_plan,
@@ -768,27 +713,14 @@ def _render_consultation_event_page(
         estimated=estimated,
         event_category=event_category,
         event_category_title=event_category_title,
-        plan_published=plan_published,
-        plan_published_text=plan_published_text,
-        consultation_start=consultation_start,
-        consultation_end=consultation_end,
-        consultation_covers=consultation_covers,
         edit_url=edit_url,
         continue_url=continue_url,
     )
 
 
-def _render_examination_and_adoption_event_page(
+def _render_estimated_examination_and_adoption_event_page(
     event, event_category, estimated, event_category_title
 ):
-    prefix = "estimated_" if estimated else ""
-    submit_plan_for_examination = _collect_date_fields(
-        event.event_data, f"{prefix}submit_plan_for_examination"
-    )
-    plan_adoption_date = _collect_date_fields(
-        event.event_data, f"{prefix}plan_adoption_date"
-    )
-
     edit_url = url_for(
         "local_plan.edit_timetable_event",
         reference=event.timetable.local_plan,
@@ -797,14 +729,25 @@ def _render_examination_and_adoption_event_page(
     )
 
     return render_template(
-        "local_plan/timetable-examination-and-adoption.html",
+        "local_plan/timetable-estimated-examination-and-adoption.html",
         event=event,
         estimated=estimated,
         event_category=event_category,
         event_category_title=event_category_title,
-        submit_plan_for_examination=submit_plan_for_examination,
-        plan_adoption_date=plan_adoption_date,
         edit_url=edit_url,
+    )
+
+
+def _render_examination_and_adoption_event_page(
+    timetable, events, event_category, estimated, event_category_title
+):
+    return render_template(
+        "local_plan/timetable-examination-and-adoption.html",
+        events=events,
+        timetable=timetable,
+        estimated=estimated,
+        event_category=event_category,
+        event_category_title=event_category_title,
     )
 
 
@@ -876,63 +819,6 @@ def _allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def _collect_date_fields(data, key):
-    dates = data.get(key, None)
-    if dates is None:
-        return None
-    date_parts = []
-    if dates.get("day", None):
-        date_parts.append(dates["day"])
-    if dates.get("month", None):
-        date_parts.append(dates["month"])
-    if dates.get("year", None):
-        date_parts.append(dates["year"])
-    return "/".join(date_parts)
-
-
-def _collate_events_data(events, category):
-    prefix = "estimated_" if "estimated" in category.value.lower() else ""
-    match category:
-        case EventCategory.ESTIMATED_REGULATION_18 | EventCategory.REGULATION_18:
-            return [
-                {
-                    "plan_published": _collect_date_fields(
-                        event.event_data, f"{prefix}reg_18_draft_local_plan_published"
-                    ),
-                    "consultation_start": _collect_date_fields(
-                        event.event_data, f"{prefix}reg_18_public_consultation_start"
-                    ),
-                    "consultation_end": _collect_date_fields(
-                        event.event_data, f"{prefix}reg_18_public_consultation_end"
-                    ),
-                    "consultation_covers": event.event_data.get("notes", ""),
-                    "event": event,
-                }
-                for event in events
-            ]
-        case EventCategory.ESTIMATED_REGULATION_19 | EventCategory.REGULATION_19:
-            return [
-                {
-                    "plan_published": _collect_date_fields(
-                        event.event_data,
-                        f"{prefix}reg_19_publication_local_plan_published",
-                    ),
-                    "consultation_start": _collect_date_fields(
-                        event.event_data, f"{prefix}reg_19_public_consultation_start"
-                    ),
-                    "consultation_end": _collect_date_fields(
-                        event.event_data, f"{prefix}reg_19_public_consultation_end"
-                    ),
-                    "consultation_covers": event.event_data.get("notes", ""),
-                    "event": event,
-                }
-                for event in events
-            ]
-
-        case _:
-            return None
-
-
 def _is_first_event_of_category(event):
     earlier_events = LocalPlanEvent.query.filter(
         LocalPlanEvent.timetable == event.timetable,
@@ -970,24 +856,6 @@ def _get_save_and_continue_url(plan_reference, event_category):
             )
         case _:
             return None
-
-
-def _get_event_form(event_category, obj=None):
-    match event_category:
-        case EventCategory.ESTIMATED_REGULATION_18:
-            return EstimatedRegulation18Form(obj=obj)
-        case EventCategory.ESTIMATED_REGULATION_19:
-            return EstimatedRegulation19Form(obj=obj)
-        case EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
-            return EsitmatedExaminationAndAdoptionForm(obj=obj)
-        case EventCategory.REGULATION_18:
-            return Regulation18Form(obj=obj)
-        case EventCategory.REGULATION_19:
-            return Regulation19Form(obj=obj)
-        case EventCategory.EXAMINATION_AND_ADOPTION:
-            return ExaminationAndAdoptionForm(obj=obj)
-        case _:
-            raise ValueError("Invalid event_category.")
 
 
 def _include_plan_published(plan, event_category):

@@ -10,42 +10,39 @@
   </div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <section class="app-summary-card">
-        <header class="app-summary-card__header">
-          <h2 class="app-summary-card__title">
-            {{ event.event_category.value }}
-          </h2>
-          <div class="app-summary-card__actions">
-            {%- if not config.AUTHENTICATION_ON or session["user"] %}
-              <a href="{{ edit_url }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
-            {%- endif %}
-          </div>
-        </header>
-        <div class="app-summary-card__body">
-          <dl class="govuk-summary-list">
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">
-                Submit plan for examination
-              </dt>
-              <dd class="govuk-summary-list__value">
-                {{ submit_plan_for_examination}}
-              </dd>
+      {% for event in events %}
+        <section class="app-summary-card">
+          <header class="app-summary-card__header">
+            <h2 class="app-summary-card__title">
+              {{ event.event_category.value }}
+            </h2>
+            <div class="app-summary-card__actions">
+              {%- if not config.AUTHENTICATION_ON or session["user"] %}
+                <a href="{{ url_for('local_plan.edit_timetable_event', reference=event.timetable.local_plan, timetable_reference=event.timetable.reference, event_reference=event.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
+              {%- endif %}
             </div>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">
-                Adoption of local plan
-              </dt>
-              <dd class="govuk-summary-list__value">
-                {{ plan_adoption_date }}
-              </dd>
+          </header>
+          {% for item in event.ordered_event_data() %}
+            <div class="app-summary-card__body">
+              <dl class="govuk-summary-list">
+                  <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                      {{ event.get_event_type_name(item) }}
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                      {{ event.collect_date_fields(item) }}
+                    </dd>
+                  </div>
+                </dl>
             </div>
-        </div>
-      </section>
+          {% endfor %}
+        </section>
+      {% endfor %}
     </div>
   </div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <a href="{{ url_for('local_plan.get_plan', reference=event.timetable.local_plan) }}" class="govuk-button govuk-button--primary">Save and close</a>
+      <a href="{{ url_for('local_plan.get_plan', reference=timetable.local_plan) }}" class="govuk-button govuk-button--primary">Save and close</a>
     </div>
   </div>
 

@@ -841,6 +841,8 @@ def seed_timetable():
 
 
 def _get_event_category(event_type):
+    if event_type == "timetable-published":
+        return EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION
     if "estimated" in event_type and "reg-18" in event_type:
         return EventCategory.ESTIMATED_REGULATION_18
     elif "estimated" in event_type and "reg-19" in event_type:

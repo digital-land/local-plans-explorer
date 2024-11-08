@@ -12,8 +12,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    {% for data in events_data %}
-    {% set event = data.event %}
+    {% for event in events %}
     <section class="app-summary-card">
         <header class="app-summary-card__header">
           <h2 class="app-summary-card__title">
@@ -27,13 +26,13 @@
         </header>
         <div class="app-summary-card__body">
           <dl class="govuk-summary-list">
-            {% if data.plan_published %}
+            {% if event.plan_published() %}
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                  {{ plan_published_text  }}
+                  {{ event.plan_published_text()  }}
                 </dt>
                 <dd class="govuk-summary-list__value">
-                  {{ data.plan_published }}
+                  {{ event.plan_published() }}
                 </dd>
               </div>
             {% endif %}
@@ -42,7 +41,7 @@
                 Consultation period
               </dt>
               <dd class="govuk-summary-list__value">
-                {{ data.consultation_start }} - {{ data.consultation_end }}
+                {{ event.consultation_start() }} - {{ event.consultation_end() }}
               </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -50,9 +49,10 @@
                 What does the consultation cover?
               </dt>
               <dd class="govuk-summary-list__value">
-                {{ data.consultation_covers }}
+                {{ event.notes }}
               </dd>
             </div>
+          </dl>
         </div>
     </section>
   {% endfor %}
