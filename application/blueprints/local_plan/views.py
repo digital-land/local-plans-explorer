@@ -494,6 +494,8 @@ def timetable_events(reference, timetable_reference, event_category):
             return _render_estimated_examination_and_adoption_event_page(
                 event, event_category, estimated, event_category_title
             )
+        else:
+            return abort(404)
     elif event_category == EventCategory.EXAMINATION_AND_ADOPTION:
         event_category_title = event_category.value
         events = timetable.get_events_by_category(event_category)
@@ -501,6 +503,8 @@ def timetable_events(reference, timetable_reference, event_category):
             return _render_examination_and_adoption_event_page(
                 timetable, events, event_category, estimated, event_category_title
             )
+        else:
+            return abort(404)
     else:
         return abort(404)
 
