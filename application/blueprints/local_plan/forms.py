@@ -388,6 +388,8 @@ class Regulation19Form(FlaskForm):
         return errors[0] if errors else None
 
 
+# TODO need to adapt this to the two types of events that can be added
+# in the actual examination and adoptions phase
 class ExaminationAndAdoptionForm(FlaskForm):
     submit_plan_for_examination = DatePartField(
         "Submit plan for examination", validators=[Optional()]

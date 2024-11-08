@@ -45,14 +45,19 @@ def get_plan(reference):
         return abort(404)
 
     if plan.boundary and plan.boundary.geojson:
-        coords, bounding_box = get_centre_and_bounds(plan.boundary.geojson)
-        geography = {
-            "name": plan.name,
-            "features": plan.boundary.geojson,
-            "coords": coords,
-            "bounding_box": bounding_box,
-            "reference": plan.boundary.reference,
-        }
+        try:
+            coords, bounding_box = get_centre_and_bounds(plan.boundary.geojson)
+            geography = {
+                "name": plan.name,
+                "features": plan.boundary.geojson,
+                "coords": coords,
+                "bounding_box": bounding_box,
+                "reference": plan.boundary.reference,
+            }
+        except Exception as e:
+            print(e)
+            geography = None
+            bounding_box = None
     else:
         geography = None
         bounding_box = None
