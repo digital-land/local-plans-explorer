@@ -119,3 +119,13 @@ class LocalPlanDocumentModel(LocalPlanBaseModel):
 class LocalPlanBoundaryModel(LocalPlanBaseModel):
     geometry: str
     plan_boundary_type: str
+
+
+class LocalPlanTimetableModel(DateModel):
+    reference: str
+    name: Optional[str] = None
+    local_plan: str
+    notes: Optional[str] = None
+    description: Optional[str] = None
+    event_date: str
+    event_type: str

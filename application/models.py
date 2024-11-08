@@ -395,6 +395,19 @@ class LocalPlanEvent(BaseModel):
             date_parts.append(dates["year"])
         return "/".join(date_parts)
 
+    def collect_iso_date_fields(self, key):
+        dates = self.event_data.get(key, None)
+        if dates is None:
+            return None
+        date_parts = []
+        if dates.get("year", None):
+            date_parts.append(dates["year"])
+        if dates.get("month", None):
+            date_parts.append(dates["month"])
+        if dates.get("day", None):
+            date_parts.append(dates["day"])
+        return "-".join(date_parts)
+
     def get_event_type_name(self, key):
         if key not in self.event_data:
             return ""
@@ -408,24 +421,69 @@ class LocalPlanEvent(BaseModel):
         if self.event_category in [EventCategory.EXAMINATION_AND_ADOPTION]:
             ordered = OrderedDict()
             if "submit_plan_for_examination" in self.event_data:
-                ordered["submit_plan_for_examination"] = self.event_data[
+                ordered["submit_plan_for_examination"] = self.event_data.get(
                     "submit_plan_for_examination"
-                ]
-                ordered["planning_inspectorate_examination_start"] = self.event_data[
+                )
+                ordered[
                     "planning_inspectorate_examination_start"
-                ]
-                ordered["planning_inspectorate_examination_end"] = self.event_data[
+                ] = self.event_data.get("planning_inspectorate_examination_start")
+                ordered["planning_inspectorate_examination_end"] = self.event_data.get(
                     "planning_inspectorate_examination_end"
-                ]
+                )
 
             if "planning_inspectorate_found_sound" in self.event_data:
-                ordered["planning_inspectorate_found_sound"] = self.event_data[
+                ordered["planning_inspectorate_found_sound"] = self.event_data.get(
                     "planning_inspectorate_found_sound"
-                ]
-                ordered["inspector_report_published"] = self.event_data[
+                )
+                ordered["inspector_report_published"] = self.event_data.get(
                     "inspector_report_published"
-                ]
-                ordered["plan_adopted"] = self.event_data["plan_adopted"]
+                )
+                ordered["plan_adopted"] = self.event_data.get("plan_adopted")
+            return ordered
+        elif self.event_category in [EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION]:
+            ordered = OrderedDict()
+            ordered["estimated_submit_plan_for_examination"] = self.event_data.get(
+                "estimated_submit_plan_for_examination"
+            )
+            ordered["estimated_plan_adoption_date"] = self.event_data.get(
+                "estimated_plan_adoption_date"
+            )
+            return ordered
+        elif self.event_category in [
+            EventCategory.ESTIMATED_REGULATION_18,
+            EventCategory.REGULATION_18,
+        ]:
+            prefix = (
+                "estimated_" if "estimated" in self.event_category.value.lower() else ""
+            )
+            ordered = OrderedDict()
+            ordered[f"{prefix}reg_18_draft_local_plan_published"] = self.event_data.get(
+                f"{prefix}reg_18_draft_local_plan_published"
+            )
+            ordered[f"{prefix}reg_18_public_consultation_start"] = self.event_data.get(
+                f"{prefix}reg_18_public_consultation_start"
+            )
+            ordered[f"{prefix}reg_18_public_consultation_end"] = self.event_data.get(
+                f"{prefix}reg_18_public_consultation_end"
+            )
+            return ordered
+        elif self.event_category in [
+            EventCategory.ESTIMATED_REGULATION_19,
+            EventCategory.REGULATION_19,
+        ]:
+            prefix = (
+                "estimated_" if "estimated" in self.event_category.value.lower() else ""
+            )
+            ordered = OrderedDict()
+            ordered[
+                f"{prefix}reg_19_publication_local_plan_published"
+            ] = self.event_data.get(f"{prefix}reg_19_publication_local_plan_published")
+            ordered[f"{prefix}reg_19_public_consultation_start"] = self.event_data.get(
+                f"{prefix}reg_19_public_consultation_start"
+            )
+            ordered[f"{prefix}reg_19_public_consultation_end"] = self.event_data.get(
+                f"{prefix}reg_19_public_consultation_end"
+            )
             return ordered
         return self.event_data
 
