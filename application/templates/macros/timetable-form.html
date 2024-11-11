@@ -101,9 +101,16 @@
           {{ form.estimated_submit_plan_for_examination() }}
           {{ form.estimated_plan_adoption_date() }}
         </div>
-      {% elif event_category.name == "EXAMINATION_AND_ADOPTION" %}
+      {% elif event_category.name == "PLANNING_INSPECTORATE_EXAMINATION" %}
         <div class="govuk-form-group">
           {{ form.submit_plan_for_examination() }}
+          {{ form.planning_inspectorate_examination_start()}}
+          {{ form.planning_inspectorate_examination_end() }}
+        </div>
+      {% elif event_category.name == "PLANNING_INSPECTORATE_FINDINGS" %}
+        <div class="govuk-form-group">
+          {{ form.planning_inspectorate_found_sound() }}
+          {{ form.inspector_report_published()}}
           {{ form.plan_adopted() }}
         </div>
       {% endif %}

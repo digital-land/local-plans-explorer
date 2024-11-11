@@ -478,7 +478,7 @@ def timetable_events(reference, timetable_reference, event_category):
         plan_reference = timetable.local_plan
         continue_url = _get_save_and_continue_url(plan_reference, event_category)
         return render_template(
-            "local_plan/timetable-consultations.html",
+            "local_plan/consultations.html",
             plan=timetable.local_plan,
             timetable=timetable,
             events=events,
@@ -497,12 +497,20 @@ def timetable_events(reference, timetable_reference, event_category):
             )
         else:
             return abort(404)
-    elif event_category == EventCategory.EXAMINATION_AND_ADOPTION:
+    elif event_category in [
+        EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
+        EventCategory.PLANNING_INSPECTORATE_FINDINGS,
+    ]:
         event_category_title = event_category.value
         events = timetable.get_events_by_category(event_category)
         if events:
-            return _render_examination_and_adoption_event_page(
-                timetable, events, event_category, estimated, event_category_title
+            return render_template(
+                "local_plan/pins-exam-and-findings.html",
+                events=events,
+                timetable=timetable,
+                estimated=estimated,
+                event_category=event_category,
+                event_category_title=event_category_title,
             )
         else:
             return abort(404)
@@ -569,7 +577,7 @@ def add_new_timetable_event(reference, event_category):
     )
 
     return render_template(
-        "local_plan/timetable-event-form.html",
+        "local_plan/event-form.html",
         plan=plan,
         form=form,
         estimated=estimated,
@@ -636,7 +644,7 @@ def add_event_to_timetable(reference, timetable_reference, event_category):
     )
 
     return render_template(
-        "local_plan/timetable-event-form.html",
+        "local_plan/event-form.html",
         plan=timetable.local_plan_obj,
         form=form,
         estimated=estimated,
@@ -692,7 +700,7 @@ def edit_timetable_event(reference, timetable_reference, event_reference):
         event_category_title = event.event_category.value
 
     return render_template(
-        "local_plan/timetable-event-form.html",
+        "local_plan/event-form.html",
         form=form,
         event=event,
         action_url=action_url,
@@ -718,7 +726,7 @@ def _render_consultation_event_page(
     continue_url = _get_save_and_continue_url(plan_reference, event_category)
 
     return render_template(
-        "local_plan/timetable-consultation.html",
+        "local_plan/consultation.html",
         event=event,
         estimated=estimated,
         event_category=event_category,
@@ -739,25 +747,12 @@ def _render_estimated_examination_and_adoption_event_page(
     )
 
     return render_template(
-        "local_plan/timetable-estimated-examination-and-adoption.html",
+        "local_plan/estimated-examination-and-adoption.html",
         event=event,
         estimated=estimated,
         event_category=event_category,
         event_category_title=event_category_title,
         edit_url=edit_url,
-    )
-
-
-def _render_examination_and_adoption_event_page(
-    timetable, events, event_category, estimated, event_category_title
-):
-    return render_template(
-        "local_plan/timetable-examination-and-adoption.html",
-        events=events,
-        timetable=timetable,
-        estimated=estimated,
-        event_category=event_category,
-        event_category_title=event_category_title,
     )
 
 

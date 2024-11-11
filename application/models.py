@@ -266,8 +266,8 @@ class EventCategory(Enum):
     ESTIMATED_EXAMINATION_AND_ADOPTION = "Estimated examination and adoption"
     REGULATION_18 = "Regulation 18"
     REGULATION_19 = "Regulation 19"
-    PLANNING_INSPECTORATE_EXAMINATION = "Planning inpsectorate examination"
-    PLANNING_INSPECTORATE_FINDINGS = "Planning inpsectorate findings"
+    PLANNING_INSPECTORATE_EXAMINATION = "Planning inspectorate examination"
+    PLANNING_INSPECTORATE_FINDINGS = "Planning inspectorate findings"
 
     def stage(self):
         if "REGULATION" in self.name:
@@ -421,27 +421,29 @@ class LocalPlanEvent(BaseModel):
         return event_type.name
 
     def ordered_event_data(self):
-        if self.event_category in [EventCategory.EXAMINATION_AND_ADOPTION]:
+        if self.event_category in [EventCategory.PLANNING_INSPECTORATE_EXAMINATION]:
             ordered = OrderedDict()
-            if "submit_plan_for_examination" in self.event_data:
-                ordered["submit_plan_for_examination"] = self.event_data.get(
-                    "submit_plan_for_examination"
-                )
-                ordered[
-                    "planning_inspectorate_examination_start"
-                ] = self.event_data.get("planning_inspectorate_examination_start")
-                ordered["planning_inspectorate_examination_end"] = self.event_data.get(
-                    "planning_inspectorate_examination_end"
-                )
-
-            if "planning_inspectorate_found_sound" in self.event_data:
-                ordered["planning_inspectorate_found_sound"] = self.event_data.get(
-                    "planning_inspectorate_found_sound"
-                )
-                ordered["inspector_report_published"] = self.event_data.get(
-                    "inspector_report_published"
-                )
-                ordered["plan_adopted"] = self.event_data.get("plan_adopted")
+            ordered["submit_plan_for_examination"] = self.event_data.get(
+                "submit_plan_for_examination"
+            )
+            ordered["planning_inspectorate_examination_start"] = self.event_data.get(
+                "planning_inspectorate_examination_start"
+            )
+            ordered["planning_inspectorate_examination_end"] = self.event_data.get(
+                "planning_inspectorate_examination_end"
+            )
+            return ordered
+        if self.event_category in [EventCategory.PLANNING_INSPECTORATE_FINDINGS]:
+            ordered = OrderedDict()
+            ordered["planning_inspectorate_found_sound"] = self.event_data.get(
+                "planning_inspectorate_found_sound"
+            )
+            ordered["inspector_report_published"] = self.event_data.get(
+                "inspector_report_published"
+            )
+            ordered["inspector_report_published"] = self.event_data.get(
+                "inspector_report_published"
+            )
             return ordered
         elif self.event_category in [EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION]:
             ordered = OrderedDict()

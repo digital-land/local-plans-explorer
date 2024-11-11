@@ -449,7 +449,7 @@ class PlanningInspectorateFindingsForm(FlaskForm):
     inspector_report_published = DatePartField(
         "Report published", validators=[Optional()]
     )
-    plan_adpoted = DatePartField("Plan adopted", validators=[Optional()])
+    plan_adopted = DatePartField("Plan adopted", validators=[Optional()])
 
     def __init__(self, obj=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -460,7 +460,7 @@ class PlanningInspectorateFindingsForm(FlaskForm):
             self.inspector_report_published.process_data(
                 obj.get("inspector_report_published")
             )
-            self.plan_adpoted.process_data(obj.get("plan_adpoted"))
+            self.plan_adopted.process_data(obj.get("plan_adopted"))
 
     def validate(self, extra_validators=None):
         if not super().validate(extra_validators=extra_validators):
@@ -469,13 +469,13 @@ class PlanningInspectorateFindingsForm(FlaskForm):
         date_fields = [
             self.planning_inspectorate_found_sound,
             self.inspector_report_published,
-            self.plan_adpoted,
+            self.plan_adopted,
         ]
         if not any(field.data.get("year") for field in date_fields if field.data):
             date_error = "At least one of the dates should have at least a year"
             self.planning_inspectorate_found_sound.errors.append(date_error)
             self.inspector_report_published.errors.append(date_error)
-            self.plan_adpoted.errors.append(date_error)
+            self.plan_adopted.errors.append(date_error)
             return False
 
         return True
@@ -485,7 +485,7 @@ class PlanningInspectorateFindingsForm(FlaskForm):
         for field in [
             self.planning_inspectorate_found_sound,
             self.inspector_report_published,
-            self.plan_adpoted,
+            self.plan_adopted,
         ]:
             if field.errors:
                 errors.extend(field.errors)
