@@ -672,18 +672,26 @@ def _populate_missing_event_types(data, event_category):
     )
     with app.app_context():
         with app.test_request_context():
-            form = get_event_form(event_category)
-            field_names = list(form._fields.keys())
-            for field in field_names:
-                if field != "notes" and field != "csrf_token":
-                    if field not in data:
-                        data[field] = {"day": "", "month": "", "year": "", "notes": ""}
+            try:
+                form = get_event_form(event_category)
+                field_names = list(form._fields.keys())
+                for field in field_names:
+                    if field != "notes" and field != "csrf_token":
+                        if field not in data:
+                            data[field] = {
+                                "day": "",
+                                "month": "",
+                                "year": "",
+                                "notes": "",
+                            }
+            except ValueError as e:
+                print(e)
 
 
 def _find_category_by_event_type(event_type):
-    if "estimated-reg-18" in event_type:
-        return EventCategory.ESTIMATED_REGULATION_18.name
     if "timetable" in event_type:
+        return EventCategory.TIMETABLE_PUBLISHED.name
+    if "estimated-reg-18" in event_type:
         return EventCategory.ESTIMATED_REGULATION_18.name
     if "estimated-reg-19" in event_type:
         return EventCategory.ESTIMATED_REGULATION_19.name

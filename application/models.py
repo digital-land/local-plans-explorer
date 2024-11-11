@@ -261,6 +261,7 @@ class Organisation(DateModel):
 
 
 class EventCategory(Enum):
+    TIMETABLE_PUBLISHED = "Timetable published"
     ESTIMATED_REGULATION_18 = "Estimated regulation 18"
     ESTIMATED_REGULATION_19 = "Estimated regulation 19"
     ESTIMATED_EXAMINATION_AND_ADOPTION = "Estimated examination and adoption"
