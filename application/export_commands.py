@@ -192,10 +192,13 @@ def export_timetable():
         for event in timetable.events:
             data = {}
             for index, (key, _) in enumerate(event.event_data.items()):
+                event_date = event.collect_iso_date_fields(key)
+                if not event_date:
+                    continue
                 kebabbed_key = key.replace("_", "-")
                 ref = f"{event.reference}-{kebabbed_key}"
                 data["reference"] = f"{ref}-{index}"
-                data["event-date"] = event.collect_iso_date_fields(key)
+                data["event-date"] = event_date
                 data["local-plan"] = timetable.local_plan
                 data["notes"] = event.event_data.get("notes", "")
                 data["description"] = event.description or ""
