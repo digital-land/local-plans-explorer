@@ -197,7 +197,7 @@ def export_timetable():
                 data["reference"] = f"{ref}-{index}"
                 data["event-date"] = event.collect_iso_date_fields(key)
                 data["local-plan"] = timetable.local_plan
-                data["notes"] = event.notes or ""
+                data["notes"] = event.event_data.get("notes", "")
                 data["description"] = event.description or ""
                 data["event-type"] = kebabbed_key
                 data["entry-date"] = event.entry_date

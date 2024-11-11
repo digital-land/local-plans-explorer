@@ -388,13 +388,16 @@ class Regulation19Form(FlaskForm):
         return errors[0] if errors else None
 
 
-# TODO need to adapt this to the two types of events that can be added
-# in the actual examination and adoptions phase
-class ExaminationAndAdoptionForm(FlaskForm):
+class PlanningInspectorateExaminationForm(FlaskForm):
     submit_plan_for_examination = DatePartField(
-        "Submit plan for examination", validators=[Optional()]
+        "Plan submitted", validators=[Optional()]
     )
-    plan_adopted = DatePartField("Plan adopted", validators=[Optional()])
+    planning_inspectorate_examination_start = DatePartField(
+        "Examination start date", validators=[Optional()]
+    )
+    planning_inspectorate_examination_end = DatePartField(
+        "Examination end date", validators=[Optional()]
+    )
 
     def __init__(self, obj=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -402,7 +405,12 @@ class ExaminationAndAdoptionForm(FlaskForm):
             self.submit_plan_for_examination.process_data(
                 obj.get("submit_plan_for_examination")
             )
-            self.plan_adopted.process_data(obj.get("plan_adopted"))
+            self.planning_inspectorate_examination_start.process_data(
+                obj.get("planning_inspectorate_examination_start")
+            )
+            self.planning_inspectorate_examination_end.process_data(
+                obj.get("planning_inspectorate_examination_end")
+            )
 
     def validate(self, extra_validators=None):
         if not super().validate(extra_validators=extra_validators):
@@ -410,12 +418,14 @@ class ExaminationAndAdoptionForm(FlaskForm):
 
         date_fields = [
             self.submit_plan_for_examination,
-            self.plan_adopted,
+            self.planning_inspectorate_examination_start,
+            self.planning_inspectorate_examination_end,
         ]
         if not any(field.data.get("year") for field in date_fields if field.data):
             date_error = "At least one of the dates should have at least a year"
             self.submit_plan_for_examination.errors.append(date_error)
-            self.plan_adopted.errors.append(date_error)
+            self.planning_inspectorate_examination_start.errors.append(date_error)
+            self.planning_inspectorate_examination_end.errors.append(date_error)
             return False
 
         return True
@@ -424,7 +434,58 @@ class ExaminationAndAdoptionForm(FlaskForm):
         errors = []
         for field in [
             self.submit_plan_for_examination,
-            self.plan_adopted,
+            self.planning_inspectorate_examination_start,
+            self.planning_inspectorate_examination_end,
+        ]:
+            if field.errors:
+                errors.extend(field.errors)
+        return errors[0] if errors else None
+
+
+class PlanningInspectorateFindingsForm(FlaskForm):
+    planning_inspectorate_found_sound = DatePartField(
+        "Planning inspectorate found sound", validators=[Optional()]
+    )
+    inspector_report_published = DatePartField(
+        "Report published", validators=[Optional()]
+    )
+    plan_adpoted = DatePartField("Plan adopted", validators=[Optional()])
+
+    def __init__(self, obj=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if request.method == "GET" and obj:
+            self.planning_inspectorate_found_sound.process_data(
+                obj.get("planning_inspectorate_found_sound")
+            )
+            self.inspector_report_published.process_data(
+                obj.get("inspector_report_published")
+            )
+            self.plan_adpoted.process_data(obj.get("plan_adpoted"))
+
+    def validate(self, extra_validators=None):
+        if not super().validate(extra_validators=extra_validators):
+            return False
+
+        date_fields = [
+            self.planning_inspectorate_found_sound,
+            self.inspector_report_published,
+            self.plan_adpoted,
+        ]
+        if not any(field.data.get("year") for field in date_fields if field.data):
+            date_error = "At least one of the dates should have at least a year"
+            self.planning_inspectorate_found_sound.errors.append(date_error)
+            self.inspector_report_published.errors.append(date_error)
+            self.plan_adpoted.errors.append(date_error)
+            return False
+
+        return True
+
+    def get_error_summary(self):
+        errors = []
+        for field in [
+            self.planning_inspectorate_found_sound,
+            self.inspector_report_published,
+            self.plan_adpoted,
         ]:
             if field.errors:
                 errors.extend(field.errors)
@@ -443,7 +504,9 @@ def get_event_form(event_category, obj=None):
             return Regulation18Form(obj=obj)
         case EventCategory.REGULATION_19:
             return Regulation19Form(obj=obj)
-        case EventCategory.EXAMINATION_AND_ADOPTION:
-            return ExaminationAndAdoptionForm(obj=obj)
+        case EventCategory.PLANNING_INSPECTORATE_EXAMINATION:
+            return PlanningInspectorateExaminationForm(obj=obj)
+        case EventCategory.PLANNING_INSPECTORATE_FINDINGS:
+            return PlanningInspectorateFindingsForm(obj=obj)
         case _:
             raise ValueError("Invalid event_category.")

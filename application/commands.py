@@ -11,6 +11,7 @@ from slugify import slugify
 from sqlalchemy import not_, select, text
 from sqlalchemy.inspection import inspect
 
+from application.blueprints.local_plan.forms import get_event_form
 from application.extensions import db
 from application.models import (
     EventCategory,
@@ -266,7 +267,7 @@ def set_default_boundaries():
     print("Default boundaries set")
 
 
-@data_cli.command("load-doc-types")
+@data_cli.command("doc-types")
 def load_doc_types():
     document_types_url = (
         "https://dluhc-datasets.planning-data.dev/dataset/local-plan-document-type.json"
@@ -303,7 +304,7 @@ def load_doc_types():
         print("Error fetching document types:", e)
 
 
-@data_cli.command("load-event-types")
+@data_cli.command("event-types")
 def load_event_types():
     event_types_url = (
         "https://dluhc-datasets.planning-data.dev/dataset/local-plan-event.json"
@@ -319,10 +320,12 @@ def load_event_types():
             end_date = (
                 event_type.get("end-date") if event_type.get("end-date") else None
             )
+            event_category = _find_category_by_event_type(reference)
+
             sql = text(
                 """
-                    INSERT INTO local_plan_event_type (name, reference, entry_date, end_date)
-                    VALUES (:name, :reference, :entry_date, :end_date)
+                    INSERT INTO local_plan_event_type (name, reference, entry_date, end_date, event_category)
+                    VALUES (:name, :reference, :entry_date, :end_date, :event_category)
                     ON CONFLICT (reference)
                     DO UPDATE
                     SET end_date = EXCLUDED.end_date;
@@ -335,6 +338,7 @@ def load_event_types():
                     "reference": reference,
                     "entry_date": entry_date,
                     "end_date": end_date,
+                    "event_category": event_category,
                 },
             )
         db.session.commit()
@@ -625,6 +629,7 @@ def seed_timetable():
         data = {}
         for row in rows:
             event_type = LocalPlanEventType.query.get(row["local-plan-event"])
+            event_category = _get_event_category(event_type.reference)
             if event_type is None:
                 print(f"Event type not found for reference {row['event-type']}")
                 continue
@@ -641,7 +646,9 @@ def seed_timetable():
                 "day": day,
                 "month": month,
                 "year": year,
+                "notes": row.get("notes", ""),
             }
+            _populate_missing_event_types(data, event_category)
         event_category = _get_event_category(event_type.reference)
         local_plan_event.event_category = event_category
         local_plan_event.event_data = data
@@ -651,17 +658,53 @@ def seed_timetable():
 
 
 def _get_event_category(event_type):
-    if event_type == "timetable-published":
-        return EventCategory.ESTIMATED_REGULATION_18
-    if "estimated" in event_type and "reg-18" in event_type:
-        return EventCategory.ESTIMATED_REGULATION_18
-    elif "estimated" in event_type and "reg-19" in event_type:
-        return EventCategory.ESTIMATED_REGULATION_19
-    elif "estimated" in event_type:
-        return EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION
-    elif "reg-18" in event_type:
-        return EventCategory.REGULATION_18
-    elif "reg-19" in event_type:
-        return EventCategory.REGULATION_19
-    else:
-        return EventCategory.EXAMINATION_AND_ADOPTION
+    event_type = LocalPlanEventType.query.get(event_type)
+    if event_type is None:
+        return None
+    return event_type.event_category
+
+
+def _populate_missing_event_types(data, event_category):
+    from application.factory import create_app
+
+    app = create_app(
+        os.getenv("FLASK_CONFIG") or "application.config.DevelopmentConfig"
+    )
+    with app.app_context():
+        with app.test_request_context():
+            form = get_event_form(event_category)
+            field_names = list(form._fields.keys())
+            for field in field_names:
+                if field != "notes":
+                    if field not in data:
+                        data[field] = {"day": "", "month": "", "year": "", "notes": ""}
+
+
+def _find_category_by_event_type(event_type):
+    if "estimated-reg-18" in event_type:
+        return EventCategory.ESTIMATED_REGULATION_18.name
+    if "timetable" in event_type:
+        return EventCategory.ESTIMATED_REGULATION_18.name
+    if "estimated-reg-19" in event_type:
+        return EventCategory.ESTIMATED_REGULATION_19.name
+    if "reg-18" in event_type:
+        return EventCategory.REGULATION_18.name
+    if "reg-19" in event_type:
+        return EventCategory.REGULATION_19.name
+    if event_type in [
+        "estimated-submit-plan-for-examination",
+        "estimated-plan-adoption-date",
+    ]:
+        return EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION.name
+    if event_type in [
+        "submit-plan-for-examination",
+        "planning-inspectorate-examination-start",
+        "planning-inspectorate-examination-end",
+    ]:
+        return EventCategory.PLANNING_INSPECTORATE_EXAMINATION.name
+    if event_type in [
+        "planning-inspectorate-found-sound",
+        "inspector-report-published",
+        "plan-adopted",
+    ]:
+        return EventCategory.PLANNING_INSPECTORATE_FINDINGS.name

@@ -159,13 +159,20 @@
                   <span class="govuk-tag govuk-tag--grey">Not started</span>
                 {% endif %}
               </li>
-              <li><a href="{{ stage_urls[event_category.EXAMINATION_AND_ADOPTION] }}">Examination and adoption</a>
+              <li><a href="{{ stage_urls[event_category.PLANNING_INSPECTORATE_EXAMINATION] }}">Planning inspectorate examination</a>
                 {% if plan.timetable %}
-                  {% set progress = plan.timetable.event_category_progress(event_category.EXAMINATION_AND_ADOPTION) %}
+                  {% set progress = plan.timetable.event_category_progress(event_category.PLANNING_INSPECTORATE_EXAMINATION) %}
                     <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
                 {% else %}
                   <span class="govuk-tag govuk-tag--grey">Not started</span>
                 {% endif %}</li>
+                <li><a href="{{ stage_urls[event_category.PLANNING_INSPECTORATE_FINDINGS] }}">Planning inspectorate findings</a>
+                  {% if plan.timetable %}
+                    {% set progress = plan.timetable.event_category_progress(event_category.PLANNING_INSPECTORATE_FINDINGS) %}
+                      <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
+                  {% else %}
+                    <span class="govuk-tag govuk-tag--grey">Not started</span>
+                  {% endif %}</li>
             </ul>
           </div>
         </section>

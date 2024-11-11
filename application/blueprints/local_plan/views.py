@@ -71,7 +71,8 @@ def get_plan(reference):
         EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
         EventCategory.REGULATION_18,
         EventCategory.REGULATION_19,
-        EventCategory.EXAMINATION_AND_ADOPTION,
+        EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
+        EventCategory.PLANNING_INSPECTORATE_FINDINGS,
     ]:
         if plan.timetable and plan.timetable.event_category_progress(
             event_category

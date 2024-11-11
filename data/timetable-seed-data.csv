@@ -47,7 +47,8 @@ isl-lp-tt-002,london-borough-of-islington-local-plan-2023,Regulation 19 public c
 isl-lp-tt-003,london-borough-of-islington-local-plan-2023,Submit plan for examination,submit-plan-for-examination,,2020-02,,,,,,,
 isl-lp-tt-003,london-borough-of-islington-local-plan-2023,Planning inspectorate examination start,planning-inspectorate-examination-start,,2021-09,,,,,,,
 isl-lp-tt-003,london-borough-of-islington-local-plan-2023,Planning inspectorate examination end,planning-inspectorate-examination-end,,2021-10,,,,,,,
-isl-lp-tt-004,london-borough-of-islington-local-plan-2023,Plan adopted,plan-adopted,,2023-09-28,lew-2020-lp-tt-001,london-borough-of-lewisham-local-plan-2020,Regulation 18 public consultation start,reg-18-public-consultation-start,"The date a regulation 18 public consultation starts.  Relevant organisations are invited to make  representations, and the consultation opens to the  public",2015-10,followed by ongoing public and stakeholder engagement to October 2020
+isl-lp-tt-004,london-borough-of-islington-local-plan-2023,Plan adopted,plan-adopted,,2023-09-28,,,,,,,
+lew-2020-lp-tt-001,london-borough-of-lewisham-local-plan-2020,Regulation 18 public consultation start,reg-18-public-consultation-start,"The date a regulation 18 public consultation starts.  Relevant organisations are invited to make  representations, and the consultation opens to the  public",2015-10,followed by ongoing public and stakeholder engagement to October 2020,,,,,,
 lew-2020-lp-tt-001,london-borough-of-lewisham-local-plan-2020,Regulation 18 public consultation end,reg-18-public-consultation-end,,2015-11,,,,,,,
 lew-2020-lp-tt-001,london-borough-of-lewisham-local-plan-2020,Regulation 18 draft local plan published,reg-18-draft-local-plan-published,,2021-01-15,,,,,,,
 lew-2020-lp-tt-002,london-borough-of-lewisham-local-plan-2020,Regulation 18 public consultation start,reg-18-public-consultation-start,,2021-01-15,,,,,,,

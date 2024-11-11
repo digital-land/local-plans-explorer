@@ -49,7 +49,7 @@
                 What does the consultation cover?
               </dt>
               <dd class="govuk-summary-list__value">
-                {{ event.notes }}
+                {% if event.event_data.notes %}{{ event.event_data.notes }}{% endif %}
               </dd>
             </div>
           </dl>

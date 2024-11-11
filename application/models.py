@@ -266,7 +266,8 @@ class EventCategory(Enum):
     ESTIMATED_EXAMINATION_AND_ADOPTION = "Estimated examination and adoption"
     REGULATION_18 = "Regulation 18"
     REGULATION_19 = "Regulation 19"
-    EXAMINATION_AND_ADOPTION = "Examination and adoption"
+    PLANNING_INSPECTORATE_EXAMINATION = "Planning inpsectorate examination"
+    PLANNING_INSPECTORATE_FINDINGS = "Planning inpsectorate findings"
 
     def stage(self):
         if "REGULATION" in self.name:
@@ -281,6 +282,8 @@ class EventCategory(Enum):
 
 class LocalPlanEventType(BaseModel):
     __tablename__ = "local_plan_event_type"
+
+    event_category: Mapped[Optional[EventCategory]] = mapped_column(ENUM(EventCategory))
 
 
 class LocalPlanEvent(BaseModel):
