@@ -675,7 +675,7 @@ def _populate_missing_event_types(data, event_category):
             form = get_event_form(event_category)
             field_names = list(form._fields.keys())
             for field in field_names:
-                if field != "notes":
+                if field != "notes" and field != "csrf_token":
                     if field not in data:
                         data[field] = {"day": "", "month": "", "year": "", "notes": ""}
 
