@@ -182,10 +182,12 @@ def export_timetable():
 
     timetable_file_path = os.path.join(data_directory, "local-plan-timetable.csv")
 
-    timetables = LocalPlanTimetable.query.all()
+    timetables = (
+        LocalPlanTimetable.query.join(LocalPlanTimetable.local_plan_obj)
+        .filter(LocalPlan.status.in_([Status.FOR_PLATFORM, Status.EXPORTED]))
+        .all()
+    )
     events = []
-
-    # TODO - Add status to events to see if exported, then set udpated true?
     for timetable in timetables:
         for event in timetable.events:
             data = {}
