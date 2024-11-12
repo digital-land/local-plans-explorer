@@ -432,6 +432,9 @@ def timetable_event(reference, timetable_reference, event_reference):
     event = LocalPlanEvent.query.get(event_reference)
     if event is None:
         return abort(404)
+    timetable = LocalPlanTimetable.query.get(timetable_reference)
+    if timetable is None:
+        return abort(404)
     event_category = event.event_category
     if "estimated" in event_category.value.lower():
         estimated = True
@@ -442,6 +445,8 @@ def timetable_event(reference, timetable_reference, event_reference):
     if event_category in [
         EventCategory.ESTIMATED_REGULATION_18,
         EventCategory.ESTIMATED_REGULATION_19,
+        EventCategory.REGULATION_18,
+        EventCategory.REGULATION_19,
     ]:
         return _render_consultation_event_page(
             event, event_category, estimated, event_category_title
@@ -450,6 +455,22 @@ def timetable_event(reference, timetable_reference, event_reference):
         return _render_estimated_examination_and_adoption_event_page(
             event, event_category, estimated, event_category_title
         )
+    elif event_category in [
+        EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
+        EventCategory.PLANNING_INSPECTORATE_FINDINGS,
+    ]:
+        continue_url = _get_save_and_continue_url(reference, event_category)
+        return render_template(
+            "local_plan/pins-exam-and-findings.html",
+            events=[event],
+            timetable=timetable,
+            estimated=estimated,
+            event_category=event_category,
+            event_category_title=event_category_title,
+            continue_url=continue_url,
+        )
+    else:
+        return redirect(url_for("local_plan.get_plan", reference=reference))
 
 
 @local_plan.route(
@@ -503,6 +524,7 @@ def timetable_events(reference, timetable_reference, event_category):
     ]:
         event_category_title = event_category.value
         events = timetable.get_events_by_category(event_category)
+        continue_url = _get_save_and_continue_url(reference, event_category)
         if events:
             return render_template(
                 "local_plan/pins-exam-and-findings.html",
@@ -511,6 +533,8 @@ def timetable_events(reference, timetable_reference, event_category):
                 estimated=estimated,
                 event_category=event_category,
                 event_category_title=event_category_title,
+                continue_url=continue_url,
+                index=True,
             )
         else:
             return abort(404)
@@ -857,14 +881,23 @@ def _get_save_and_continue_url(plan_reference, event_category):
             return url_for(
                 "local_plan.add_new_timetable_event",
                 reference=plan_reference,
-                event_category=EventCategory.EXAMINATION_AND_ADOPTION,
+                event_category=EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
+            )
+        case EventCategory.PLANNING_INSPECTORATE_EXAMINATION:
+            return url_for(
+                "local_plan.add_new_timetable_event",
+                reference=plan_reference,
+                event_category=EventCategory.PLANNING_INSPECTORATE_FINDINGS,
             )
         case _:
             return None
 
 
 def _include_plan_published(plan, event_category):
-    if event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
+    if event_category in [
+        EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
+        EventCategory.PLANNING_INSPECTORATE_FINDINGS,
+    ]:
         return False
     if plan.timetable and plan.timetable.event_category_progress(event_category) in [
         "started",
