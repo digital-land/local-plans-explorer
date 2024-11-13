@@ -1,5 +1,7 @@
 import csv
 import os
+import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -716,3 +718,44 @@ def _find_category_by_event_type(event_type):
         "plan-adopted",
     ]:
         return EventCategory.PLANNING_INSPECTORATE_FINDINGS.name
+
+
+@data_cli.command("docker-db-backup")
+@click.argument("file")
+def load_backup_from_file_in_docker(file):
+    current_file_path = Path(__file__).resolve()
+    base_directory = current_file_path.parent.parent
+    file_path = os.path.join(base_directory, file)
+
+    print("Starting load data into", current_app.config["SQLALCHEMY_DATABASE_URI"])
+    if (
+        input(
+            "Completing process will overwrite your local database. Enter 'y' to continue, or anything else to exit. "
+        )
+        != "y"
+    ):
+        print("Exiting without making any changes")
+        sys.exit(0)
+
+    print(f"Local backup from {file_path}")
+    subprocess.run(
+        [
+            "pg_restore",
+            "--verbose",
+            "--clean",
+            "--no-acl",
+            "--no-owner",
+            "-h",
+            "db",
+            "-U",
+            "postgres",
+            "-d",
+            "local_plans",
+            file_path,
+        ]
+    )
+    print(
+        "\n\nRestored the dump to the local database using pg_restore. You can ignore warnings from pg_restore."
+    )
+
+    print("Data loaded successfully")
