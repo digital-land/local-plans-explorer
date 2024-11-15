@@ -248,7 +248,7 @@ def set_default_boundaries():
         if boundary is None:
             boundary = LocalPlanBoundary(
                 reference=reference,
-                name=f"{org.name} statistical geography",
+                name=org.name,
                 description="Default local plan boundary",
                 geometry=org.geometry,
                 geojson=org.geojson,
