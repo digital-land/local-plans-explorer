@@ -1,4 +1,5 @@
 from flask import url_for
+from playwright.sync_api import expect
 
 
 def test_add_plan(live_server, page):
@@ -23,3 +24,13 @@ def test_add_plan(live_server, page):
     page.locator("#period_end_date").fill("2034")
     page.get_by_label("Year").click()
     page.get_by_role("button", name="Add record").click()
+
+    expect(page.locator("h1")).to_contain_text("Area covered by this plan")
+    expect(page.locator("form")).to_contain_text(
+        "Warning We don't have any boundaries for the authoring planning authorities. Please provide one."
+    )
+    page.get_by_role("link", name="Skip for now").click()
+
+    expect(page.locator("h1")).to_contain_text("This is a test local plan")
+    expect(page.locator("dl")).to_contain_text("Reference")
+    expect(page.locator("dl")).to_contain_text("this-is-a-test-local-plan")

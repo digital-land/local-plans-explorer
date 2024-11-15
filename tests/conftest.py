@@ -9,7 +9,7 @@ from application.models import Organisation
 @pytest.fixture(scope="session")
 def app():
     application = create_app("application.config.TestConfig")
-    application.config["SERVER_NAME"] = "127.0.0.1:5050"
+    application.config["SERVER_NAME"] = "127.0.0.1"
 
     with application.app_context():
         db.create_all()
