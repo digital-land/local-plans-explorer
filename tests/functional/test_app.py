@@ -1,0 +1,25 @@
+from flask import url_for
+
+
+def test_add_plan(live_server, page):
+    page.goto(url_for("main.index", _external=True))
+    page.get_by_role("link", name="✚ Add new plan record").click()
+    page.get_by_label("Name of plan").click()
+    page.get_by_label("Name of plan").fill("This is a test local plan")
+    page.get_by_label("Name of plan").press("Tab")
+    page.get_by_role("combobox", name="Organisation").fill("Somewhere Borough Council")
+    page.get_by_role("option", name="Somewhere Borough Council", exact=True).click()
+    page.get_by_label("Brief description of plan").click()
+    page.get_by_label("Brief description of plan").fill(
+        "This is a test local plan description"
+    )
+    page.get_by_label("Brief description of plan").press("Tab")
+    page.get_by_label("URL for plan information").fill(
+        "http://www.borough-council-local-plan.gov.uk"
+    )
+    page.locator("#period_start_date").click()
+    page.locator("#period_start_date").fill("2024")
+    page.locator("#period_end_date").click()
+    page.locator("#period_end_date").fill("2034")
+    page.get_by_label("Year").click()
+    page.get_by_role("button", name="Add record").click()

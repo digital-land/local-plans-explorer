@@ -31,3 +31,5 @@ class DevelopmentConfig(Config):
 
 class TestConfig(Config):
     TESTING = True
+    AUTHENTICATION_ON = False
+    DATABASE_URL = "postgresql://localhost/local_plans_test"
