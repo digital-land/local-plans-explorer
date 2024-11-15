@@ -555,37 +555,57 @@ def add_new_timetable_event(reference, event_category):
     if redirect_url is not None:
         return redirect(redirect_url)
 
-    if form.validate_on_submit():
-        if plan.timetable is None:
-            plan.timetable = LocalPlanTimetable(
-                reference=f"{plan.reference}-timetable",
-                name=f"{plan.name} timetable",
-                local_plan=plan.reference,
-                events=[],
+    if request.method == "POST":
+        if form.validate():
+            # Check if form is completely empty
+            if form.is_completely_empty():
+                # Skip to next stage without creating any objects
+                continue_url = _skip_and_continue_url(reference, event_category)
+                return redirect(continue_url)
+
+            # Otherwise create event as normal
+            if plan.timetable is None:
+                plan.timetable = LocalPlanTimetable(
+                    reference=f"{plan.reference}-timetable",
+                    name=f"{plan.name} timetable",
+                    local_plan=plan.reference,
+                    events=[],
+                )
+            event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
+            if hasattr(form, "notes"):
+                notes = form.notes.data
+            else:
+                notes = None
+
+            # Only store validated data
+            validated_data = {}
+            for field in form:
+                if field.name != "csrf_token":
+                    if isinstance(field.data, dict):
+                        # For date fields, only include if they passed validation
+                        if any(field.data.values()):
+                            validated_data[field.name] = field.data
+                    else:
+                        validated_data[field.name] = field.data
+
+            event = LocalPlanEvent(
+                reference=event_reference,
+                event_category=event_category,
+                event_data=validated_data,
+                notes=notes,
             )
-        event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
-        if hasattr(form, "notes"):
-            notes = form.notes.data
-        else:
-            notes = None
-        event = LocalPlanEvent(
-            reference=event_reference,
-            event_category=event_category,
-            event_data=form.data,
-            notes=notes,
-        )
-        plan.timetable.events.append(event)
-        db.session.add(event)
-        db.session.add(plan)
-        db.session.commit()
-        return redirect(
-            url_for(
-                "local_plan.timetable_event",
-                reference=plan.reference,
-                timetable_reference=plan.timetable.reference,
-                event_reference=event.reference,
+            plan.timetable.events.append(event)
+            db.session.add(event)
+            db.session.add(plan)
+            db.session.commit()
+            return redirect(
+                url_for(
+                    "local_plan.timetable_event",
+                    reference=plan.reference,
+                    timetable_reference=plan.timetable.reference,
+                    event_reference=event.reference,
+                )
             )
-        )
 
     if estimated:
         event_category_title = event_category.value.replace("Estimated", "").strip()
@@ -624,7 +644,12 @@ def add_event_to_timetable(reference, timetable_reference, event_category):
     estimated = True if event_category.value.lower().startswith("estimated") else False
     form = get_event_form(event_category)
 
-    if form.validate_on_submit():
+    if form.validate():
+        if form.is_completely_empty():
+            # Skip to next stage without creating any objects
+            continue_url = _skip_and_continue_url(reference, event_category)
+            return redirect(continue_url)
+
         if timetable.events is None:
             timetable.events = []
         reference = f"{timetable.reference}-{len(timetable.events)}"
@@ -632,10 +657,22 @@ def add_event_to_timetable(reference, timetable_reference, event_category):
             notes = form.notes.data
         else:
             notes = None
+
+        # Only store validated data
+        validated_data = {}
+        for field in form:
+            if field.name != "csrf_token":
+                if isinstance(field.data, dict):
+                    # For date fields, only include if they passed validation
+                    if any(field.data.values()):
+                        validated_data[field.name] = field.data
+                else:
+                    validated_data[field.name] = field.data
+
         event = LocalPlanEvent(
             reference=reference,
             event_category=event_category,
-            event_data=form.data,
+            event_data=validated_data,
             notes=notes,
         )
         timetable.events.append(event)
@@ -857,40 +894,51 @@ def _is_first_event_of_category(event):
     return True if not earlier_events else False
 
 
-def _get_save_and_continue_url(plan_reference, event_category):
+def _skip_and_continue_url(
+    plan_reference: str, event_category: EventCategory
+) -> str | None:
+    """Get URL for skipping to next stage's timetable events view"""
+    next_category = _get_next_category(event_category)
+    if next_category is None:
+        return url_for("local_plan.get_plan", reference=plan_reference)
+
+    return url_for(
+        "local_plan.add_new_timetable_event",
+        reference=plan_reference,
+        event_category=next_category,
+    )
+
+
+def _get_next_category(event_category: EventCategory) -> EventCategory | None:
+    """Get the next event category in the sequence"""
     match event_category:
         case EventCategory.ESTIMATED_REGULATION_18:
-            return url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan_reference,
-                event_category=EventCategory.ESTIMATED_REGULATION_19,
-            )
+            return EventCategory.ESTIMATED_REGULATION_19
         case EventCategory.ESTIMATED_REGULATION_19:
-            return url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan_reference,
-                event_category=EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
-            )
+            return EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION
         case EventCategory.REGULATION_18:
-            return url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan_reference,
-                event_category=EventCategory.REGULATION_19,
-            )
+            return EventCategory.REGULATION_19
         case EventCategory.REGULATION_19:
-            return url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan_reference,
-                event_category=EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
-            )
+            return EventCategory.PLANNING_INSPECTORATE_EXAMINATION
         case EventCategory.PLANNING_INSPECTORATE_EXAMINATION:
-            return url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan_reference,
-                event_category=EventCategory.PLANNING_INSPECTORATE_FINDINGS,
-            )
+            return EventCategory.PLANNING_INSPECTORATE_FINDINGS
         case _:
             return None
+
+
+def _get_save_and_continue_url(
+    plan_reference: str, event_category: EventCategory
+) -> str | None:
+    """Get URL for continuing after saving an event"""
+    next_category = _get_next_category(event_category)
+    if next_category is None:
+        return url_for("local_plan.get_plan", reference=plan_reference)
+
+    return url_for(
+        "local_plan.add_new_timetable_event",
+        reference=plan_reference,
+        event_category=next_category,
+    )
 
 
 def _include_plan_published(plan, event_category):

@@ -72,52 +72,112 @@ class DatePartField(Field):
         return {"day": "", "month": "", "year": ""}
 
     def process_formdata(self, valuelist):
-        day_str = request.form.get(f"{self.name}_day", "")
-        month_str = request.form.get(f"{self.name}_month", "")
-        year_str = request.form.get(f"{self.name}_year", "")
+        # Get raw input values without stripping yet
+        raw_day = request.form.get(f"{self.name}_day", "")
+        raw_month = request.form.get(f"{self.name}_month", "")
+        raw_year = request.form.get(f"{self.name}_year", "")
 
-        day = int(day_str) if day_str else None
-        month = int(month_str) if month_str else None
-        year = int(year_str) if year_str else None
-
-        if (day or month) and not year:
-            raise ValidationError(
-                "Invalid date: a year is required if day or month is provided."
-            )
-
-        try:
-            if year:
-                if month and day:
-                    datetime(year, month, day)
-                elif month:
-                    datetime(year, month, 1)
-                else:
-                    datetime(year, 1, 1)
-            else:
-                raise ValidationError("Invalid date: at least a year is required.")
-        except ValueError:
-            raise ValidationError(
-                "Invalid date input: please check day, month, and year."
-            )
-
+        # Store raw values first
         self.data = {
-            "day": day_str,
-            "month": month_str,
-            "year": year_str,
+            "day": raw_day.strip(),
+            "month": raw_month.strip(),
+            "year": raw_year.strip(),
         }
 
-    def process_data(self, value):
-        if isinstance(value, dict):
-            self.data = {
-                "day": value.get("day", ""),
-                "month": value.get("month", ""),
-                "year": value.get("year", ""),
-            }
+    def pre_validate(self, form):
+        """Validate the date parts before the form-level validation"""
+        day_str = self.data.get("day", "")
+        month_str = self.data.get("month", "")
+        year_str = self.data.get("year", "")
+
+        # If all fields are empty, that's valid
+        if not any([day_str, month_str, year_str]):
+            return
+
+        # Validate year if provided
+        if year_str:
+            if not year_str.isdigit() or len(year_str) != 4:
+                raise ValidationError("Year must be in YYYY format")
         else:
-            self.data = {"day": "", "month": "", "year": ""}
+            if day_str or month_str:
+                raise ValidationError("Year is required if day or month is provided")
+
+        # Validate month if provided
+        if month_str:
+            if not month_str.isdigit():
+                raise ValidationError("Month must be a number")
+            month = int(month_str)
+            if not (1 <= month <= 12):
+                raise ValidationError("Month must be between 1 and 12")
+        else:
+            if day_str:
+                raise ValidationError("Month is required when day is provided")
+
+        # Validate day if provided
+        if day_str:
+            if not day_str.isdigit():
+                raise ValidationError("Day must be a number")
+            day = int(day_str)
+            if not (1 <= day <= 31):
+                raise ValidationError("Day must be between 1 and 31")
+            # Check if day is valid for the given month/year
+            try:
+                datetime(int(year_str), int(month_str), day)
+            except ValueError:
+                raise ValidationError(f"Invalid day for {month_str}/{year_str}")
 
 
-class EstimatedRegulation18Form(FlaskForm):
+class BaseEventForm(FlaskForm):
+    notes = TextAreaField("Notes")
+
+    def get_error_summary(self):
+        """Get summary of form errors for display"""
+        errors = []
+        for field in self:
+            if field.errors:
+                for error in field.errors:
+                    # errors.append({
+                    #     'text': error,
+                    #     'href': f'#{field.id}'
+                    # })
+                    errors.append(error)
+        return errors
+
+    def validate(self, extra_validators=None) -> bool:
+        """Custom validation that properly handles ValidationErrors from DatePartField"""
+        # Run the standard form validation which includes field pre_validate
+        if not super().validate(extra_validators=extra_validators):
+            return False
+
+        # If form is completely empty, that's valid
+        if self.is_completely_empty():
+            return True
+
+        # Check if any DatePartFields have errors
+        for field in self:
+            if isinstance(field, DatePartField):
+                try:
+                    field.pre_validate(self)
+                except ValidationError as e:
+                    field.errors.append(str(e))
+                    return False
+
+        return True
+
+    def is_completely_empty(self) -> bool:
+        """Check if all fields in the form are empty"""
+        for field in self:
+            if field.name != "csrf_token":
+                if isinstance(field.data, dict):
+                    # For date fields, check if any of the values are non-empty
+                    if any(value.strip() for value in field.data.values()):
+                        return False
+                elif field.data and str(field.data).strip():
+                    return False
+        return True
+
+
+class EstimatedRegulation18Form(BaseEventForm):
     estimated_reg_18_draft_local_plan_published = DatePartField(
         "Draft local plan published", validators=[Optional()]
     )
@@ -143,37 +203,8 @@ class EstimatedRegulation18Form(FlaskForm):
             )
             self.notes.data = obj.get("notes", "")
 
-    def validate(self, extra_validators=None):
-        if not super().validate(extra_validators=extra_validators):
-            return False
 
-        date_fields = [
-            self.estimated_reg_18_draft_local_plan_published,
-            self.estimated_reg_18_public_consultation_start,
-            self.estimated_reg_18_public_consultation_end,
-        ]
-        if not any(field.data.get("year") for field in date_fields if field.data):
-            date_error = "At least one of the dates should have at least a year"
-            self.estimated_reg_18_draft_local_plan_published.errors.append(date_error)
-            self.estimated_reg_18_public_consultation_start.errors.append(date_error)
-            self.estimated_reg_18_public_consultation_end.errors.append(date_error)
-            return False
-
-        return True
-
-    def get_error_summary(self):
-        errors = []
-        for field in [
-            self.estimated_reg_18_draft_local_plan_published,
-            self.estimated_reg_18_public_consultation_start,
-            self.estimated_reg_18_public_consultation_end,
-        ]:
-            if field.errors:
-                errors.extend(field.errors)
-        return errors[0] if errors else None
-
-
-class EstimatedRegulation19Form(FlaskForm):
+class EstimatedRegulation19Form(BaseEventForm):
     estimated_reg_19_publication_local_plan_published = DatePartField(
         "Publication local plan published", validators=[Optional()]
     )
@@ -199,39 +230,8 @@ class EstimatedRegulation19Form(FlaskForm):
             )
             self.notes.data = obj.get("notes", "")
 
-    def validate(self, extra_validators=None):
-        if not super().validate(extra_validators=extra_validators):
-            return False
 
-        date_fields = [
-            self.estimated_reg_19_publication_local_plan_published,
-            self.estimated_reg_19_public_consultation_start,
-            self.estimated_reg_19_public_consultation_end,
-        ]
-        if not any(field.data.get("year") for field in date_fields if field.data):
-            date_error = "At least one of the dates should have at least a year"
-            self.estimated_reg_19_publication_local_plan_published.errors.append(
-                date_error
-            )
-            self.estimated_reg_19_public_consultation_start.errors.append(date_error)
-            self.estimated_reg_19_public_consultation_end.errors.append(date_error)
-            return False
-
-        return True
-
-    def get_error_summary(self):
-        errors = []
-        for field in [
-            self.estimated_reg_19_publication_local_plan_published,
-            self.estimated_reg_19_public_consultation_start,
-            self.estimated_reg_19_public_consultation_end,
-        ]:
-            if field.errors:
-                errors.extend(field.errors)
-        return errors[0] if errors else None
-
-
-class EsitmatedExaminationAndAdoptionForm(FlaskForm):
+class EsitmatedExaminationAndAdoptionForm(BaseEventForm):
     estimated_submit_plan_for_examination = DatePartField(
         "Submit plan for examination", validators=[Optional()]
     )
@@ -249,34 +249,8 @@ class EsitmatedExaminationAndAdoptionForm(FlaskForm):
                 obj.get("estimated_plan_adoption_date")
             )
 
-    def validate(self, extra_validators=None):
-        if not super().validate(extra_validators=extra_validators):
-            return False
 
-        date_fields = [
-            self.estimated_submit_plan_for_examination,
-            self.estimated_plan_adoption_date,
-        ]
-        if not any(field.data.get("year") for field in date_fields if field.data):
-            date_error = "At least one of the dates should have at least a year"
-            self.estimated_submit_plan_for_examination.errors.append(date_error)
-            self.estimated_plan_adoption_date.errors.append(date_error)
-            return False
-
-        return True
-
-    def get_error_summary(self):
-        errors = []
-        for field in [
-            self.estimated_submit_plan_for_examination,
-            self.estimated_plan_adoption_date,
-        ]:
-            if field.errors:
-                errors.extend(field.errors)
-        return errors[0] if errors else None
-
-
-class Regulation18Form(FlaskForm):
+class Regulation18Form(BaseEventForm):
     reg_18_draft_local_plan_published = DatePartField(
         "Draft local plan published", validators=[Optional()]
     )
@@ -302,37 +276,8 @@ class Regulation18Form(FlaskForm):
             )
             self.notes.data = obj.get("notes", "")
 
-    def validate(self, extra_validators=None):
-        if not super().validate(extra_validators=extra_validators):
-            return False
 
-        date_fields = [
-            self.reg_18_draft_local_plan_published,
-            self.reg_18_public_consultation_start,
-            self.reg_18_public_consultation_end,
-        ]
-        if not any(field.data.get("year") for field in date_fields if field.data):
-            date_error = "At least one of the dates should have at least a year"
-            self.reg_18_draft_local_plan_published.errors.append(date_error)
-            self.reg_18_public_consultation_start.errors.append(date_error)
-            self.reg_18_public_consultation_end.errors.append(date_error)
-            return False
-
-        return True
-
-    def get_error_summary(self):
-        errors = []
-        for field in [
-            self.reg_18_draft_local_plan_published,
-            self.reg_18_public_consultation_start,
-            self.reg_18_public_consultation_end,
-        ]:
-            if field.errors:
-                errors.extend(field.errors)
-        return errors[0] if errors else None
-
-
-class Regulation19Form(FlaskForm):
+class Regulation19Form(BaseEventForm):
     reg_19_publication_local_plan_published = DatePartField(
         "Publication local plan published", validators=[Optional()]
     )
@@ -358,37 +303,8 @@ class Regulation19Form(FlaskForm):
             )
             self.notes.data = obj.get("notes", "")
 
-    def validate(self, extra_validators=None):
-        if not super().validate(extra_validators=extra_validators):
-            return False
 
-        date_fields = [
-            self.reg_19_publication_local_plan_published,
-            self.reg_19_public_consultation_start,
-            self.reg_19_public_consultation_end,
-        ]
-        if not any(field.data.get("year") for field in date_fields if field.data):
-            date_error = "At least one of the dates should have at least a year"
-            self.reg_19_publication_local_plan_published.errors.append(date_error)
-            self.reg_19_public_consultation_start.errors.append(date_error)
-            self.reg_19_public_consultation_end.errors.append(date_error)
-            return False
-
-        return True
-
-    def get_error_summary(self):
-        errors = []
-        for field in [
-            self.reg_19_publication_local_plan_published,
-            self.reg_19_public_consultation_start,
-            self.reg_19_public_consultation_end,
-        ]:
-            if field.errors:
-                errors.extend(field.errors)
-        return errors[0] if errors else None
-
-
-class PlanningInspectorateExaminationForm(FlaskForm):
+class PlanningInspectorateExaminationForm(BaseEventForm):
     submit_plan_for_examination = DatePartField(
         "Plan submitted", validators=[Optional()]
     )
@@ -412,37 +328,8 @@ class PlanningInspectorateExaminationForm(FlaskForm):
                 obj.get("planning_inspectorate_examination_end")
             )
 
-    def validate(self, extra_validators=None):
-        if not super().validate(extra_validators=extra_validators):
-            return False
 
-        date_fields = [
-            self.submit_plan_for_examination,
-            self.planning_inspectorate_examination_start,
-            self.planning_inspectorate_examination_end,
-        ]
-        if not any(field.data.get("year") for field in date_fields if field.data):
-            date_error = "At least one of the dates should have at least a year"
-            self.submit_plan_for_examination.errors.append(date_error)
-            self.planning_inspectorate_examination_start.errors.append(date_error)
-            self.planning_inspectorate_examination_end.errors.append(date_error)
-            return False
-
-        return True
-
-    def get_error_summary(self):
-        errors = []
-        for field in [
-            self.submit_plan_for_examination,
-            self.planning_inspectorate_examination_start,
-            self.planning_inspectorate_examination_end,
-        ]:
-            if field.errors:
-                errors.extend(field.errors)
-        return errors[0] if errors else None
-
-
-class PlanningInspectorateFindingsForm(FlaskForm):
+class PlanningInspectorateFindingsForm(BaseEventForm):
     planning_inspectorate_found_sound = DatePartField(
         "Planning inspectorate found sound", validators=[Optional()]
     )
@@ -461,35 +348,6 @@ class PlanningInspectorateFindingsForm(FlaskForm):
                 obj.get("inspector_report_published")
             )
             self.plan_adopted.process_data(obj.get("plan_adopted"))
-
-    def validate(self, extra_validators=None):
-        if not super().validate(extra_validators=extra_validators):
-            return False
-
-        date_fields = [
-            self.planning_inspectorate_found_sound,
-            self.inspector_report_published,
-            self.plan_adopted,
-        ]
-        if not any(field.data.get("year") for field in date_fields if field.data):
-            date_error = "At least one of the dates should have at least a year"
-            self.planning_inspectorate_found_sound.errors.append(date_error)
-            self.inspector_report_published.errors.append(date_error)
-            self.plan_adopted.errors.append(date_error)
-            return False
-
-        return True
-
-    def get_error_summary(self):
-        errors = []
-        for field in [
-            self.planning_inspectorate_found_sound,
-            self.inspector_report_published,
-            self.plan_adopted,
-        ]:
-            if field.errors:
-                errors.extend(field.errors)
-        return errors[0] if errors else None
 
 
 def get_event_form(event_category, obj=None):
