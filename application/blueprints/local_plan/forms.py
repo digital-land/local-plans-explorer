@@ -54,13 +54,34 @@ class LocalPlanForm(FlaskForm):
 
 class DatePartsInputWidget:
     def __call__(self, field, **kwargs):
+        # Get the errors with parts from the field
+        errors_with_parts = field.get_errors_with_parts()
+        # Create a dict of which parts have errors
+        error_parts = {error["part"]: error["message"] for error in errors_with_parts}
+
         return Markup(
-            render_template("partials/date-parts-form.html", field=field, **kwargs)
+            render_template(
+                "partials/date-parts-form.html",
+                field=field,
+                error_parts=error_parts,
+                **kwargs,
+            )
         )
+
+
+class DatePartValidationError(ValidationError):
+    def __init__(self, message, part=None):
+        super().__init__(message)
+        self.part = part  # 'day', 'month', or 'year'
 
 
 class DatePartField(Field):
     widget = DatePartsInputWidget()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.errors = []  # Initialize errors as a list instead of tuple
+        self._errors_with_parts = []
 
     def _value(self):
         if self.data:
@@ -90,41 +111,99 @@ class DatePartField(Field):
         month_str = self.data.get("month", "")
         year_str = self.data.get("year", "")
 
+        # Collect all errors
+        errors = []
+
         # If all fields are empty, that's valid
         if not any([day_str, month_str, year_str]):
-            return
+            return True
 
         # Validate year if provided
         if year_str:
             if not year_str.isdigit() or len(year_str) != 4:
-                raise ValidationError("Year must be in YYYY format")
+                errors.append(
+                    DatePartValidationError("Year must be in YYYY format", part="year")
+                )
         else:
             if day_str or month_str:
-                raise ValidationError("Year is required if day or month is provided")
+                errors.append(
+                    DatePartValidationError(
+                        "Year is required if day or month is provided", part="year"
+                    )
+                )
 
         # Validate month if provided
         if month_str:
             if not month_str.isdigit():
-                raise ValidationError("Month must be a number")
-            month = int(month_str)
-            if not (1 <= month <= 12):
-                raise ValidationError("Month must be between 1 and 12")
+                errors.append(
+                    DatePartValidationError("Month must be a number", part="month")
+                )
+            else:
+                month = int(month_str)
+                if not (1 <= month <= 12):
+                    errors.append(
+                        DatePartValidationError(
+                            "Month must be between 1 and 12", part="month"
+                        )
+                    )
         else:
             if day_str:
-                raise ValidationError("Month is required when day is provided")
+                errors.append(
+                    DatePartValidationError(
+                        "Month is required when day is provided", part="month"
+                    )
+                )
 
         # Validate day if provided
         if day_str:
             if not day_str.isdigit():
-                raise ValidationError("Day must be a number")
-            day = int(day_str)
-            if not (1 <= day <= 31):
-                raise ValidationError("Day must be between 1 and 31")
-            # Check if day is valid for the given month/year
-            try:
-                datetime(int(year_str), int(month_str), day)
-            except ValueError:
-                raise ValidationError(f"Invalid day for {month_str}/{year_str}")
+                errors.append(
+                    DatePartValidationError("Day must be a number", part="day")
+                )
+            else:
+                day = int(day_str)
+                if not (1 <= day <= 31):
+                    errors.append(
+                        DatePartValidationError(
+                            "Day must be between 1 and 31", part="day"
+                        )
+                    )
+                # Only check valid date if we have all parts and they're numeric
+                elif (
+                    year_str
+                    and month_str
+                    and year_str.isdigit()
+                    and month_str.isdigit()
+                ):
+                    try:
+                        datetime(int(year_str), int(month_str), day)
+                    except ValueError:
+                        errors.append(
+                            DatePartValidationError(
+                                f"Invalid day for {month_str}/{year_str}", part="day"
+                            )
+                        )
+
+        # If we have any errors, raise them all
+        if errors:
+            # Store all errors
+            self._errors_with_parts = [
+                {"message": str(e), "part": e.part} for e in errors
+            ]
+            # Add all error messages to the field's errors list
+            self.errors.extend(str(e) for e in errors)
+            return False
+
+        return True
+
+    def get_errors_with_parts(self):
+        """Return list of errors with their associated parts"""
+        return getattr(self, "_errors_with_parts", [])
+
+    def validate(self, form, extra_validators=None):
+        self._errors_with_parts = []  # Reset errors
+        self.errors = []  # Reset errors
+        return self.pre_validate(form)
 
 
 class BaseEventForm(FlaskForm):
@@ -134,13 +213,19 @@ class BaseEventForm(FlaskForm):
         """Get summary of form errors for display"""
         errors = []
         for field in self:
-            if field.errors:
+            if isinstance(field, DatePartField):
+                # Handle DatePartField errors specially
+                for error in field.get_errors_with_parts():
+                    errors.append(
+                        {
+                            "text": error["message"],
+                            "href": f'#{field.name}_{error["part"]}',  # Links to specific input component
+                        }
+                    )
+            elif field.errors:
+                # Handle regular field errors
                 for error in field.errors:
-                    # errors.append({
-                    #     'text': error,
-                    #     'href': f'#{field.id}'
-                    # })
-                    errors.append(error)
+                    errors.append({"text": error, "href": f"#{field.name}"})
         return errors
 
     def validate(self, extra_validators=None) -> bool:

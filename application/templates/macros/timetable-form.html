@@ -7,7 +7,13 @@
           There was a problem
         </h2>
         <div class="govuk-error-summary__body">
-            {{ form.get_error_summary() }}
+          <ul class="govuk-list govuk-error-summary__list">
+            {% for error in form.get_error_summary() %}
+              <li>
+                <a href="{{ error.href }}">{{ error.text }}</a>
+              </li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
     </div>
