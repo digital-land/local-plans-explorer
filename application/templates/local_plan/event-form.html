@@ -7,16 +7,14 @@
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-m">{%if estimated %}Estimated{% else %}Actual{% endif %} dates</span>
     <h1 class="govuk-heading-l">{{ event_category_title | capitalize }}</h1>
-    {% if estimated %}
-      <p class="govuk-body-m">
-        With dates, some data is better than no data, so:
-        <ul class="govuk-list govuk-list--bullet">
-          <li>2014 is fine</li>
-          <li>03-2014 is better</li>
-          <li>27-03-2014 is brilliant</li><br>
-        </ul>
-      </p>
-    {% endif %}
+    <p class="govuk-body-m">
+      With dates, some data is better than no data, so:
+      <ul class="govuk-list govuk-list--bullet">
+        <li>2014 is fine</li>
+        <li>3-2014 is better</li>
+        <li>27-3-2014 is brilliant</li><br>
+      </ul>
+    </p>
   </div>
 </div>
 <div class="govuk-grid-row">
