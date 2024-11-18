@@ -111,15 +111,18 @@
         <div class="govuk-form-group">
           {{ form.planning_inspectorate_found_sound() }}
           {{ form.inspector_report_published()}}
-          {{ form.plan_adopted() }}
         </div>
       {% endif %}
       <div class="govuk-button-group">
         <button type="submit" class="govuk-button" data-module="govuk-button">
-          Continue
+          Submit
         </button>
         <a href="{{ url_for('local_plan.get_plan', reference=plan.reference ) }}" class="govuk-button govuk-button--secondary">Cancel</a>
-      </div>
+        <a class="govuk-link" href="#">Skip to next section</a>
+      </div> 
+
+      
+
     </fieldset>
   </form>
 {%-  endmacro %}

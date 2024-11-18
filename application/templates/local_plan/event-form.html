@@ -8,7 +8,14 @@
     <span class="govuk-caption-m">{%if estimated %}Estimated{% else %}Actual{% endif %} dates</span>
     <h1 class="govuk-heading-l">{{ event_category_title | capitalize }}</h1>
     {% if estimated %}
-      <p class="govuk-body-s">You can use your Local Development Scheme to add dates to your timetable. For estimated dates, a month and year is a valid entry.</p>
+      <p class="govuk-body-m">
+        With dates, some data is better than no data, so: 
+        <ul class="govuk-list govuk-list--bullet">
+          <li>2014 is fine</li>
+          <li>03-2014 is better</li>
+          <li>27-03-2014 is brilliant</li><br>
+        </ul>
+      </p>
     {% endif %}
   </div>
 </div>
