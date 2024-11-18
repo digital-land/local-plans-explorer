@@ -137,7 +137,7 @@ class DatePartField(Field):
             if not month_str.isdigit():
                 errors.append(
                     DatePartValidationError(
-                        "Month must be between 1 and 12", part="month"
+                        "Month must be a number between 1 and 12", part="month"
                     )
                 )
             else:
@@ -145,7 +145,7 @@ class DatePartField(Field):
                 if not (1 <= month <= 12):
                     errors.append(
                         DatePartValidationError(
-                            "Month must be between 1 and 12", part="month"
+                            "Month must be a number between 1 and 12", part="month"
                         )
                     )
         else:
@@ -160,14 +160,16 @@ class DatePartField(Field):
         if day_str:
             if not day_str.isdigit():
                 errors.append(
-                    DatePartValidationError("Day must be between 1 and 31", part="day")
+                    DatePartValidationError(
+                        "Day must be a number between 1 and 31", part="day"
+                    )
                 )
             else:
                 day = int(day_str)
                 if not (1 <= day <= 31):
                     errors.append(
                         DatePartValidationError(
-                            "Day must be between 1 and 31", part="day"
+                            "Day must be a number between 1 and 31", part="day"
                         )
                     )
                 # Only check valid date if we have all parts and they're numeric
