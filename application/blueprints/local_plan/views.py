@@ -619,6 +619,14 @@ def add_new_timetable_event(reference, event_category):
         reference=reference,
         event_category=event_category,
     )
+    skip_url = _skip_and_continue_url(reference, event_category)
+    if event_category in [
+        EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
+        EventCategory.PLANNING_INSPECTORATE_FINDINGS,
+    ]:
+        skip_text = "Return to local plan"
+    else:
+        skip_text = "Skip to next event"
 
     return render_template(
         "local_plan/event-form.html",
@@ -629,6 +637,8 @@ def add_new_timetable_event(reference, event_category):
         event_category=event_category,
         event_category_title=event_category_title,
         include_plan_published=include_plan_published,
+        skip_url=skip_url,
+        skip_text=skip_text,
     )
 
 
@@ -703,6 +713,14 @@ def add_event_to_timetable(reference, timetable_reference, event_category):
         timetable_reference=timetable_reference,
         event_category=event_category,
     )
+    skip_url = _skip_and_continue_url(reference, event_category)
+    if event_category in [
+        EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
+        EventCategory.PLANNING_INSPECTORATE_FINDINGS,
+    ]:
+        skip_text = "Return to local plan"
+    else:
+        skip_text = "Skip to next event"
 
     return render_template(
         "local_plan/event-form.html",
@@ -713,6 +731,8 @@ def add_event_to_timetable(reference, timetable_reference, event_category):
         event_category=event_category,
         event_category_title=event_category_title,
         include_plan_published=include_plan_published,
+        skip_url=skip_url,
+        skip_text=skip_text,
     )
 
 

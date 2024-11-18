@@ -9,7 +9,7 @@
     <h1 class="govuk-heading-l">{{ event_category_title | capitalize }}</h1>
     {% if estimated %}
       <p class="govuk-body-m">
-        With dates, some data is better than no data, so: 
+        With dates, some data is better than no data, so:
         <ul class="govuk-list govuk-list--bullet">
           <li>2014 is fine</li>
           <li>03-2014 is better</li>
@@ -21,7 +21,7 @@
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    {{ timetable_form.render_form(form, plan, event_category, action_url, include_plan_published=include_plan_published) }}
+    {{ timetable_form.render_form(form, plan, event_category, action_url, include_plan_published=include_plan_published, skip_url=skip_url, skip_text=skip_text) }}
   </div>
 </div>
 

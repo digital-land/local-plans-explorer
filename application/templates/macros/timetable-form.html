@@ -1,4 +1,4 @@
-{% macro render_form(form, plan, event_category, action_url, include_plan_published=False) -%}
+{% macro render_form(form, plan, event_category, action_url, include_plan_published=False, skip_url=None, skip_text="") -%}
 
   {% if form.errors %}
     <div class="govuk-error-summary" data-module="govuk-error-summary">
@@ -118,10 +118,11 @@
           Submit
         </button>
         <a href="{{ url_for('local_plan.get_plan', reference=plan.reference ) }}" class="govuk-button govuk-button--secondary">Cancel</a>
-        <a class="govuk-link" href="#">Skip to next section</a>
-      </div> 
+          <a class="govuk-link" href="{{ skip_url }}">{{skip_text}}</a>
 
-      
+      </div>
+
+
 
     </fieldset>
   </form>
