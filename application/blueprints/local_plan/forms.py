@@ -45,9 +45,16 @@ class LocalPlanForm(FlaskForm):
             Regexp("^https?://", message="URL must start with http or https"),
         ],
     )
+
     adopted_date_year = StringField("Adopted date year", validators=[Optional()])
     adopted_date_month = StringField("Adopted date month", validators=[Optional()])
     adopted_date_day = StringField("Adopted date day", validators=[Optional()])
+
+    lds_published_date_year = StringField("LDS published year", validators=[Optional()])
+    lds_published_date_month = StringField(
+        "LDS published month", validators=[Optional()]
+    )
+    lds_published_date_day = StringField("LDS published day", validators=[Optional()])
 
     status = RadioField("Status", validators=[Optional()])
 
@@ -425,7 +432,6 @@ class PlanningInspectorateFindingsForm(BaseEventForm):
     inspector_report_published = DatePartField(
         "Report published", validators=[Optional()]
     )
-    plan_adopted = DatePartField("Plan adopted", validators=[Optional()])
 
     def __init__(self, obj=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -436,7 +442,6 @@ class PlanningInspectorateFindingsForm(BaseEventForm):
             self.inspector_report_published.process_data(
                 obj.get("inspector_report_published")
             )
-            self.plan_adopted.process_data(obj.get("plan_adopted"))
 
 
 def get_event_form(event_category, obj=None):

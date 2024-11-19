@@ -123,6 +123,7 @@ class LocalPlan(BaseModel):
     period_end_date: Mapped[Optional[int]] = mapped_column(Integer)
     documentation_url: Mapped[Optional[str]] = mapped_column(Text)
     adopted_date: Mapped[Optional[str]] = mapped_column(Text)
+    lds_published_date: Mapped[Optional[str]] = mapped_column(Text)
 
     local_plan_boundary: Mapped[Optional[str]] = mapped_column(
         ForeignKey("local_plan_boundary.reference")
@@ -303,7 +304,6 @@ class LocalPlanEvent(BaseModel):
     timetable: Mapped["LocalPlanTimetable"] = relationship(back_populates="events")
     notes: Mapped[Optional[str]] = mapped_column(Text)
 
-    # TODO not sure this is correct at the moment - need to check
     def event_status(self):
         for key, value in self.event_data.items():
             if key == "notes":

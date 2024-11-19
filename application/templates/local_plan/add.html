@@ -7,12 +7,12 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-  <form class="govuk-form" method="POST" action="{{ url_for('local_plan.add', organisation=organ) }}">
+  <form class="govuk-form" method="POST" action="{{ url_for('local_plan.add', organisation=organisation) }}">
     {{ form.hidden_tag() }}
 
         {% for field in form %}
         {# the fields listed are either not shown or handled individually #}
-        {%- if field.name not in ['reference', 'period_start_date', 'period_end_date', 'csrf_token', 'notes', 'adopted_date_year', 'adopted_date_month', 'adopted_date_day', 'status'] %}
+        {%- if field.name not in ['reference', 'period_start_date', 'period_end_date', 'csrf_token', 'notes', 'adopted_date_year', 'adopted_date_month', 'adopted_date_day', 'status', 'lds_published_date_year', 'lds_published_date_month', 'lds_published_date_day'] %}
           {%- if field.name == 'organisations' %}
             <div class="app-organisation-select" data-module="multi-select">
               <div class="govuk-form-group" data-multi-select="form-group">
@@ -90,6 +90,42 @@
                     Year
                   </label>
                   <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="adopted_date_year" name="adopted_date_year" type="text" inputmode="numeric" value="">
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="govuk-form-group">
+          <fieldset class="govuk-fieldset" role="group" aria-describedby="lds-published-date-hint">
+            <legend class="govuk-fieldset__legend">
+                  Local development scheme published!!!
+            </legend>
+            <div id="lds-published-date-hint" class="govuk-hint">
+              For example, 27 03 2014
+            </div>
+            <div class="govuk-date-input" id="lds-published-date">
+              <div class="govuk-date-input__item">
+                <div class="govuk-form-group">
+                  <label class="govuk-label govuk-date-input__label" for="lds_published_date_day">
+                    Day
+                  </label>
+                  <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="lds_published_date_day" name="lds_published_date_day" type="text" inputmode="numeric" value=""}>
+                </div>
+              </div>
+              <div class="govuk-date-input__item">
+                <div class="govuk-form-group">
+                  <label class="govuk-label govuk-date-input__label" for="lds_published_date_month">
+                    Month
+                  </label>
+                  <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="lds_published_date_month" name="lds_published_date_month" type="text" inputmode="numeric" value="">
+                </div>
+              </div>
+              <div class="govuk-date-input__item">
+                <div class="govuk-form-group">
+                  <label class="govuk-label govuk-date-input__label" for="lds_published_date_year">
+                    Year
+                  </label>
+                  <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="lds_published_date_year" name="lds_published_date_year" type="text" inputmode="numeric" value="">
                 </div>
               </div>
             </div>
