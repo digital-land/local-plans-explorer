@@ -18,7 +18,7 @@
             </h2>
             <div class="app-summary-card__actions">
               {%- if not config.AUTHENTICATION_ON or session["user"] %}
-                <a href="{{ url_for('local_plan.edit_timetable_event', reference=event.timetable.local_plan, timetable_reference=event.timetable.reference, event_reference=event.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
+                <a href="{{ url_for('timetable.edit_timetable_event', local_plan_reference=event.timetable.local_plan, timetable_reference=event.timetable.reference, event_reference=event.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
               {%- endif %}
             </div>
           </header>

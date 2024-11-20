@@ -43,6 +43,7 @@ def register_blueprints(app):
     from application.blueprints.local_plan.views import local_plan
     from application.blueprints.main.views import main
     from application.blueprints.organisation.views import organisation
+    from application.blueprints.timetable.views import timetable
 
     app.register_blueprint(main)
     app.register_blueprint(organisation)
@@ -50,6 +51,7 @@ def register_blueprints(app):
     app.register_blueprint(document)
     app.register_blueprint(auth)
     app.register_blueprint(boundary)
+    app.register_blueprint(timetable)
 
 
 def register_extensions(app):

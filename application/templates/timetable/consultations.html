@@ -20,7 +20,7 @@
           </h2>
           <div class="app-summary-card__actions">
             {%- if not config.AUTHENTICATION_ON or session["user"] %}
-              <a href="{{ url_for('local_plan.edit_timetable_event', reference=plan, timetable_reference=timetable.reference, event_reference=event.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
+              <a href="{{ url_for('timetable.edit_timetable_event', local_plan_reference=plan.reference, timetable_reference=timetable.reference, event_reference=event.reference) }}" class="govuk-link">Edit<span class="govuk-visually-hidden"> plan</span></a>
             {%- endif %}
           </div>
         </header>
@@ -61,7 +61,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="govuk-button-group">
-      <a href="{{ url_for('local_plan.add_event_to_timetable', reference=timetable.local_plan, timetable_reference=timetable.reference, event_category=event_category) }}" class="govuk-button govuk-button--secondary">Add another</a>
+      <a href="{{ url_for('timetable.add_event_to_timetable', local_plan_reference=plan.reference, timetable_reference=timetable.reference, event_category=event_category) }}" class="govuk-button govuk-button--secondary">Add another</a>
     </div>
   </div>
 </div>
@@ -71,7 +71,7 @@
       {% if continue_url %}
         <a href="{{ continue_url }}" class="govuk-button">Continue</a>
       {% endif %}
-      <a href="{{ url_for('local_plan.get_plan', reference=plan) }}" class="govuk-button govuk-button--secondary">Close</a>
+      <a href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}" class="govuk-button govuk-button--secondary">Close</a>
     </div>
   </div>
 </div>
