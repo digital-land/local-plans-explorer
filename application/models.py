@@ -369,7 +369,7 @@ class LocalPlanEvent(BaseModel):
 
     def event_status(self):
         for key, value in self.event_data.items():
-            if key == "notes":
+            if key == "notes" or key == "csrf_token":
                 continue
             if all(value.get(k, "").strip() != "" for k in ["day", "month", "year"]):
                 return "completed"
