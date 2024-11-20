@@ -10069,7 +10069,7 @@
 .moj-timeline__document-item {
   margin-bottom: 5px;
 }
-.moj-timeline__document-item:last-child {
+.timeline__item__document-item:last-child {
   margin-bottom: 0;
 }
 

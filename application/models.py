@@ -551,4 +551,5 @@ class LocalPlanTimetable(DateModel):
                             "notes": event.notes if event.notes else "",
                         }
                     )
-        return events
+        # reverse the events so the most recent ones are at the top
+        return events[::-1]
