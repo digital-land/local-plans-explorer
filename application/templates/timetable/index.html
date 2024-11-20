@@ -23,7 +23,7 @@
           <h2 class="moj-timeline__title">{{ event.name }}</span></h2>
         </div>
         <p class="moj-timeline__date">
-          <time datetime="2019-06-14T14:01:00.000Z">{{ event.date }}</time>
+          <time datetime="2019-06-14T14:01:00.000Z">{{ event.date | short_date }}</time>
         </p>
       </div>
       {% endfor %}
