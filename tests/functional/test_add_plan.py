@@ -22,7 +22,13 @@ def test_add_plan(live_server, page):
     page.locator("#period_start_date").fill("2024")
     page.locator("#period_end_date").click()
     page.locator("#period_end_date").fill("2034")
-    page.get_by_label("Year").click()
+    page.get_by_role("group", name="Adopted date").get_by_label("Year").click()
+
+    page.locator("#period_start_date").click()
+    page.locator("#period_start_date").fill("2024")
+    page.locator("#period_end_date").click()
+    page.locator("#period_end_date").fill("2034")
+    page.get_by_role("group", name="Adopted date").get_by_label("Year").click()
     page.get_by_role("button", name="Add record").click()
 
     expect(page.locator("h1")).to_contain_text("Area covered by this plan")
