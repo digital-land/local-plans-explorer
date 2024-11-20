@@ -51,7 +51,6 @@ def add(local_plan_reference):
             name=form.name.data,
             description=form.description.data,
             geometry=form.geometry.data,
-            plan_boundary_type=form.plan_boundary_type.data,
         )
         if form.organisations.data:
             set_organisations(boundary, form.organisations.data)
@@ -108,7 +107,6 @@ def edit(local_plan_reference, reference):
                 print("Update the existing boundary")
                 lp_boundary.name = form.name.data
                 lp_boundary.description = form.description.data
-                lp_boundary.plan_boundary_type = form.plan_boundary_type.data
                 if form.organisations.data:
                     set_organisations(lp_boundary, form.organisations.data)
                 db.session.add(lp_boundary)
@@ -123,7 +121,6 @@ def edit(local_plan_reference, reference):
                     description=form.description.data,
                     geometry=geometry,
                     geojson=form_geojson,
-                    plan_boundary_type=form.plan_boundary_type.data,
                 )
                 if form.organisations.data:
                     set_organisations(lp_boundary, form.organisations.data)

@@ -363,7 +363,6 @@ def add_geography(reference):
                     if plan.organisations[0].geojson is not None
                     else None
                 )
-                geography_type = "planning-authority-district"
             else:
                 reference = "-".join(
                     [
@@ -372,15 +371,12 @@ def add_geography(reference):
                         if org.geojson is not None
                     ]
                 )
-                geography_type = "combined-planning-authority-district"
-
             geojson = combine_geographies(geographies)
             boundary = LocalPlanBoundary.query.get(reference)
             if boundary is None:
                 boundary = LocalPlanBoundary(
                     reference=reference,
                     geojson=geojson,
-                    plan_boundary_type=geography_type,
                 )
             plan.boundary = boundary
             boundary.local_plans.append(plan)

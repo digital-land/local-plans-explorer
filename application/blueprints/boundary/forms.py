@@ -10,7 +10,6 @@ class BoundaryForm(FlaskForm):
     )
     description = TextAreaField("Brief description of supporting document")
     organisations = StringField("Organisation", validators=[Optional()])
-    plan_boundary_type = StringField("Boundary type", validators=[Optional()])
 
 
 class EditBoundaryForm(BoundaryForm):

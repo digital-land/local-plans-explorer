@@ -101,7 +101,6 @@ class LocalPlanDocumentType(BaseModel):
 class LocalPlanBoundary(BaseModel):
     __tablename__ = "local_plan_boundary"
 
-    plan_boundary_type: Mapped[Optional[str]] = mapped_column(Text)
     geometry: Mapped[Optional[str]] = mapped_column(Text)
 
     geojson: Mapped[Optional[dict]] = mapped_column(JSONB)

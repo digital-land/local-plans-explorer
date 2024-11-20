@@ -252,7 +252,6 @@ def set_default_boundaries():
                 description="Default local plan boundary",
                 geometry=org.geometry,
                 geojson=org.geojson,
-                plan_boundary_type="statistical-geography",
             )
             boundary.organisations.append(org)
 
