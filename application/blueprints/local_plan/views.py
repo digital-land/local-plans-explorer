@@ -6,7 +6,8 @@ from flask import Blueprint, abort, redirect, render_template, request, url_for
 from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
-from application.blueprints.local_plan.forms import LocalPlanForm, get_event_form
+from application.blueprints.local_plan.forms import LocalPlanForm
+from application.blueprints.timetable.forms import get_event_form
 from application.extensions import db
 from application.models import (
     CandidateDocument,

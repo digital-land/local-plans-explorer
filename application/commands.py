@@ -13,7 +13,7 @@ from slugify import slugify
 from sqlalchemy import not_, select, text
 from sqlalchemy.inspection import inspect
 
-from application.blueprints.local_plan.forms import get_event_form
+from application.blueprints.timetable.forms import get_event_form
 from application.extensions import db
 from application.models import (
     EventCategory,
