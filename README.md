@@ -1,5 +1,5 @@
 ## Local plans explorer
-
+![build](https://github.com//digital-land/local-plans-explorer/actions/workflows/ci.yml/badge.svg)
 
 #### Prerequisites
 
