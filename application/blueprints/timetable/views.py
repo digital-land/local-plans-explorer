@@ -17,12 +17,18 @@ timetable = Blueprint(
 )
 
 
-@timetable.route("/")
-def index(local_plan_reference):
-    plan = LocalPlan.query.get(local_plan_reference)
-    if plan is None:
+@timetable.route("/<string:timetable_reference>")
+def index(local_plan_reference, timetable_reference):
+    timetable = LocalPlanTimetable.query.filter(
+        LocalPlanTimetable.local_plan == local_plan_reference,
+        LocalPlanTimetable.reference == timetable_reference,
+    ).one_or_none()
+    if timetable is None:
         abort(404)
-    return render_template("timetable/index.html", plan=plan)
+    timeline_data = timetable.timeline()
+    return render_template(
+        "timetable/index.html", timetable=timetable, timeline_data=timeline_data
+    )
 
 
 @timetable.route(

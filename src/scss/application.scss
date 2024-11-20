@@ -1,6 +1,9 @@
 // import all digital land and GOVUK Frontend scss
 @import "digital-land-frontend/dl-frontend";
 
+// 3rd party components
+@import "components/moj-timeline";
+
 // app specific component scss
 @import "components/summary-card";
 @import "components/register-table";

@@ -144,6 +144,9 @@
             <h2 class="app-timetable__title">
               Actual timetable
             </h2>
+            {% if plan.timetable and plan.timetable.has_actual_events() %}
+              <a href="{{ url_for('timetable.index', local_plan_reference=plan.reference, timetable_reference=plan.timetable.reference ) }}" class="govuk-link">View as timeline<span class="govuk-visually-hidden"> timetable</span></a>
+            {% endif %}
           </header>
           <div class="app-timetable__body">
             <ul class="govuk-list app-timetable__list">

@@ -515,3 +515,40 @@ class LocalPlanTimetable(DateModel):
 
     def get_events_by_category(self, category):
         return [event for event in self.events if event.event_category == category]
+
+    def get_actual_events(self):
+        return [
+            event
+            for event in self.events
+            if event.event_category
+            in [
+                EventCategory.TIMETABLE_PUBLISHED,
+                EventCategory.REGULATION_18,
+                EventCategory.REGULATION_19,
+                EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
+                EventCategory.PLANNING_INSPECTORATE_FINDINGS,
+            ]
+        ]
+
+    def has_actual_events(self):
+        return len(self.get_actual_events()) > 0
+
+    def timeline(self):
+        actual_events = self.get_actual_events()
+        events = []
+        for event in actual_events:
+            ordered_event_data = event.ordered_event_data()
+            for key in ordered_event_data.keys():
+                event_type_key = key.replace("_", "-")
+                event_type = LocalPlanEventType.query.get(event_type_key)
+                date_data = event.event_data[key]
+                if event_type and isinstance(date_data, dict):
+                    event_date = event.collect_date_fields(key)
+                    events.append(
+                        {
+                            "name": event_type.name,
+                            "date": event_date,
+                            "notes": event.notes if event.notes else "",
+                        }
+                    )
+        return events
