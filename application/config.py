@@ -32,4 +32,6 @@ class DevelopmentConfig(Config):
 class TestConfig(Config):
     TESTING = True
     AUTHENTICATION_ON = False
-    SQLALCHEMY_DATABASE_URI = "postgresql://localhost/local_plans_test"
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql://postgres:postgres@localhost/local_plans_test"
+    )
