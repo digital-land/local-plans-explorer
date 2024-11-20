@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, redirect, render_template, request, url_for
+from flask import Blueprint, abort, redirect, render_template, url_for
 
 from application.blueprints.timetable.forms import get_event_form
 from application.extensions import db
@@ -44,59 +44,56 @@ def add_new_timetable_event(local_plan_reference, event_category):
     if redirect_url is not None:
         return redirect(redirect_url)
 
-    if request.method == "POST":
-        if form.validate():
-            # Check if form is completely empty
-            if form.is_completely_empty():
-                # Skip to next stage without creating any objects
-                continue_url = _skip_and_continue_url(
-                    local_plan_reference, event_category
-                )
-                return redirect(continue_url)
+    if form.validate_on_submit():
+        # Check if form is completely empty
+        if form.is_completely_empty():
+            # Skip to next stage without creating any objects
+            continue_url = _skip_and_continue_url(local_plan_reference, event_category)
+            return redirect(continue_url)
 
-            # Otherwise create event as normal
-            if plan.timetable is None:
-                plan.timetable = LocalPlanTimetable(
-                    reference=f"{plan.reference}-timetable",
-                    name=f"{plan.name} timetable",
-                    local_plan=plan.reference,
-                    events=[],
-                )
-            event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
-            if hasattr(form, "notes"):
-                notes = form.notes.data
-            else:
-                notes = None
+        # Otherwise create event as normal
+        if plan.timetable is None:
+            plan.timetable = LocalPlanTimetable(
+                reference=f"{plan.reference}-timetable",
+                name=f"{plan.name} timetable",
+                local_plan=plan.reference,
+                events=[],
+            )
+        event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
+        if hasattr(form, "notes"):
+            notes = form.notes.data
+        else:
+            notes = None
 
-            # Only store validated data
-            validated_data = {}
-            for field in form:
-                if field.name != "csrf_token":
-                    if isinstance(field.data, dict):
-                        # For date fields, only include if they passed validation
-                        if any(field.data.values()):
-                            validated_data[field.name] = field.data
-                    else:
+        # Only store validated data
+        validated_data = {}
+        for field in form:
+            if field.name != "csrf_token":
+                if isinstance(field.data, dict):
+                    # For date fields, only include if they passed validation
+                    if any(field.data.values()):
                         validated_data[field.name] = field.data
+                else:
+                    validated_data[field.name] = field.data
 
-            event = LocalPlanEvent(
-                reference=event_reference,
-                event_category=event_category,
-                event_data=validated_data,
-                notes=notes,
+        event = LocalPlanEvent(
+            reference=event_reference,
+            event_category=event_category,
+            event_data=validated_data,
+            notes=notes,
+        )
+        plan.timetable.events.append(event)
+        db.session.add(event)
+        db.session.add(plan)
+        db.session.commit()
+        return redirect(
+            url_for(
+                "timetable.timetable_event",
+                local_plan_reference=plan.reference,
+                timetable_reference=plan.timetable.reference,
+                event_reference=event.reference,
             )
-            plan.timetable.events.append(event)
-            db.session.add(event)
-            db.session.add(plan)
-            db.session.commit()
-            return redirect(
-                url_for(
-                    "timetable.timetable_event",
-                    local_plan_reference=plan.reference,
-                    timetable_reference=plan.timetable.reference,
-                    event_reference=event.reference,
-                )
-            )
+        )
 
     if estimated:
         event_category_title = event_category.value.replace("Estimated", "").strip()
@@ -356,7 +353,17 @@ def edit_timetable_event(local_plan_reference, timetable_reference, event_refere
     form = get_event_form(event.event_category, obj=event.event_data)
 
     if form.validate_on_submit():
-        event.event_data = form.data
+        # Only store validated data
+        validated_data = {}
+        for field in form:
+            if field.name != "csrf_token":
+                if isinstance(field.data, dict):
+                    # For date fields, only include if they passed validation
+                    if any(field.data.values()):
+                        validated_data[field.name] = field.data
+                else:
+                    validated_data[field.name] = field.data
+        event.event_data = validated_data
         db.session.add(event)
         db.session.commit()
         return redirect(
