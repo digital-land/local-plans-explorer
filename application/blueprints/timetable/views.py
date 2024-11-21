@@ -336,7 +336,7 @@ def edit_timetable_event(local_plan_reference, timetable_reference, event_refere
     if event is None:
         return abort(404)
 
-    include_plan_published = _is_first_event_of_category(event)
+    include_plan_published = event.is_first_event_of_category()
 
     form = get_event_form(event.event_category, obj=event.event_data)
 
@@ -365,7 +365,7 @@ def edit_timetable_event(local_plan_reference, timetable_reference, event_refere
         event_reference=event_reference,
     )
 
-    include_plan_published = _is_first_event_of_category(event)
+    include_plan_published = event.is_first_event_of_category()
     estimated = True if "estimated" in event.event_category.value.lower() else False
 
     if estimated:
@@ -458,15 +458,6 @@ def _redirect_url_category_exists(plan, event_category):
             )
 
     return None
-
-
-def _is_first_event_of_category(event):
-    earlier_events = LocalPlanEvent.query.filter(
-        LocalPlanEvent.timetable == event.timetable,
-        LocalPlanEvent.event_category == event.event_category,
-        LocalPlanEvent.created_date < event.created_date,
-    ).all()
-    return True if not earlier_events else False
 
 
 def _skip_and_continue_url(

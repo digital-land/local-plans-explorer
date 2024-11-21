@@ -556,6 +556,14 @@ class LocalPlanEvent(BaseModel):
             return ordered
         return self.event_data
 
+    def is_first_event_of_category(self):
+        earlier_events = self.query.filter(
+            LocalPlanEvent.timetable == self.timetable,
+            LocalPlanEvent.event_category == self.event_category,
+            LocalPlanEvent.created_date < self.created_date,
+        ).all()
+        return True if not earlier_events else False
+
     def as_timeline_entry(self):
         match self.event_category:
             case EventCategory.TIMETABLE_PUBLISHED:
@@ -570,7 +578,10 @@ class LocalPlanEvent(BaseModel):
                 return data
             case EventCategory.REGULATION_18:
                 data = []
-                if "reg_18_draft_local_plan_published" in self.event_data:
+                if (
+                    "reg_18_draft_local_plan_published" in self.event_data
+                    and self.is_first_event_of_category()
+                ):
                     date = self.collect_date_fields("reg_18_draft_local_plan_published")
                     data.append(
                         {
@@ -582,17 +593,30 @@ class LocalPlanEvent(BaseModel):
                     "reg_18_public_consultation_start"
                 )
                 end_date = self.collect_date_fields("reg_18_public_consultation_end")
+
+                if start_date and end_date:
+                    consultation_text = f"{start_date} to {end_date}"
+                elif start_date and not end_date:
+                    consultation_text = f"{start_date} to date unavailable"
+                elif not start_date and end_date:
+                    consultation_text = f"Date unavailable to {end_date}"
+                else:
+                    consultation_text = "Date unavailable"
+
                 data.append(
                     {
                         "name": "Regulation 18 consultation",
-                        "date": f"{start_date} to {end_date}",
+                        "date": consultation_text,
                         "notes": self.notes if self.notes else "",
                     }
                 )
                 return data
             case EventCategory.REGULATION_19:
                 data = []
-                if "reg_19_publication_local_plan_published" in self.event_data:
+                if (
+                    "reg_19_publication_local_plan_published" in self.event_data
+                    and self.is_first_event_of_category()
+                ):
                     date = self.collect_date_fields(
                         "reg_19_publication_local_plan_published"
                     )
@@ -606,10 +630,20 @@ class LocalPlanEvent(BaseModel):
                     "reg_19_public_consultation_start"
                 )
                 end_date = self.collect_date_fields("reg_19_public_consultation_end")
+
+                if start_date and end_date:
+                    consultation_text = f"{start_date} to {end_date}"
+                elif start_date and not end_date:
+                    consultation_text = f"{start_date} to date unavailable"
+                elif not start_date and end_date:
+                    consultation_text = f"Date unavailable to {end_date}"
+                else:
+                    consultation_text = "Date unavailable"
+
                 data.append(
                     {
                         "name": "Regulation 19 consultation",
-                        "date": f"{start_date} to {end_date}",
+                        "date": consultation_text,
                         "notes": self.notes if self.notes else "",
                     }
                 )
