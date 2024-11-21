@@ -182,7 +182,24 @@ def edit(reference):
         db.session.commit()
         return redirect(url_for("local_plan.get_plan", reference=plan.reference))
 
-    return render_template("local_plan/edit.html", plan=plan, form=form)
+    breadcrumbs = {
+        "items": [
+            {"text": "Home", "href": url_for("main.index")},
+            {
+                "text": "Plans by organisation",
+                "href": url_for("organisation.organisations"),
+            },
+            {
+                "text": plan.name,
+                "href": url_for("local_plan.get_plan", reference=plan.reference),
+            },
+            {"text": "Edit"},
+        ]
+    }
+
+    return render_template(
+        "local_plan/edit.html", plan=plan, form=form, breadcrumbs=breadcrumbs
+    )
 
 
 @local_plan.route("/archived")

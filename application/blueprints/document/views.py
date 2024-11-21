@@ -89,7 +89,23 @@ def get_document(local_plan_reference, reference):
     ).one_or_none()
     if doc is None:
         return abort(404)
-    return render_template("document/document.html", plan=doc.plan, document=doc)
+    breadcrumbs = {
+        "items": [
+            {"text": "Home", "href": url_for("main.index")},
+            {
+                "text": "Plans by organisation",
+                "href": url_for("organisation.organisations"),
+            },
+            {
+                "text": doc.plan.name,
+                "href": url_for("local_plan.get_plan", reference=local_plan_reference),
+            },
+            {"text": doc.name},
+        ]
+    }
+    return render_template(
+        "document/document.html", plan=doc.plan, document=doc, breadcrumbs=breadcrumbs
+    )
 
 
 @document.route("/<string:reference>/edit", methods=["GET", "POST"])
@@ -139,8 +155,35 @@ def edit(local_plan_reference, reference):
                 reference=document.reference,
             )
         )
-
-    return render_template("document/edit.html", plan=doc.plan, document=doc, form=form)
+    breadcrumbs = {
+        "items": [
+            {"text": "Home", "href": url_for("main.index")},
+            {
+                "text": "Plans by organisation",
+                "href": url_for("organisation.organisations"),
+            },
+            {
+                "text": doc.plan.name,
+                "href": url_for("local_plan.get_plan", reference=local_plan_reference),
+            },
+            {
+                "text": doc.name,
+                "href": url_for(
+                    "document.get_document",
+                    local_plan_reference=local_plan_reference,
+                    reference=reference,
+                ),
+            },
+            {"text": "Edit"},
+        ]
+    }
+    return render_template(
+        "document/edit.html",
+        plan=doc.plan,
+        document=doc,
+        form=form,
+        breadcrumbs=breadcrumbs,
+    )
 
 
 def _make_reference(form, plan_reference):
