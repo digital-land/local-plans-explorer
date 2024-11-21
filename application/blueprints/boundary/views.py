@@ -84,7 +84,7 @@ def edit(local_plan_reference, reference):
         [org.organisation for org in lp_boundary.organisations]
     )
     del lp_boundary.organisations
-    form = EditBoundaryForm(obj=lp_boundary)
+    form = EditBoundaryForm(obj=lp_boundary, boundary=lp_boundary)
     if not form.organisations.data:
         form.organisations.data = organisation__string
 
@@ -126,10 +126,9 @@ def edit(local_plan_reference, reference):
                     set_organisations(lp_boundary, form.organisations.data)
                 lp_boundary.local_plans.append(plan)
 
-            if form.status.data == Status.FOR_PLATFORM.name:
-                plan.boundary_status = Status.FOR_PLATFORM
-                db.session.add(plan)
+            plan.boundary_status = form.status.data
 
+            db.session.add(plan)
             db.session.add(lp_boundary)
             db.session.commit()
 
