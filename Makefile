@@ -48,3 +48,6 @@ isort:
 	isort --profile black .
 
 lint: black flake8 isort
+
+test:
+	PWDEBUG=1 pytest -s
