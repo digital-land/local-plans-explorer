@@ -30,10 +30,14 @@ def index(local_plan_reference, timetable_reference):
         "items": [
             {"text": "Home", "href": url_for("main.index")},
             {
+                "text": "Plans by organisation",
+                "href": url_for("organisation.organisations"),
+            },
+            {
                 "text": timetable.local_plan_obj.name,
                 "href": url_for("local_plan.get_plan", reference=local_plan_reference),
             },
-            {"text": "timeline"},
+            {"text": "Local plan events timeline"},
         ]
     }
 
