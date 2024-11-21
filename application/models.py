@@ -586,7 +586,7 @@ class LocalPlanEvent(BaseModel):
                     data.append(
                         {
                             "name": "Draft local plan published",
-                            "date": date if date else "Date unavailable",
+                            "date": "Date unavailable",
                         }
                     )
                 start_date = self.collect_date_fields(
@@ -735,14 +735,31 @@ class LocalPlanTimetable(DateModel):
             category for category in EventCategory if category.actual_dates_category()
         ]
         events = []
+        first_reg_18 = True
+        first_reg_19 = True
         for category in event_category_order:
             events_by_category = self.get_events_by_category(category)
             if not events_by_category:
-                data = {
-                    "name": category.timeline_name(),
-                    "date": "Date unavailable",
-                    "notes": "",
-                }
+                if category == EventCategory.REGULATION_18 and first_reg_18:
+                    data = {
+                        "name": "Draft local plan published",
+                        "date": "Date unavailable",
+                        "notes": "",
+                    }
+                    first_reg_18 = False
+                elif category == EventCategory.REGULATION_19 and first_reg_19:
+                    data = {
+                        "name": "Publication local plan published",
+                        "date": "Date unavailable",
+                        "notes": "",
+                    }
+                    first_reg_19 = False
+                else:
+                    data = {
+                        "name": category.timeline_name(),
+                        "date": "Date unavailable",
+                        "notes": "",
+                    }
                 events.append(data)
             else:
                 for event in events_by_category:
