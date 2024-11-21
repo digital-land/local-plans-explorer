@@ -65,21 +65,15 @@ def add_new_timetable_event(local_plan_reference, event_category):
         else:
             notes = None
 
-        # Only store validated data
-        validated_data = {}
+        sanitised_data = {}
         for field in form:
             if field.name != "csrf_token":
-                if isinstance(field.data, dict):
-                    # For date fields, only include if they passed validation
-                    if any(field.data.values()):
-                        validated_data[field.name] = field.data
-                else:
-                    validated_data[field.name] = field.data
+                sanitised_data[field.name] = field.data
 
         event = LocalPlanEvent(
             reference=event_reference,
             event_category=event_category,
-            event_data=validated_data,
+            event_data=sanitised_data,
             notes=notes,
         )
         plan.timetable.events.append(event)
@@ -270,21 +264,15 @@ def add_event_to_timetable(local_plan_reference, timetable_reference, event_cate
         else:
             notes = None
 
-        # Only store validated data
-        validated_data = {}
+        sanitised_data = {}
         for field in form:
             if field.name != "csrf_token":
-                if isinstance(field.data, dict):
-                    # For date fields, only include if they passed validation
-                    if any(field.data.values()):
-                        validated_data[field.name] = field.data
-                else:
-                    validated_data[field.name] = field.data
+                sanitised_data[field.name] = field.data
 
         event = LocalPlanEvent(
             reference=reference,
             event_category=event_category,
-            event_data=validated_data,
+            event_data=sanitised_data,
             notes=notes,
         )
         timetable.events.append(event)
@@ -353,17 +341,12 @@ def edit_timetable_event(local_plan_reference, timetable_reference, event_refere
     form = get_event_form(event.event_category, obj=event.event_data)
 
     if form.validate_on_submit():
-        # Only store validated data
-        validated_data = {}
+        sanitised_data = {}
         for field in form:
             if field.name != "csrf_token":
-                if isinstance(field.data, dict):
-                    # For date fields, only include if they passed validation
-                    if any(field.data.values()):
-                        validated_data[field.name] = field.data
-                else:
-                    validated_data[field.name] = field.data
-        event.event_data = validated_data
+                sanitised_data[field.name] = field.data
+        event.event_data = sanitised_data
+
         db.session.add(event)
         db.session.commit()
         return redirect(

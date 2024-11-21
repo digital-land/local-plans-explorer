@@ -40,7 +40,7 @@
               <dt class="govuk-summary-list__key">
                 Consultation period
               </dt>
-              <dd class="govuk-summary-list__value">{%- if event.consultation_start() %}{{ event.consultation_start() }}{% endif %} - {%- if event.consultation_end() %}{{ event.consultation_end() }}{% endif -%}</dd>
+              <dd class="govuk-summary-list__value">{%- if event.consultation_start() %}{{ event.consultation_start() }}{% endif %} - {% if event.consultation_end() %}{{ event.consultation_end() }}{% endif -%}</dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">
