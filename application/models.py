@@ -749,10 +749,13 @@ class LocalPlanTimetable(DateModel):
                     events.extend(event.as_timeline_entry())
 
         if self.local_plan_obj.adopted_date:
+            adopted_date_text = self.local_plan_obj.adopted_date
+            if adopted_date_text.replace("-", "") == "":
+                adopted_date_text = "Date unavailable"
             events.append(
                 {
                     "name": "Plan adopted",
-                    "date": self.local_plan_obj.adopted_date,
+                    "date": adopted_date_text,
                 }
             )
         # reverse the events so the most recent ones are at the top
