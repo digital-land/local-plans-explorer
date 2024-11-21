@@ -91,6 +91,17 @@ def get_plan(reference):
                 event_category=event_category,
             )
 
+    breadcrumbs = {
+        "items": [
+            {"text": "Home", "href": url_for("main.index")},
+            {
+                "text": "Plans by organisation",
+                "href": url_for("organisation.organisations"),
+            },
+            {"text": plan.name},
+        ]
+    }
+
     return render_template(
         "local_plan/plan.html",
         plan=plan,
@@ -99,6 +110,7 @@ def get_plan(reference):
         document_counts=document_counts,
         event_category=EventCategory,
         stage_urls=stage_urls,
+        breadcrumbs=breadcrumbs,
     )
 
 

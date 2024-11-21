@@ -26,8 +26,22 @@ def index(local_plan_reference, timetable_reference):
     if timetable is None:
         abort(404)
     timeline_data = timetable.timeline()
+    breadcrumbs = {
+        "items": [
+            {"text": "Home", "href": url_for("main.index")},
+            {
+                "text": timetable.local_plan_obj.name,
+                "href": url_for("local_plan.get_plan", reference=local_plan_reference),
+            },
+            {"text": "timeline"},
+        ]
+    }
+
     return render_template(
-        "timetable/index.html", timetable=timetable, timeline_data=timeline_data
+        "timetable/index.html",
+        timetable=timetable,
+        timeline_data=timeline_data,
+        breadcrumbs=breadcrumbs,
     )
 
 
