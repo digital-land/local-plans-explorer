@@ -49,5 +49,8 @@ isort:
 
 lint: black flake8 isort
 
-test:
+test-debug:
 	PWDEBUG=1 pytest -s
+
+test-visible:
+	pytest --headed --slowmo 500
