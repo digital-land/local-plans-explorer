@@ -121,7 +121,7 @@ def edit(local_plan_reference, reference):
     organisation__string = ";".join([org.organisation for org in doc.organisations])
 
     del doc.organisations
-    form = EditDocumentForm(obj=doc)
+    form = EditDocumentForm(obj=doc, document=doc)
 
     if not form.organisations.data:
         form.organisations.data = organisation__string
