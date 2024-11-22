@@ -130,9 +130,8 @@ def add():
     )
     organisation_choices = [(org.organisation, org.name) for org in orgs]
     form.organisations.choices = [(" ", " ")] + organisation_choices
-    if org is not None:
-        form.organisations.default = org.organisation
-        form.process()
+    if org is not None and not form.is_submitted():
+        form.organisations.data = org.organisation
 
     form.status.choices = [(s.name, s.value) for s in Status if s != Status.EXPORTED]
 

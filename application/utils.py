@@ -92,8 +92,25 @@ def populate_object(form, obj):
         del form.period_start_date
         del form.period_end_date
 
-        obj.adopted_date = f"{form.adopted_date_year.data}-{form.adopted_date_month.data}-{form.adopted_date_day.data}"
-        obj.lds_published_date = f"{form.lds_published_date_year.data}-{form.lds_published_date_month.data}-{form.lds_published_date_day.data}"  # noqa: E501
+        if form.adopted_date_year.data:
+            adopted_date = form.adopted_date_year.data
+            if form.adopted_date_month.data:
+                adopted_date += f"-{form.adopted_date_month.data}"
+                if form.adopted_date_day.data:
+                    adopted_date += f"-{form.adopted_date_day.data}"
+            obj.adopted_date = adopted_date
+        else:
+            obj.adopted_date = None
+
+        if form.lds_published_date_year.data:
+            lds_date = form.lds_published_date_year.data
+            if form.lds_published_date_month.data:
+                lds_date += f"-{form.lds_published_date_month.data}"
+                if form.lds_published_date_day.data:
+                    lds_date += f"-{form.lds_published_date_day.data}"
+            obj.lds_published_date = lds_date
+        else:
+            obj.lds_published_date = None
 
         del form.adopted_date_year
         del form.adopted_date_month

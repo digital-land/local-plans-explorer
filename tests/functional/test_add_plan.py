@@ -4,7 +4,7 @@ from playwright.sync_api import expect
 
 def test_add_plan(live_server, page):
     page.goto(url_for("main.index", _external=True))
-    page.get_by_role("link", name="✚ Add new plan record").click()
+    page.get_by_role("link", name="✚ Add new plan").click()
     page.get_by_label("Name of plan").click()
     page.get_by_label("Name of plan").fill("This is a test local plan")
     page.get_by_label("Name of plan").press("Tab")

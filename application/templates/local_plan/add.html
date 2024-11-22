@@ -3,11 +3,11 @@
 {% block content %}
 
 <span class="govuk-caption-l">Local plans</span>
-<h1 class="govuk-heading-l">Add plan record</h1>
+<h1 class="govuk-heading-l">Add plan</h1>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-  <form class="govuk-form" method="POST" action="{{ url_for('local_plan.add', organisation=organisation) }}">
+  <form class="govuk-form" method="POST" action="{{ url_for('local_plan.add', organisation=organisation.organisation) }}">
     {{ form.hidden_tag() }}
 
         {% for field in form %}

@@ -737,16 +737,32 @@ class LocalPlanTimetable(DateModel):
     def timeline(self):
         entries = []
 
-        # TODO: Need to find out if the reg 18 draft local plan published is one of the events and if so,
-        # add it to the start of the timeline however if it's not one of the events, then add it to the
-        # start of the timeline with text "Date unavailable"
+        # Check for Draft local plan published event
+        draft_plan_entry = None
+        has_draft_plan = False
 
-        # Only include actual events
         for event in self.get_actual_events():
-            entries.extend(event.as_timeline_entry())
+            # Check each event's entries for draft plan published
+            event_entries = event.as_timeline_entry()
+            for entry in event_entries:
+                if entry.name == "Draft local plan published":
+                    draft_plan_entry = entry
+                    has_draft_plan = True
+                else:
+                    entries.append(entry)
 
-        # Sort entries
+        # If no draft plan entry found, create one with no date
+        if not has_draft_plan:
+            draft_plan_entry = TimelineEntry(
+                name="Draft local plan published",
+                start_date=None,
+                end_date=None,
+                notes="",
+            )
+
+        # Sort the main entries
         entries.sort()
+
         # Add adopted date if it exists
         if self.local_plan_obj.adopted_date:
             adopted_date = TimelineEntry(
@@ -755,7 +771,18 @@ class LocalPlanTimetable(DateModel):
                 end_date=None,
                 notes="",
             )
+        else:
+            adopted_date = TimelineEntry(
+                name="Plan adopted",
+                start_date=None,
+                end_date=None,
+                notes="",
+            )
             entries = [adopted_date] + entries
+
+        # Always put draft at the end so it renders as the first event
+        # as timeline reads from top to bottom - oldest first latest last
+        entries = entries + [draft_plan_entry]
 
         return entries
 
