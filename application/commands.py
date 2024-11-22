@@ -363,21 +363,22 @@ def load_all(ctx):
 def load_db_backup():
     import subprocess
     import sys
-    import tempfile
 
     # check heroku cli installed
     result = subprocess.run(["which", "heroku"], capture_output=True, text=True)
-
     if result.returncode == 1:
         print("Heroku CLI is not installed. Please install it and try again.")
         sys.exit(1)
 
     # check heroku login
     result = subprocess.run(["heroku", "whoami"], capture_output=True, text=True)
-
     if "Error: not logged in" in result.stderr:
         print("Please login to heroku using 'heroku login' and try again.")
         sys.exit(1)
+
+    current_file_path = Path(__file__).resolve()
+    data_directory = os.path.join(current_file_path.parent.parent, "data")
+    local_dump = os.path.join(data_directory, "latest.dump")
 
     print("Starting load data into", current_app.config["SQLALCHEMY_DATABASE_URI"])
     if (
@@ -389,9 +390,17 @@ def load_db_backup():
         print("Exiting without making any changes")
         sys.exit(0)
 
-    with tempfile.TemporaryDirectory() as tempdir:
-        path = os.path.join(tempdir, "latest.dump")
+    # Check if local dump exists and is less than 24 hours old
+    use_local = False
+    if os.path.exists(local_dump):
+        file_time = datetime.fromtimestamp(os.path.getmtime(local_dump))
+        age = datetime.now() - file_time
+        if age.days < 1:
+            use_local = True
+            print(f"Using local backup from {local_dump} (less than 24 hours old)")
 
+    if not use_local:
+        print("Local backup not found or too old, fetching from Heroku...")
         # get the latest dump from heroku
         result = subprocess.run(
             [
@@ -400,7 +409,7 @@ def load_db_backup():
                 "-a",
                 "local-plans-explorer",
                 "-o",
-                path,
+                local_dump,
             ]
         )
 
@@ -408,24 +417,24 @@ def load_db_backup():
             print("Error downloading the backup")
             sys.exit(1)
 
-        # restore the dump to the local database
-        subprocess.run(
-            [
-                "pg_restore",
-                "--verbose",
-                "--clean",
-                "--no-acl",
-                "--no-owner",
-                "-h",
-                "localhost",
-                "-d",
-                "local_plans",
-                path,
-            ]
-        )
-        print(
-            "\n\nRestored the dump to the local database using pg_restore. You can ignore warnings from pg_restore."
-        )
+    # restore the dump to the local database
+    subprocess.run(
+        [
+            "pg_restore",
+            "--verbose",
+            "--clean",
+            "--no-acl",
+            "--no-owner",
+            "-h",
+            "localhost",
+            "-d",
+            "local_plans",
+            local_dump,
+        ]
+    )
+    print(
+        "\n\nRestored the dump to the local database using pg_restore. You can ignore warnings from pg_restore."
+    )
 
     print("Data loaded successfully")
 
