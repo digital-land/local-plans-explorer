@@ -1,4 +1,3 @@
-
 {% extends 'layouts/base-with-map.html' %}
 
 {% block content %}
@@ -7,9 +6,7 @@
     {% if form.errors %}
     <div class="govuk-error-summary" data-module="govuk-error-summary">
       <div role="alert">
-        <h2 class="govuk-error-summary__title">
-          There was a problem
-        </h2>
+        <h2 class="govuk-error-summary__title">There was a problem</h2>
         <div class="govuk-error-summary__body">
           <ul class="govuk-list govuk-error-summary__list">
             {% for field, messages in form.errors.items() %}
@@ -24,17 +21,19 @@
       </div>
     </div>
     {% endif %}
-    <form class="govuk-form" method="POST" action="{{ url_for('boundary.edit', local_plan_reference=plan.reference, reference=boundary.reference) }}">
-    {{ form.hidden_tag() }}
-        <div class="govuk-form-group">
-          <label for="#" class="govuk-label">Reference</label>
-          <div class="govuk-body govuk-!-font-weight-bold">{{ boundary.reference }}</div>
-          <span class="govuk-tag govuk-tag--{{plan.boundary_status | status_colour }}">{{plan.boundary_status.value}}</span>
-        </div>
 
-        {% for field in form %}
-        {# the fields listed are either not shown or handled individually #}
-        {%- if field.name not in ['status', 'csrf_token'] %}
+    <form class="govuk-form" method="POST" action="{{ url_for('boundary.edit', local_plan_reference=plan.reference, reference=boundary.reference) }}">
+      {{ form.hidden_tag() }}
+
+      <div class="govuk-form-group">
+        <label class="govuk-label">Reference</label>
+        <div class="govuk-body govuk-!-font-weight-bold">{{ boundary.reference }}</div>
+        <span class="govuk-tag govuk-tag--{{plan.boundary_status | status_colour }}">{{plan.boundary_status.value}}</span>
+      </div>
+
+      {% for field in form %}
+      {# the fields listed are either not shown or handled individually #}
+        {% if field.name not in ['status', 'csrf_token', 'geometry', 'geojson', 'geometry_type'] %}
           {%- if field.name == 'organisations' %}
             <div class="app-organisation-select" data-module="multi-select">
               <div class="govuk-form-group" data-multi-select="form-group">
@@ -49,73 +48,124 @@
                 </select>
               </div>
             </div>
-          {%- elif field.name == 'geojson' %}
-          <div class="govuk-form-group">
-            {{ field.label(class='govuk-label') }}
-            <textarea name="geojson" id="geojson" class="govuk-textarea" rows="15">
-              {{ form.geojson.data | tojson}}
-            </textarea>
-            {% if field.errors %}
-              <ul>
-              {% for error in field.errors %}
-                  <li>{{ error }}</li>
-              {% endfor %}
-              </ul>
-            {% endif %}
-          </div>
-
           {% else %}
-          <div class="govuk-form-group">
-            {{ field.label(class='govuk-label') }}
-            {% if field.type == "TextAreaField" %}
-            {{ field(class='govuk-textarea') }}
-            {% else %}
-            {{ field(class='govuk-input') }}
-            {% endif %}
-            {% if field.errors %}
-              <ul>
-              {% for error in field.errors %}
-                  <li>{{ error }}</li>
-              {% endfor %}
-              </ul>
-            {% endif %}
-          </div>
-          {% endif %}{# end if organisation field #}
-        {% endif -%}
-        {% endfor %}
+            <div class="govuk-form-group">
+              {{ field.label(class='govuk-label') }}
+              {% if field.type == "TextAreaField" %}
+                {{ field(class='govuk-textarea') }}
+              {% else %}
+                {{ field(class='govuk-input') }}
+              {% endif %}
+              {% if field.errors %}
+                <ul>
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
 
-        <div class="govuk-form-group {% if form.status.errors %}govuk-form-group--error{% endif %}" id="status">
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend">
-              Status
-            </legend>
-            <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
+      {# Geometry type selection #}
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          {{ form.geometry_type.label(class='govuk-fieldset__legend govuk-fieldset__legend--s') }}
+          {% if form.geometry_type.description %}
+            <div class="govuk-hint">{{ form.geometry_type.description }}</div>
+          {% endif %}
+          <div class="govuk-radios" data-module="govuk-radios">
+            {% for choice in form.geometry_type %}
+              <div class="govuk-radios__item">
+                {{ choice(class="govuk-radios__input") }}
+                {{ choice.label(class="govuk-label govuk-radios__label") }}
+              </div>
+            {% endfor %}
+          </div>
+        </fieldset>
+      </div>
+
+      {# WKT input #}
+      <div class="govuk-form-group" id="wkt-input" style="display: none;">
+        {{ form.geometry.label(class='govuk-label') }}
+        {% if form.geometry.description %}
+          <div class="govuk-hint">{{ form.geometry.description }}</div>
+        {% endif %}
+        {{ form.geometry(class='govuk-textarea', rows='10') }}
+      </div>
+
+      {# GeoJSON input #}
+      <div class="govuk-form-group" id="geojson-input" style="display: none;">
+        {{ form.geojson.label(class='govuk-label') }}
+        {% if form.geojson.description %}
+          <div class="govuk-hint">{{ form.geojson.description }}</div>
+        {% endif %}
+        {{ form.geojson(class='govuk-textarea', rows='10') }}
+      </div>
+
+      {# Status field #}
+      <div class="govuk-form-group {% if form.status.errors %}govuk-form-group--error{% endif %}" id="status">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend">Status</legend>
+          <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
             {% for choice in form.status.choices %}
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="{{ choice[0] }}" name="status" type="radio" value="{{ choice[0] }}" {% if choice[0] == plan.boundary_status.name %} checked{% endif %}>
+                <input class="govuk-radios__input" id="{{ choice[0] }}" name="status" type="radio" value="{{ choice[0] }}"
+                  {% if choice[0] == plan.boundary_status.name %} checked{% endif %}>
                 <label class="govuk-label govuk-radios__label" for="{{ choice[0] }}">
                   {{ choice[1] }}
                 </label>
               </div>
             {% endfor %}
-            </div>
-          </fieldset>
-        </div>
+          </div>
+        </fieldset>
+      </div>
 
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        <div class="govuk-button-group">
+      <div class="govuk-button-group">
         <button class="govuk-button" type="submit">Save</button>
         <a class="govuk-link" href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}">Cancel</a>
-    </div>
-  </form>
+      </div>
+    </form>
   </div>
 </div>
-
 {% endblock %}
 
 {% block pageScripts %}
-  <script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const geometryTypeInputs = document.querySelectorAll('input[name="geometry_type"]');
+    const wktInput = document.getElementById('wkt-input');
+    const geojsonInput = document.getElementById('geojson-input');
+
+    function updateVisibleInputs(selectedValue) {
+        if (selectedValue === 'wkt') {
+            wktInput.style.display = 'block';
+            geojsonInput.style.display = 'none';
+        } else if (selectedValue === 'geojson') {
+            wktInput.style.display = 'none';
+            geojsonInput.style.display = 'block';
+        }
+    }
+
+    // Set initial state based on any pre-selected value
+    geometryTypeInputs.forEach(input => {
+        if (input.checked) {
+            updateVisibleInputs(input.value);
+        }
+    });
+
+    // Update on change
+    geometryTypeInputs.forEach(input => {
+        input.addEventListener('change', (e) => {
+            updateVisibleInputs(e.target.value);
+        });
+    });
+});
+</script>
+
+<script>
     const $multiSelectModule = document.querySelector('[data-module="multi-select"]')
     const multiSelectModule = new dptp.MultiSelect($multiSelectModule).init()
-  </script>
+</script>
 {% endblock pageScripts %}
