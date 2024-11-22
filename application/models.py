@@ -567,52 +567,47 @@ class LocalPlanEvent(BaseModel):
     def as_timeline_entry(self):
         match self.event_category:
             case EventCategory.TIMETABLE_PUBLISHED:
-                data = []
-                data.append(
-                    {
-                        "name": "Timetable published",
-                        "date": self.collect_date_fields("timetable_published"),
-                        "notes": self.notes if self.notes else "",
-                    }
-                )
-                return data
+                return [
+                    TimelineEntry(
+                        "Timetable published",
+                        self.collect_date_fields("timetable_published"),
+                        None,
+                        self.notes if self.notes else "",
+                    )
+                ]
+
             case EventCategory.REGULATION_18:
-                data = []
+                entries = []
                 if (
                     "reg_18_draft_local_plan_published" in self.event_data
                     and self.is_first_event_of_category()
                 ):
                     date = self.collect_date_fields("reg_18_draft_local_plan_published")
-                    data.append(
-                        {
-                            "name": "Draft local plan published",
-                            "date": "Date unavailable",
-                        }
+                    entries.append(
+                        TimelineEntry(
+                            "Draft local plan published",
+                            date if date else "Date unavailable",
+                            None,
+                            "",
+                        )
                     )
+
                 start_date = self.collect_date_fields(
                     "reg_18_public_consultation_start"
                 )
                 end_date = self.collect_date_fields("reg_18_public_consultation_end")
-
-                if start_date and end_date:
-                    consultation_text = f"{start_date} to {end_date}"
-                elif start_date and not end_date:
-                    consultation_text = f"{start_date} to date unavailable"
-                elif not start_date and end_date:
-                    consultation_text = f"Date unavailable to {end_date}"
-                else:
-                    consultation_text = "Date unavailable"
-
-                data.append(
-                    {
-                        "name": "Regulation 18 consultation",
-                        "date": consultation_text,
-                        "notes": self.notes if self.notes else "",
-                    }
+                entries.append(
+                    TimelineEntry(
+                        "Regulation 18 consultation",
+                        start_date if start_date else "Date unavailable",
+                        end_date if end_date else "Date unavailable",
+                        self.notes if self.notes else "",
+                    )
                 )
-                return data
+                return entries
+
             case EventCategory.REGULATION_19:
-                data = []
+                entries = []
                 if (
                     "reg_19_publication_local_plan_published" in self.event_data
                     and self.is_first_event_of_category()
@@ -620,72 +615,72 @@ class LocalPlanEvent(BaseModel):
                     date = self.collect_date_fields(
                         "reg_19_publication_local_plan_published"
                     )
-                    data.append(
-                        {
-                            "name": "Publication local plan published",
-                            "date": date if date else "Date unavailable",
-                        }
+                    entries.append(
+                        TimelineEntry(
+                            "Publication local plan published",
+                            date if date else "Date unavailable",
+                            None,
+                            "",
+                        )
                     )
+
                 start_date = self.collect_date_fields(
                     "reg_19_public_consultation_start"
                 )
                 end_date = self.collect_date_fields("reg_19_public_consultation_end")
-
-                if start_date and end_date:
-                    consultation_text = f"{start_date} to {end_date}"
-                elif start_date and not end_date:
-                    consultation_text = f"{start_date} to date unavailable"
-                elif not start_date and end_date:
-                    consultation_text = f"Date unavailable to {end_date}"
-                else:
-                    consultation_text = "Date unavailable"
-
-                data.append(
-                    {
-                        "name": "Regulation 19 consultation",
-                        "date": consultation_text,
-                        "notes": self.notes if self.notes else "",
-                    }
+                entries.append(
+                    TimelineEntry(
+                        "Regulation 19 consultation",
+                        start_date if start_date else "Date unavailable",
+                        end_date if end_date else "Date unavailable",
+                        self.notes if self.notes else "",
+                    )
                 )
-                return data
+                return entries
 
             case EventCategory.PLANNING_INSPECTORATE_EXAMINATION:
-                data = []
-                data.append(
-                    {
-                        "name": "Submit plan for examination",
-                        "date": self.collect_date_fields("submit_plan_for_examination"),
-                        "notes": self.notes if self.notes else "",
-                    }
+                entries = []
+                entries.append(
+                    TimelineEntry(
+                        "Submit plan for examination",
+                        self.collect_date_fields("submit_plan_for_examination"),
+                        None,
+                        self.notes if self.notes else "",
+                    )
                 )
+
                 start_date = self.collect_date_fields(
                     "planning_inspectorate_examination_start"
                 )
                 end_date = self.collect_date_fields(
                     "planning_inspectorate_examination_end"
                 )
-                data.append(
-                    {
-                        "name": "Planning inspectorate examination period",
-                        "date": f"{start_date} to {end_date}",
-                        "notes": self.notes if self.notes else "",
-                    }
+                entries.append(
+                    TimelineEntry(
+                        "Planning inspectorate examination period",
+                        start_date if start_date else "Date unavailable",
+                        end_date if end_date else "Date unavailable",
+                        self.notes if self.notes else "",
+                    )
                 )
-                return data
+                return entries
+
             case EventCategory.PLANNING_INSPECTORATE_FINDINGS:
-                data = []
+                entries = []
                 keys = self.event_category.ordered_event_types()
                 for key in keys:
                     event_type = LocalPlanEventType.query.get(key.replace("_", "-"))
                     if event_type:
-                        data.append(
-                            {
-                                "name": event_type.name,
-                                "date": self.collect_date_fields(key),
-                                "notes": self.notes if self.notes else "",
-                            }
+                        entries.append(
+                            TimelineEntry(
+                                event_type.name,
+                                self.collect_date_fields(key),
+                                None,
+                                self.notes if self.notes else "",
+                            )
                         )
-                return data
+                return entries
+
             case _:
                 return []
 
@@ -734,46 +729,106 @@ class LocalPlanTimetable(DateModel):
         event_category_order = [
             category for category in EventCategory if category.actual_dates_category()
         ]
-        events = []
+        timeline_entries = []
         first_reg_18 = True
         first_reg_19 = True
+
         for category in event_category_order:
             events_by_category = self.get_events_by_category(category)
             if not events_by_category:
                 if category == EventCategory.REGULATION_18 and first_reg_18:
-                    data = {
-                        "name": "Draft local plan published",
-                        "date": "Date unavailable",
-                        "notes": "",
-                    }
+                    timeline_entries.append(
+                        TimelineEntry(
+                            "Draft local plan published", "Date unavailable", None, ""
+                        )
+                    )
                     first_reg_18 = False
                 elif category == EventCategory.REGULATION_19 and first_reg_19:
-                    data = {
-                        "name": "Publication local plan published",
-                        "date": "Date unavailable",
-                        "notes": "",
-                    }
+                    timeline_entries.append(
+                        TimelineEntry(
+                            "Publication local plan published",
+                            "Date unavailable",
+                            None,
+                            "",
+                        )
+                    )
                     first_reg_19 = False
                 else:
-                    data = {
-                        "name": category.timeline_name(),
-                        "date": "Date unavailable",
-                        "notes": "",
-                    }
-                events.append(data)
+                    timeline_entries.append(
+                        TimelineEntry(
+                            category.timeline_name(), "Date unavailable", None, ""
+                        )
+                    )
             else:
                 for event in events_by_category:
-                    events.extend(event.as_timeline_entry())
+                    timeline_entries.extend(event.as_timeline_entry())
 
         if self.local_plan_obj.adopted_date:
             adopted_date_text = self.local_plan_obj.adopted_date
             if adopted_date_text.replace("-", "") == "":
                 adopted_date_text = "Date unavailable"
-            events.append(
-                {
-                    "name": "Plan adopted",
-                    "date": adopted_date_text,
-                }
+            timeline_entries.append(
+                TimelineEntry("Plan adopted", adopted_date_text, None, "")
             )
-        # reverse the events so the most recent ones are at the top
-        return events[::-1]
+
+        # Sort entries by date (newest first)
+        timeline_entries.sort()
+
+        # Convert to dict format for backward compatibility with templates
+        return [entry.to_dict() for entry in timeline_entries]
+
+
+class TimelineEntry:
+    def __init__(self, event_name, event_start_date, event_end_date, event_notes=""):
+        self.name = event_name
+        self._start_date_str = event_start_date
+        self._end_date_str = event_end_date
+        self.notes = event_notes
+        # Parse dates for sorting
+        self.start_date = self._parse_date(event_start_date)
+        self.end_date = self._parse_date(event_end_date)
+
+    def _parse_date(self, date_str):
+        if not date_str or date_str == "Date unavailable":
+            return None
+        try:
+            # Try different date formats
+            for fmt in ["%d/%m/%Y", "%m/%Y", "%Y"]:
+                try:
+                    return datetime.datetime.strptime(date_str, fmt)
+                except ValueError:
+                    continue
+            return None
+        except Exception:
+            return None
+
+    def date(self):
+        if self._start_date_str and self._end_date_str:
+            return f"{self._start_date_str} to {self._end_date_str}"
+        elif self._start_date_str:
+            return self._start_date_str
+        else:
+            return "Date unavailable"
+
+    def __lt__(self, other):
+        # For reverse chronological order (newest first)
+        if not isinstance(other, TimelineEntry):
+            return NotImplemented
+
+        # Handle cases where dates might be None
+        if self.start_date is None and other.start_date is None:
+            return False  # Consider equal
+        if self.start_date is None:
+            return False  # None dates go at the end
+        if other.start_date is None:
+            return True  # None dates go at the end
+
+        return self.start_date > other.start_date  # Reverse chronological
+
+    def __eq__(self, other):
+        if not isinstance(other, TimelineEntry):
+            return NotImplemented
+        return self.start_date == other.start_date and self.name == other.name
+
+    def to_dict(self):
+        return {"name": self.name, "date": self.date(), "notes": self.notes}

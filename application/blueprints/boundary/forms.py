@@ -10,7 +10,7 @@ class BoundaryForm(FlaskForm):
     geojson = TextAreaField(
         "Plan boundary geometry as geojson", validators=[DataRequired()]
     )
-    description = TextAreaField("Brief description of supporting document")
+    description = TextAreaField("Brief description of boundary")
     organisations = StringField("Organisation", validators=[Optional()])
 
 

@@ -50,7 +50,7 @@ def add(local_plan_reference):
             reference=reference,
             name=form.name.data,
             description=form.description.data,
-            geometry=form.geometry.data,
+            geometry=form.geojson.data,
         )
         if form.organisations.data:
             set_organisations(boundary, form.organisations.data)
@@ -63,7 +63,7 @@ def add(local_plan_reference):
             url_for(
                 "boundary.get_boundary",
                 local_plan_reference=local_plan_reference,
-                reference="some-reference",
+                reference=reference,
             )
         )
 
