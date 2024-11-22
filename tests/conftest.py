@@ -33,18 +33,19 @@ def client(app):
 
 
 @pytest.fixture(scope="session")
-def event_types(app):
+def supporting_types(app):
     with app.app_context():
         import csv
         from pathlib import Path
 
         from application.extensions import db
-        from application.models import LocalPlanEventType
+        from application.models import LocalPlanDocumentType, LocalPlanEventType
 
         project_root = Path(__file__).parent.parent  # go up one level from tests dir
-        csv_path = project_root / "data" / "local-plan-event.csv"
 
-        with open(csv_path) as f:
+        # Load event types
+        event_csv_path = project_root / "data" / "local-plan-event.csv"
+        with open(event_csv_path) as f:
             reader = csv.DictReader(f)
             for row in reader:
                 event_type = LocalPlanEventType(
@@ -53,11 +54,22 @@ def event_types(app):
                     description=row["description"],
                 )
                 db.session.add(event_type)
-            db.session.commit()
+
+        # Load document types
+        doc_csv_path = project_root / "data" / "local-plan-document-types.csv"
+        with open(doc_csv_path) as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                doc_type = LocalPlanDocumentType(
+                    reference=row["reference"], name=row["name"]
+                )
+                db.session.add(doc_type)
+
+        db.session.commit()
 
 
 @pytest.fixture(scope="session")
-def test_data(app, event_types):
+def test_data(app, supporting_types):
     with app.app_context():
         organisation = Organisation.query.filter_by(
             name="Somewhere Borough Council"
