@@ -44,7 +44,11 @@
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Period</dt>
-              <dd class="govuk-summary-list__value">{{ plan.period_start_date }} - {{ plan.period_end_date }}</dd>
+              <dd class="govuk-summary-list__value">
+                {%- if plan.period_start_date %}{{ plan.period_start_date }}{% endif -%}
+                {%- if plan.period_start_date and plan.period_end_date %} - {% endif -%}
+                {%- if plan.period_end_date %}{{ plan.period_end_date }}{% endif -%}
+              </dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Adopted date</dt>
