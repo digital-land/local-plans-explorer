@@ -43,6 +43,7 @@ def register_blueprints(app):
     from application.blueprints.local_plan.views import local_plan
     from application.blueprints.main.views import main
     from application.blueprints.organisation.views import organisation
+    from application.blueprints.timetable.views import timetable
 
     app.register_blueprint(main)
     app.register_blueprint(organisation)
@@ -50,6 +51,7 @@ def register_blueprints(app):
     app.register_blueprint(document)
     app.register_blueprint(auth)
     app.register_blueprint(boundary)
+    app.register_blueprint(timetable)
 
 
 def register_extensions(app):
@@ -133,12 +135,14 @@ def register_filters(app):
     from application.filters import (
         get_date_part,
         get_status_colour,
+        short_date_filter,
         timetable_status_colour,
     )
 
     app.add_template_filter(get_date_part, name="date_part")
     app.add_template_filter(get_status_colour, name="status_colour")
     app.add_template_filter(timetable_status_colour, name="timetable_status_colour")
+    app.add_template_filter(short_date_filter, name="short_date")
 
 
 def register_globals(app):

@@ -93,10 +93,15 @@ def populate_object(form, obj):
         del form.period_end_date
 
         obj.adopted_date = f"{form.adopted_date_year.data}-{form.adopted_date_month.data}-{form.adopted_date_day.data}"
+        obj.lds_published_date = f"{form.lds_published_date_year.data}-{form.lds_published_date_month.data}-{form.lds_published_date_day.data}"  # noqa: E501
 
         del form.adopted_date_year
         del form.adopted_date_month
         del form.adopted_date_day
+
+        del form.lds_published_date_year
+        del form.lds_published_date_month
+        del form.lds_published_date_day
 
     form.populate_obj(obj)
 

@@ -54,6 +54,10 @@
               <dt class="govuk-summary-list__key">Description</dt>
               <dd class="govuk-summary-list__value">{{ plan.description if plan.description }}</dd>
             </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">LDS published date</dt>
+              <dd class="govuk-summary-list__value">{{ plan.lds_published_date if plan.lds_published_date }}</dd>
+            </div>
           </dl>
         </div>
         <div class="app-summary-card__footer">
@@ -140,6 +144,9 @@
             <h2 class="app-timetable__title">
               Actual timetable
             </h2>
+            {% if plan.timetable and plan.timetable.has_actual_events() %}
+              <a href="{{ url_for('timetable.index', local_plan_reference=plan.reference, timetable_reference=plan.timetable.reference ) }}" class="govuk-link">View as timeline<span class="govuk-visually-hidden"> timetable</span></a>
+            {% endif %}
           </header>
           <div class="app-timetable__body">
             <ul class="govuk-list app-timetable__list">

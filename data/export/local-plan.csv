@@ -1,6 +1,9 @@
 entry-date,start-date,end-date,reference,name,organisations,description,period-start-date,period-end-date,local-plan-boundary,documentation-url,adopted-date
 2024-10-02,,,arun-district-council-local-plan-2011,Arun District Council Local Plan 2011 - 2031,local-authority:ARU,,2011,2031,E07000224,https://www.arun.gov.uk/adopted-local-plan/,2018-07-18
 2024-10-02,,,ashford-borough-council-local-plan-2019,Ashford Borough Council Local Plan 2019,local-authority:ASF,,2019,2030,E07000105,https://www.ashford.gov.uk/planning-and-development/planning-policy/adopted-development-plan-documents/adopted-local-plan-to-2030/,2019-02-01
+2024-10-02,,,babergh-district-council-local-plan-2023,The Babergh and Mid Suffolk Joint Local Plan,local-authority:BAB;local-authority:MSU,"The Babergh and Mid Suffolk Joint Local Plan will provide a framework for shaping our communities - and guiding future development - until the year 2037.
+
+Part 1 of the Joint Local Plan was adopted by Mid Suffolk District Council on 20 November 2023 and by Babergh District Council on 21 November 2023",2023,2037,E07000200,https://www.babergh.gov.uk/joint-local-plan?p_l_back_url=%2Fsearch%3Fq%3DLocal%2BPlans,2023-11-20
 2024-10-15,,,camden-local-plan-2026,Camden local plan 2026,local-authority:CMD,,2026,2041,E09000007,https://www.camden.gov.uk/draft-new-local-plan,--
 2024-10-02,,,darlington-borough-council-local-plan-2016,Darlington Local Plan 2016 - 2036,local-authority:DAL,,2016,2036,E06000005,https://www.darlington.gov.uk/environment-and-planning/planning/planning-and-environmental-policy/adopted-local-plan-2016-2036/,2022-02-17
 2024-10-21,,,development-strategy-2026,Development Plan 2026,local-authority:EAL,,2011,2026,E09000009,https://www.ealing.gov.uk/info/201162/planning_policy/3124/development_plan,2012-04-03

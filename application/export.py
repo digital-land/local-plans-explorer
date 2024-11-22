@@ -118,7 +118,6 @@ class LocalPlanDocumentModel(LocalPlanBaseModel):
 
 class LocalPlanBoundaryModel(LocalPlanBaseModel):
     geometry: str
-    plan_boundary_type: str
 
 
 class LocalPlanTimetableModel(DateModel):

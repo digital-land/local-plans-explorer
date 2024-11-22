@@ -25,9 +25,13 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = True
     WTF_CSRF_ENABLED = False
-    AUTHENTICATION_ON = False
+    AUTHENTICATION_ON = True
     SQLALCHEMY_RECORD_QUERIES = True
 
 
 class TestConfig(Config):
     TESTING = True
+    AUTHENTICATION_ON = False
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql://postgres:postgres@localhost/local_plans_test"
+    )

@@ -7,11 +7,11 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <form class="govuk-form" method="POST" action="{{ url_for('boundary.add', local_plan_reference=plan.reference) }}">
+    <form class="govuk-form" method="POST" enctype="multipart/form-data" action="{{ url_for('boundary.add', local_plan_reference=plan.reference) }}">
       {{ form.hidden_tag() }}
       {% for field in form %}
         {# the fields listed are either not shown or handled individually #}
-        {% if field.name not in ['status', 'csrf_token', 'include_in_dataset'] %}
+        {% if field.name not in ['status', 'csrf_token', 'geometry', 'geojson', 'geometry_type'] %}
           {%- if field.name == 'organisations' %}
             <div class="app-organisation-select" data-module="multi-select">
               <div class="govuk-form-group" data-multi-select="form-group">
@@ -26,29 +26,6 @@
                 </select>
               </div>
             </div>
-          {%- elif field.name == 'document_types' %}
-              <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" aria-describedby="document-types-hint">
-                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                    <p class="govuk-fieldset__heading">
-                      Document types
-                    </p>
-                  </legend>
-                  <div id="document-types-hint" class="govuk-hint">
-                    Select all that apply.
-                  </div>
-                  <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                    {% for choice in field %}
-                    <div class="govuk-checkboxes__item">
-                      <input class="govuk-checkboxes__input" id="{{ choice.id }}" name="{{ choice.name }}" type="checkbox" value="{{ choice.data }}" {% if choice.checked %}checked{% endif %}>
-                      <label class="govuk-label govuk-checkboxes__label" for="{{ choice.id }}">
-                        {{ choice.label }}
-                      </label>
-                    </div>
-                    {% endfor %}
-                  </div>
-                </fieldset>
-              </div>
           {% else %}
           <div class="govuk-form-group{{ ' govuk-form-group--error' if field.errors }}">
             {{ field.label(class='govuk-label') }}
@@ -61,7 +38,7 @@
               <span class="govuk-visually-hidden">Error:</span> {{ error }}
               {% endfor %}
             </p>
-            {%- endif %}{# end if errors #}
+            {%- endif %}
             {% set extra_classes = " govuk-input--width-4" if "date" in field.name else "" %}
             {% if field.type == "TextAreaField" %}
               {{ field(class='govuk-textarea') }}
@@ -70,11 +47,48 @@
               {{ field(class=classes) }}
             {%- endif %}
           </div>
-          {% endif -%}{# end of if organisation #}
-        {% endif -%}{# end of skip fields #}
+          {% endif %}
+        {% endif %}
       {% endfor %}
+
+      {# Geometry type selection #}
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          {{ form.geometry_type.label(class='govuk-fieldset__legend govuk-fieldset__legend--s') }}
+          {% if form.geometry_type.description %}
+            <div class="govuk-hint">{{ form.geometry_type.description }}</div>
+          {% endif %}
+          <div class="govuk-radios" data-module="govuk-radios">
+            {% for choice in form.geometry_type %}
+              <div class="govuk-radios__item">
+                {{ choice(class="govuk-radios__input") }}
+                {{ choice.label(class="govuk-label govuk-radios__label") }}
+              </div>
+            {% endfor %}
+          </div>
+        </fieldset>
+      </div>
+
+      {# WKT input #}
+      <div class="govuk-form-group" id="wkt-input" style="display: none;">
+        {{ form.geometry.label(class='govuk-label') }}
+        {% if form.geometry.description %}
+          <div class="govuk-hint">{{ form.geometry.description }}</div>
+        {% endif %}
+        {{ form.geometry(class='govuk-textarea', rows='10') }}
+      </div>
+
+      {# GeoJSON input #}
+      <div class="govuk-form-group" id="geojson-input" style="display: none;">
+        {{ form.geojson.label(class='govuk-label') }}
+        {% if form.geojson.description %}
+          <div class="govuk-hint">{{ form.geojson.description }}</div>
+        {% endif %}
+        {{ form.geojson(class='govuk-textarea', rows='10') }}
+      </div>
+
       <div class="govuk-button-group">
-        <button class="govuk-button" type="submit">Create document record</button>
+        <button class="govuk-button" type="submit">Save</button>
         <a class="govuk-link" href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}">Cancel</a>
       </div>
     </form>
@@ -84,6 +98,38 @@
 {% endblock %}
 
 {% block pageScripts %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const geometryTypeInputs = document.querySelectorAll('input[name="geometry_type"]');
+        const wktInput = document.getElementById('wkt-input');
+        const geojsonInput = document.getElementById('geojson-input');
+
+        function updateVisibleInputs(selectedValue) {
+            if (selectedValue === 'wkt') {
+                wktInput.style.display = 'block';
+                geojsonInput.style.display = 'none';
+            } else if (selectedValue === 'geojson') {
+                wktInput.style.display = 'none';
+                geojsonInput.style.display = 'block';
+            }
+        }
+
+        // Set initial state based on any pre-selected value
+        geometryTypeInputs.forEach(input => {
+            if (input.checked) {
+                updateVisibleInputs(input.value);
+            }
+        });
+
+        // Update on change
+        geometryTypeInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                updateVisibleInputs(e.target.value);
+            });
+        });
+    });
+  </script>
+
   <script>
     const $multiSelectModule = document.querySelector('[data-module="multi-select"]')
     const multiSelectModule = new dptp.MultiSelect($multiSelectModule).init()

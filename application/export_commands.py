@@ -17,9 +17,11 @@ from application.export import (
 )
 from application.extensions import db
 from application.models import (
+    EventCategory,
     LocalPlan,
     LocalPlanBoundary,
     LocalPlanDocument,
+    LocalPlanEvent,
     LocalPlanTimetable,
     Status,
 )
@@ -189,6 +191,23 @@ def export_timetable():
     )
     events = []
     for timetable in timetables:
+        # Add LDS published date as first event if it exists
+        if timetable.local_plan_obj.lds_published_date:
+            lds_published_data = {
+                "reference": f"{timetable.reference}-timetable-published",
+                "event-date": timetable.local_plan_obj.lds_published_date,
+                "local-plan": timetable.local_plan,
+                "notes": "Local development scheme published",
+                "description": "Local development scheme published",
+                "event-type": "timetable-published",
+                "entry-date": timetable.entry_date,
+                "start-date": timetable.start_date,
+                "end-date": timetable.end_date,
+            }
+            model = LocalPlanTimetableModel.model_validate(lds_published_data)
+            events.append(model.model_dump(by_alias=True))
+
+        # Continue with existing event processing
         for event in timetable.events:
             data = {}
             for index, (key, value) in enumerate(event.event_data.items()):
@@ -207,6 +226,22 @@ def export_timetable():
                 data["start-date"] = event.start_date
                 data["end-date"] = event.end_date
             model = LocalPlanTimetableModel.model_validate(data)
+            events.append(model.model_dump(by_alias=True))
+
+        # Add adopted date after processing all events for this timetable
+        if timetable.local_plan_obj.adopted_date:
+            adopted_date_data = {
+                "reference": f"{timetable.reference}-plan-adopted",
+                "event-date": timetable.local_plan_obj.adopted_date,
+                "local-plan": timetable.local_plan,
+                "notes": None,
+                "description": "Plan adopted",
+                "event-type": "plan-adopted",
+                "entry-date": timetable.entry_date,
+                "start-date": timetable.start_date,
+                "end-date": timetable.end_date,
+            }
+            model = LocalPlanTimetableModel.model_validate(adopted_date_data)
             events.append(model.model_dump(by_alias=True))
 
     with open(timetable_file_path, mode="w") as file:
@@ -254,3 +289,34 @@ def _commit(repo, file, contents, message="Updated local-plan data"):
         print(f"{file.path} updated successfully!")
     else:
         print(f"No changes detected in {file.path}. Skipping commit.")
+
+
+@export_cli.command("migrate-adopted-date")
+def migrate_adopted_date():
+    events = LocalPlanEvent.query.filter(
+        LocalPlanEvent.event_category == EventCategory.PLANNING_INSPECTORATE_FINDINGS
+    ).all()
+
+    migrated_count = 0
+    for event in events:
+        # Get the adoption date from event data
+        adopted_date = event.collect_iso_date_fields("plan_adopted")
+        if adopted_date:
+            # Get the associated local plan and update its adopted date
+            local_plan = event.timetable.local_plan_obj
+            local_plan.adopted_date = adopted_date
+
+            # Remove the plan_adopted data from the event
+            event.event_data.pop("plan_adopted", None)
+
+            # Save both the local plan and the modified event
+            db.session.add(local_plan)
+            db.session.add(event)
+
+            migrated_count += 1
+
+    if migrated_count > 0:
+        db.session.commit()
+        print(f"Migrated {migrated_count} adoption dates to local plans")
+    else:
+        print("No adoption dates found to migrate")

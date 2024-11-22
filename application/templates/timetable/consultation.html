@@ -40,10 +40,7 @@
             <dt class="govuk-summary-list__key">
               Consultation period
             </dt>
-            <dd class="govuk-summary-list__value">
-            </dd>
-            {{ event.consultation_start() }} - {{ event.consultation_end() }}
-            </dd>
+            <dd class="govuk-summary-list__value">{%- if event.consultation_start() %}{{ event.consultation_start() }}{% endif %} - {% if event.consultation_end() %}{{ event.consultation_end() }}{% endif -%}</dd>
           </div>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
@@ -60,7 +57,7 @@
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <a href="{{ url_for('local_plan.add_event_to_timetable', reference=event.timetable.local_plan, timetable_reference=event.timetable.reference, event_category=event_category) }}" class="govuk-button govuk-button--secondary">Add another</a>
+    <a href="{{ url_for('timetable.add_event_to_timetable', local_plan_reference=event.timetable.local_plan, timetable_reference=event.timetable.reference, event_category=event_category) }}" class="govuk-button govuk-button--secondary">Add another</a>
   </div>
 </div>
 <div class="govuk-grid-row">

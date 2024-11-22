@@ -6,7 +6,7 @@ from flask import Blueprint, abort, redirect, render_template, request, url_for
 from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
-from application.blueprints.local_plan.forms import LocalPlanForm, get_event_form
+from application.blueprints.local_plan.forms import LocalPlanForm
 from application.extensions import db
 from application.models import (
     CandidateDocument,
@@ -16,8 +16,6 @@ from application.models import (
     LocalPlanBoundary,
     LocalPlanDocument,
     LocalPlanDocumentType,
-    LocalPlanEvent,
-    LocalPlanTimetable,
     Organisation,
     Status,
 )
@@ -81,17 +79,28 @@ def get_plan(reference):
             "completed",
         ]:
             stage_urls[event_category] = url_for(
-                "local_plan.timetable_events",
-                reference=plan.reference,
+                "timetable.timetable_events",
+                local_plan_reference=plan.reference,
                 timetable_reference=plan.timetable.reference,
                 event_category=event_category,
             )
         else:
             stage_urls[event_category] = url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan.reference,
+                "timetable.add_new_timetable_event",
+                local_plan_reference=plan.reference,
                 event_category=event_category,
             )
+
+    breadcrumbs = {
+        "items": [
+            {"text": "Home", "href": url_for("main.index")},
+            {
+                "text": "Plans by organisation",
+                "href": url_for("organisation.organisations"),
+            },
+            {"text": plan.name},
+        ]
+    }
 
     return render_template(
         "local_plan/plan.html",
@@ -101,6 +110,7 @@ def get_plan(reference):
         document_counts=document_counts,
         event_category=EventCategory,
         stage_urls=stage_urls,
+        breadcrumbs=breadcrumbs,
     )
 
 
@@ -172,7 +182,24 @@ def edit(reference):
         db.session.commit()
         return redirect(url_for("local_plan.get_plan", reference=plan.reference))
 
-    return render_template("local_plan/edit.html", plan=plan, form=form)
+    breadcrumbs = {
+        "items": [
+            {"text": "Home", "href": url_for("main.index")},
+            {
+                "text": "Plans by organisation",
+                "href": url_for("organisation.organisations"),
+            },
+            {
+                "text": plan.name,
+                "href": url_for("local_plan.get_plan", reference=plan.reference),
+            },
+            {"text": "Edit"},
+        ]
+    }
+
+    return render_template(
+        "local_plan/edit.html", plan=plan, form=form, breadcrumbs=breadcrumbs
+    )
 
 
 @local_plan.route("/archived")
@@ -363,7 +390,6 @@ def add_geography(reference):
                     if plan.organisations[0].geojson is not None
                     else None
                 )
-                geography_type = "planning-authority-district"
             else:
                 reference = "-".join(
                     [
@@ -372,15 +398,12 @@ def add_geography(reference):
                         if org.geojson is not None
                     ]
                 )
-                geography_type = "combined-planning-authority-district"
-
             geojson = combine_geographies(geographies)
             boundary = LocalPlanBoundary.query.get(reference)
             if boundary is None:
                 boundary = LocalPlanBoundary(
                     reference=reference,
                     geojson=geojson,
-                    plan_boundary_type=geography_type,
                 )
             plan.boundary = boundary
             boundary.local_plans.append(plan)
@@ -424,390 +447,6 @@ def add_geography(reference):
     )
 
 
-@local_plan.route(
-    "/<string:reference>/timetable/<string:timetable_reference>/event/<string:event_reference>"
-)
-@login_required
-def timetable_event(reference, timetable_reference, event_reference):
-    event = LocalPlanEvent.query.get(event_reference)
-    if event is None:
-        return abort(404)
-    timetable = LocalPlanTimetable.query.get(timetable_reference)
-    if timetable is None:
-        return abort(404)
-    event_category = event.event_category
-    if "estimated" in event_category.value.lower():
-        estimated = True
-    else:
-        estimated = False
-    event_category_title = event_category.value.replace("Estimated", "").strip()
-
-    if event_category in [
-        EventCategory.ESTIMATED_REGULATION_18,
-        EventCategory.ESTIMATED_REGULATION_19,
-        EventCategory.REGULATION_18,
-        EventCategory.REGULATION_19,
-    ]:
-        return _render_consultation_event_page(
-            event, event_category, estimated, event_category_title
-        )
-    elif event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
-        return _render_estimated_examination_and_adoption_event_page(
-            event, event_category, estimated, event_category_title
-        )
-    elif event_category in [
-        EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
-        EventCategory.PLANNING_INSPECTORATE_FINDINGS,
-    ]:
-        continue_url = _get_save_and_continue_url(reference, event_category)
-        return render_template(
-            "local_plan/pins-exam-and-findings.html",
-            events=[event],
-            timetable=timetable,
-            estimated=estimated,
-            event_category=event_category,
-            event_category_title=event_category_title,
-            continue_url=continue_url,
-        )
-    else:
-        return redirect(url_for("local_plan.get_plan", reference=reference))
-
-
-@local_plan.route(
-    "/<string:reference>/timetable/<string:timetable_reference>/<event_category:event_category>"
-)
-@login_required
-def timetable_events(reference, timetable_reference, event_category):
-    timetable = LocalPlanTimetable.query.filter(
-        LocalPlanTimetable.local_plan == reference,
-        LocalPlanTimetable.reference == timetable_reference,
-    ).one_or_none()
-
-    if timetable is None:
-        return abort(404)
-
-    estimated = True if "estimated" in event_category.value.lower() else False
-
-    if event_category in [
-        EventCategory.ESTIMATED_REGULATION_18,
-        EventCategory.ESTIMATED_REGULATION_19,
-        EventCategory.REGULATION_18,
-        EventCategory.REGULATION_19,
-    ]:
-        events = timetable.get_events_by_category(event_category)
-        event_category_title = event_category.value.replace("Estimated", "").strip()
-        plan_reference = timetable.local_plan
-        continue_url = _get_save_and_continue_url(plan_reference, event_category)
-        return render_template(
-            "local_plan/consultations.html",
-            plan=timetable.local_plan,
-            timetable=timetable,
-            events=events,
-            estimated=estimated,
-            event_category=event_category,
-            event_category_title=event_category_title,
-            continue_url=continue_url,
-        )
-    elif event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
-        event_category_title = event_category.value
-        events = timetable.get_events_by_category(event_category)
-        if events and len(events) == 1:
-            event = events[0]
-            return _render_estimated_examination_and_adoption_event_page(
-                event, event_category, estimated, event_category_title
-            )
-        else:
-            return abort(404)
-    elif event_category in [
-        EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
-        EventCategory.PLANNING_INSPECTORATE_FINDINGS,
-    ]:
-        event_category_title = event_category.value
-        events = timetable.get_events_by_category(event_category)
-        continue_url = _get_save_and_continue_url(reference, event_category)
-        if events:
-            return render_template(
-                "local_plan/pins-exam-and-findings.html",
-                events=events,
-                timetable=timetable,
-                estimated=estimated,
-                event_category=event_category,
-                event_category_title=event_category_title,
-                continue_url=continue_url,
-                index=True,
-            )
-        else:
-            return abort(404)
-    else:
-        return abort(404)
-
-
-@local_plan.route(
-    "/<string:reference>/<event_category:event_category>/add", methods=["GET", "POST"]
-)
-@login_required
-def add_new_timetable_event(reference, event_category):
-    plan = LocalPlan.query.get(reference)
-    estimated = True if event_category.value.lower().startswith("estimated") else False
-    form = get_event_form(event_category)
-
-    redirect_url = _redirect_url_category_exists(plan, event_category)
-    if redirect_url is not None:
-        return redirect(redirect_url)
-
-    if form.validate_on_submit():
-        if plan.timetable is None:
-            plan.timetable = LocalPlanTimetable(
-                reference=f"{plan.reference}-timetable",
-                name=f"{plan.name} timetable",
-                local_plan=plan.reference,
-                events=[],
-            )
-        event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
-        if hasattr(form, "notes"):
-            notes = form.notes.data
-        else:
-            notes = None
-        event = LocalPlanEvent(
-            reference=event_reference,
-            event_category=event_category,
-            event_data=form.data,
-            notes=notes,
-        )
-        plan.timetable.events.append(event)
-        db.session.add(event)
-        db.session.add(plan)
-        db.session.commit()
-        return redirect(
-            url_for(
-                "local_plan.timetable_event",
-                reference=plan.reference,
-                timetable_reference=plan.timetable.reference,
-                event_reference=event.reference,
-            )
-        )
-
-    if estimated:
-        event_category_title = event_category.value.replace("Estimated", "").strip()
-    else:
-        event_category_title = event_category.value
-
-    include_plan_published = _include_plan_published(plan, event_category)
-
-    action_url = url_for(
-        "local_plan.add_new_timetable_event",
-        reference=reference,
-        event_category=event_category,
-    )
-
-    return render_template(
-        "local_plan/event-form.html",
-        plan=plan,
-        form=form,
-        estimated=estimated,
-        action_url=action_url,
-        event_category=event_category,
-        event_category_title=event_category_title,
-        include_plan_published=include_plan_published,
-    )
-
-
-@local_plan.route(
-    "/<string:reference>/timetable/<string:timetable_reference>/<event_category:event_category>/add",
-    methods=["GET", "POST"],
-)
-@login_required
-def add_event_to_timetable(reference, timetable_reference, event_category):
-    timetable = LocalPlanTimetable.query.get(timetable_reference)
-    if timetable is None:
-        return abort(404)
-    estimated = True if event_category.value.lower().startswith("estimated") else False
-    form = get_event_form(event_category)
-
-    if form.validate_on_submit():
-        if timetable.events is None:
-            timetable.events = []
-        reference = f"{timetable.reference}-{len(timetable.events)}"
-        if hasattr(form, "notes"):
-            notes = form.notes.data
-        else:
-            notes = None
-        event = LocalPlanEvent(
-            reference=reference,
-            event_category=event_category,
-            event_data=form.data,
-            notes=notes,
-        )
-        timetable.events.append(event)
-        db.session.add(event)
-        db.session.add(timetable)
-        db.session.commit()
-        return redirect(
-            url_for(
-                "local_plan.timetable_event",
-                reference=timetable.local_plan,
-                timetable_reference=timetable.reference,
-                event_reference=event.reference,
-            )
-        )
-
-    if estimated:
-        event_category_title = event_category.value.replace("Estimated", "").strip()
-    else:
-        event_category_title = event_category.value
-
-    include_plan_published = _include_plan_published(
-        timetable.local_plan_obj, event_category
-    )
-
-    action_url = url_for(
-        "local_plan.add_event_to_timetable",
-        reference=reference,
-        timetable_reference=timetable_reference,
-        event_category=event_category,
-    )
-
-    return render_template(
-        "local_plan/event-form.html",
-        plan=timetable.local_plan_obj,
-        form=form,
-        estimated=estimated,
-        action_url=action_url,
-        event_category=event_category,
-        event_category_title=event_category_title,
-        include_plan_published=include_plan_published,
-    )
-
-
-@local_plan.route(
-    "/<string:reference>/timetable/<string:timetable_reference>/event/<string:event_reference>/edit",
-    methods=["GET", "POST"],
-)
-@login_required
-def edit_timetable_event(reference, timetable_reference, event_reference):
-    event = LocalPlanEvent.query.get(event_reference)
-    if event is None:
-        return abort(404)
-
-    include_plan_published = _is_first_event_of_category(event)
-
-    form = get_event_form(event.event_category, obj=event.event_data)
-
-    if form.validate_on_submit():
-        event.event_data = form.data
-        db.session.add(event)
-        db.session.commit()
-        return redirect(
-            url_for(
-                "local_plan.timetable_event",
-                reference=reference,
-                timetable_reference=timetable_reference,
-                event_reference=event.reference,
-            )
-        )
-
-    action_url = url_for(
-        "local_plan.edit_timetable_event",
-        reference=reference,
-        timetable_reference=timetable_reference,
-        event_reference=event_reference,
-    )
-
-    include_plan_published = _is_first_event_of_category(event)
-    estimated = True if "estimated" in event.event_category.value.lower() else False
-
-    if estimated:
-        event_category_title = event.event_category.value.replace(
-            "Estimated", ""
-        ).strip()
-    else:
-        event_category_title = event.event_category.value
-
-    return render_template(
-        "local_plan/event-form.html",
-        form=form,
-        event=event,
-        action_url=action_url,
-        plan=event.timetable.local_plan_obj,
-        timetable=event.timetable,
-        event_category=event.event_category,
-        include_plan_published=include_plan_published,
-        estimated=estimated,
-        event_category_title=event_category_title,
-    )
-
-
-def _render_consultation_event_page(
-    event: LocalPlanEvent, event_category, estimated, event_category_title
-):
-    edit_url = url_for(
-        "local_plan.edit_timetable_event",
-        reference=event.timetable.local_plan,
-        timetable_reference=event.timetable.reference,
-        event_reference=event.reference,
-    )
-    plan_reference = event.timetable.local_plan
-    continue_url = _get_save_and_continue_url(plan_reference, event_category)
-
-    return render_template(
-        "local_plan/consultation.html",
-        event=event,
-        estimated=estimated,
-        event_category=event_category,
-        event_category_title=event_category_title,
-        edit_url=edit_url,
-        continue_url=continue_url,
-    )
-
-
-def _render_estimated_examination_and_adoption_event_page(
-    event, event_category, estimated, event_category_title
-):
-    edit_url = url_for(
-        "local_plan.edit_timetable_event",
-        reference=event.timetable.local_plan,
-        timetable_reference=event.timetable.reference,
-        event_reference=event.reference,
-    )
-
-    return render_template(
-        "local_plan/estimated-examination-and-adoption.html",
-        event=event,
-        estimated=estimated,
-        event_category=event_category,
-        event_category_title=event_category_title,
-        edit_url=edit_url,
-    )
-
-
-def _redirect_url_category_exists(plan, event_category):
-    if (
-        event_category == EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION
-        and plan.timetable
-    ):
-        events = plan.timetable.get_events_by_category(
-            EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION
-        )
-        if events and len(events) == 1:
-            return url_for(
-                "local_plan.timetable_event",
-                reference=plan.reference,
-                timetable_reference=plan.timetable.reference,
-                event_reference=events[0].reference,
-            )
-    elif plan.timetable:
-        events = plan.timetable.get_events_by_category(event_category)
-        if events:
-            return url_for(
-                "local_plan.timetable_events",
-                reference=plan.reference,
-                timetable_reference=plan.timetable.reference,
-                event_category=event_category,
-            )
-
-    return None
-
-
 def _get_document_counts(documents):
     counts = {}
     for status in Status:
@@ -846,62 +485,3 @@ def _allowed_file(filename):
 
     ALLOWED_EXTENSIONS = current_app.config["ALLOWED_EXTENSIONS"]
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def _is_first_event_of_category(event):
-    earlier_events = LocalPlanEvent.query.filter(
-        LocalPlanEvent.timetable == event.timetable,
-        LocalPlanEvent.event_category == event.event_category,
-        LocalPlanEvent.created_date < event.created_date,
-    ).all()
-    return True if not earlier_events else False
-
-
-def _get_save_and_continue_url(plan_reference, event_category):
-    match event_category:
-        case EventCategory.ESTIMATED_REGULATION_18:
-            return url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan_reference,
-                event_category=EventCategory.ESTIMATED_REGULATION_19,
-            )
-        case EventCategory.ESTIMATED_REGULATION_19:
-            return url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan_reference,
-                event_category=EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
-            )
-        case EventCategory.REGULATION_18:
-            return url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan_reference,
-                event_category=EventCategory.REGULATION_19,
-            )
-        case EventCategory.REGULATION_19:
-            return url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan_reference,
-                event_category=EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
-            )
-        case EventCategory.PLANNING_INSPECTORATE_EXAMINATION:
-            return url_for(
-                "local_plan.add_new_timetable_event",
-                reference=plan_reference,
-                event_category=EventCategory.PLANNING_INSPECTORATE_FINDINGS,
-            )
-        case _:
-            return None
-
-
-def _include_plan_published(plan, event_category):
-    if event_category in [
-        EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
-        EventCategory.PLANNING_INSPECTORATE_FINDINGS,
-    ]:
-        return False
-    if plan.timetable and plan.timetable.event_category_progress(event_category) in [
-        "started",
-        "completed",
-    ]:
-        return False
-    return True

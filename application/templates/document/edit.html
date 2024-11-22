@@ -8,6 +8,26 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    {% if form.errors %}
+    <div class="govuk-error-summary" data-module="govuk-error-summary">
+      <div role="alert">
+        <h2 class="govuk-error-summary__title">
+          There was a problem
+        </h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            {% for field, messages in form.errors.items() %}
+              <li>
+                {% for message in messages %}
+                  <a href="#{{field}}">{{message}}</a>
+                {% endfor %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endif %}
   <form class="govuk-form" method="POST" action="{{ url_for('document.edit', local_plan_reference=plan.reference, reference=document.reference) }}">
     {{ form.hidden_tag() }}
 
@@ -77,28 +97,25 @@
         {% endif -%}
         {% endfor %}
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        <div class="govuk-form-group">
-          <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset">
-              <legend class="govuk-fieldset__legend">
-                Status
-              </legend>
-              <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
-
-              {% for choice in form.status.choices %}
-                <div class="govuk-radios__item">
-                  <input class="govuk-radios__input" id="{{ choice[0] }}" name="status" type="radio" value="{{ choice[0] }}" {% if choice[0] == document.status.name %} checked{% endif %}>
-                  <label class="govuk-label govuk-radios__label" for="{{ choice[0] }}">
-                    {{ choice[1] }}
-                  </label>
-                </div>
-              {% endfor %}
+        <div class="govuk-form-group {% if form.status.errors %}govuk-form-group--error{% endif %}" id="status">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend">
+              Status
+            </legend>
+            <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
+            {% for choice in form.status.choices %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="{{ choice[0] }}" name="status" type="radio" value="{{ choice[0] }}" {% if choice[0] == document.status.name %} checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="{{ choice[0] }}">
+                  {{ choice[1] }}
+                </label>
               </div>
-            </fieldset>
-          </div>
+            {% endfor %}
+            </div>
+          </fieldset>
         </div>
         <div class="govuk-button-group">
-        <button class="govuk-button" type="submit">Edit record</button>
+        <button class="govuk-button" type="submit">Save</button>
         <a class="govuk-link" href="{{ url_for('local_plan.get_plan', reference=plan.reference) }}">Cancel</a>
     </div>
   </form>

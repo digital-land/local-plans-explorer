@@ -34,3 +34,23 @@ assets: build-assets copyjs
 assets-clobber:
 	rm -rf application/static/
 	mkdir -p application/static
+
+black:
+	black application tests
+
+black-check:
+	black --check application tests
+
+flake8:
+	flake8 .
+
+isort:
+	isort --profile black .
+
+lint: black flake8 isort
+
+test-debug:
+	PWDEBUG=1 pytest -s
+
+test-visible:
+	pytest --headed --slowmo 500
