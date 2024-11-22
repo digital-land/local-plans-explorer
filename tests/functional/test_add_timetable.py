@@ -53,7 +53,7 @@ def test_add_estimated_dates(live_server, page, test_data):
     page.get_by_role("group", name="Regulation 18 consultation end").get_by_label(
         "Year"
     ).fill("2026")
-    page.get_by_role("button", name="Submit").click()
+    page.get_by_role("button", name="Save").click()
     expect(page.locator("dl")).to_contain_text("Draft local plan published")
     page.get_by_text("2024").click()
     expect(page.locator("dl")).to_contain_text("2024")
@@ -100,7 +100,7 @@ def test_add_estimated_dates(live_server, page, test_data):
     page.get_by_role("group", name="Regulation 19 consultation end").get_by_label(
         "Year"
     ).fill("2027")
-    page.get_by_role("button", name="Submit").click()
+    page.get_by_role("button", name="Save").click()
     expect(page.locator("dl")).to_contain_text("Publication local plan published")
     expect(page.locator("dl")).to_contain_text("1/2/2026")
     expect(page.locator("dl")).to_contain_text("Consultation period 6/2026 - 3/2027")
@@ -117,7 +117,7 @@ def test_add_estimated_dates(live_server, page, test_data):
     page.get_by_role("group", name="Adoption of local plan").get_by_label("Year").fill(
         "2030"
     )
-    page.get_by_role("button", name="Submit").click()
+    page.get_by_role("button", name="Save").click()
     expect(page.locator("dl")).to_contain_text("Submit plan for examination")
     expect(page.locator("dl")).to_contain_text("2027")
     expect(page.locator("dl")).to_contain_text("Adoption of local plan")
@@ -188,7 +188,7 @@ def test_add_actual_dates(live_server, page, test_data):
     page.get_by_role("group", name="Regulation 18 consultation end").get_by_label(
         "Year"
     ).fill("2027")
-    page.get_by_role("button", name="Submit").click()
+    page.get_by_role("button", name="Save").click()
     expect(page.locator("dl")).to_contain_text("Draft local plan published")
     expect(page.locator("dl")).to_contain_text("1/2/2025")
     expect(page.locator("dl")).to_contain_text("Consultation period")
@@ -250,7 +250,7 @@ def test_add_actual_dates(live_server, page, test_data):
     page.get_by_role("group", name="Regulation 19 consultation end").get_by_label(
         "Year"
     ).fill("2030")
-    page.get_by_role("button", name="Submit").click()
+    page.get_by_role("button", name="Save").click()
     expect(page.locator("dl")).to_contain_text("Publication local plan published")
     expect(page.locator("dl")).to_contain_text("6/7/2028")
     expect(page.locator("dl")).to_contain_text("Consultation period")
@@ -301,7 +301,7 @@ def test_add_actual_dates(live_server, page, test_data):
     page.get_by_role("group", name="Examination end date").get_by_label("Year").fill(
         "2050"
     )
-    page.get_by_role("button", name="Submit").click()
+    page.get_by_role("button", name="Save").click()
 
     expect(page.locator("h1")).to_contain_text("Planning inspectorate examination")
     expect(page.locator("section")).to_contain_text("Submit plan for examination")
@@ -344,7 +344,7 @@ def test_add_actual_dates(live_server, page, test_data):
         "Tab"
     )
     page.get_by_role("group", name="Report published").get_by_label("Year").fill("2070")
-    page.get_by_role("button", name="Submit").click()
+    page.get_by_role("button", name="Save").click()
     expect(page.locator("h1")).to_contain_text("Planning inspectorate findings")
     expect(page.locator("section")).to_contain_text("Planning inspectorate found sound")
     expect(page.locator("section")).to_contain_text("15/4/2060")
