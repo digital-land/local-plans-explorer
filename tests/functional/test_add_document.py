@@ -36,7 +36,7 @@ def test_add_and_edit_document(live_server, page, test_data):
     page.locator("#for_publication").check()
 
     # Submit form
-    page.get_by_role("button", name="Create document record").click()
+    page.get_by_role("button", name="Save").click()
 
     # Verify document was created
     expect(page.locator("h1")).to_contain_text(
@@ -64,7 +64,7 @@ def test_add_and_edit_document(live_server, page, test_data):
     page.get_by_text("For review", exact=True).click()
 
     # Save changes
-    page.get_by_role("button", name="Edit record").click()
+    page.get_by_role("button", name="Save").click()
 
     # Verify updates
     expect(page.locator("dl")).to_contain_text("Name")
@@ -91,12 +91,12 @@ def test_document_status_validation(live_server, page, test_data):
     page.get_by_role("option", name="Somewhere Borough Council", exact=True).click()
 
     # Create document
-    page.get_by_role("button", name="Create document record").click()
+    page.get_by_role("button", name="Save").click()
 
     # Edit document and try to change status
     page.get_by_role("link", name="Edit").click()
     page.get_by_text("For platform", exact=True).click()
-    page.get_by_role("button", name="Edit record").click()
+    page.get_by_role("button", name="Save").click()
 
     # Verify error message
     expect(
@@ -123,7 +123,7 @@ def test_document_url_validation(live_server, page, test_data):
     page.get_by_role("option", name="Somewhere Borough Council", exact=True).click()
 
     # Try to submit
-    page.get_by_role("button", name="Create document record").click()
+    page.get_by_role("button", name="Save").click()
 
     # Verify URL validation error
     expect(page.locator("#document_url-error")).to_contain_text(
