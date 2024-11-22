@@ -737,8 +737,12 @@ class LocalPlanTimetable(DateModel):
     def timeline(self):
         entries = []
 
-        # Add all events
-        for event in self.events:
+        # TODO: Need to find out if the reg 18 draft local plan published is one of the events and if so,
+        # add it to the start of the timeline however if it's not one of the events, then add it to the
+        # start of the timeline with text "Date unavailable"
+
+        # Only include actual events
+        for event in self.get_actual_events():
             entries.extend(event.as_timeline_entry())
 
         # Sort entries
