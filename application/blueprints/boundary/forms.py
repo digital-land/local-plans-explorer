@@ -89,13 +89,36 @@ class EditBoundaryForm(BoundaryForm):
     def __init__(self, *args, boundary=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.boundary = boundary
+        self.geometry_type.validators = [Optional()]
 
-    def validate_status(self, field):
-        error = "Can't set status to 'For platform' as the local plan status is '{}'"
-        if field.data == Status.FOR_PLATFORM.name:
+    def validate(self, extra_validators=None):
+        # First validate all fields with their own validators
+        if not super(FlaskForm, self).validate(extra_validators=extra_validators):
+            return False
+
+        # Only validate geometry if user has selected a geometry type
+        if self.geometry_type.data:
+            if self.geometry_type.data == "wkt" and not self.geometry.data:
+                self.geometry.errors.append(
+                    "WKT geometry is required when WKT format is selected"
+                )
+                return False
+
+            if self.geometry_type.data == "geojson" and not self.geojson.data:
+                self.geojson.errors.append(
+                    "GeoJSON is required when GeoJSON format is selected"
+                )
+                return False
+
+        # Validate status if provided
+        if self.status.data == Status.FOR_PLATFORM.name:
             if self.boundary and self.boundary.local_plans[0].status not in [
                 Status.FOR_PLATFORM,
                 Status.EXPORTED,
             ]:
-                msg = error.format(self.boundary.local_plans[0].status.value)
-                raise ValidationError(msg)
+                msg = "Can't set status to 'For platform' as the local plan status is '{}'"
+                msg = msg.format(self.boundary.local_plans[0].status.value)
+                self.status.errors.append(msg)
+                return False
+
+        return True

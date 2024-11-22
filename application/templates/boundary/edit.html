@@ -22,7 +22,7 @@
     </div>
     {% endif %}
 
-    <form class="govuk-form" method="POST" action="{{ url_for('boundary.edit', local_plan_reference=plan.reference, reference=boundary.reference) }}">
+    <form class="govuk-form" method="POST" enctype="multipart/form-data" action="{{ url_for('boundary.edit', local_plan_reference=plan.reference, reference=boundary.reference) }}">
       {{ form.hidden_tag() }}
 
       <div class="govuk-form-group">

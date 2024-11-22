@@ -106,41 +106,53 @@ def edit(local_plan_reference, reference):
     form.status.choices = [(s.name, s.value) for s in Status if s != Status.EXPORTED]
 
     if form.validate_on_submit():
-        geojson = form.geojson.data
-        if geojson is not None:
-            form_geojson = loads(geojson)
+        # Check if geometry was changed
+        geometry_changed = False
+        form_geojson = None
+
+        if form.geometry_type.data == "wkt" and form.geometry.data:
+            geometry = form.geometry.data
+            form_geojson = form.geometry.parsed_geojson
+            geometry_changed = True
+        elif form.geometry_type.data == "geojson" and form.geojson.data:
+            form_geojson = loads(form.geojson.data)
+            geometry = _convert_to_wkt(form_geojson)
+            geometry_changed = True
+
+        if geometry_changed:
             existing_geojson = lp_boundary.geojson
             un_changed = _compare_feature_collections(form_geojson, existing_geojson)
             if un_changed:
-                print("Update the existing boundary")
-                lp_boundary.name = form.name.data
-                lp_boundary.description = form.description.data
-                if form.organisations.data:
-                    set_organisations(lp_boundary, form.organisations.data)
-                db.session.add(lp_boundary)
-            else:
-                print("Create a new boundary")
-                reference = slugify(f"{form.name.data}-{generate_random_string()}")
-                geometry = _convert_to_wkt(form_geojson)
+                geometry_changed = False
 
-                lp_boundary = LocalPlanBoundary(
-                    reference=reference,
-                    name=form.name.data,
-                    description=form.description.data,
-                    geometry=geometry,
-                    geojson=form_geojson,
-                )
-                if form.organisations.data:
-                    set_organisations(lp_boundary, form.organisations.data)
-                lp_boundary.local_plans.append(plan)
-
-            plan.boundary_status = form.status.data
-
-            db.session.add(plan)
+        if not geometry_changed:
+            print("Update the existing boundary")
+            lp_boundary.name = form.name.data
+            lp_boundary.description = form.description.data
+            if form.organisations.data:
+                set_organisations(lp_boundary, form.organisations.data)
             db.session.add(lp_boundary)
-            db.session.commit()
+        else:
+            print("Create a new boundary")
+            reference = slugify(f"{form.name.data}-{generate_random_string()}")
+            lp_boundary = LocalPlanBoundary(
+                reference=reference,
+                name=form.name.data,
+                description=form.description.data,
+                geometry=geometry,
+                geojson=form_geojson,
+            )
+            if form.organisations.data:
+                set_organisations(lp_boundary, form.organisations.data)
+            lp_boundary.local_plans.append(plan)
+
+        plan.boundary_status = form.status.data
+        db.session.add(plan)
+        db.session.add(lp_boundary)
+        db.session.commit()
 
         return redirect(url_for("local_plan.get_plan", reference=local_plan_reference))
+
     return render_template(
         "boundary/edit.html", plan=plan, form=form, boundary=lp_boundary
     )
