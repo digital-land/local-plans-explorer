@@ -42,7 +42,7 @@ class LocalPlanForm(FlaskForm):
         "URL for plan information",
         validators=[
             DataRequired(),
-            Regexp("^https?://", message="URL must start with http or https"),
+            Regexp("^https?://", message="URL must start with http:// or https://"),
         ],
     )
     adopted_date_year = StringField("Adopted date year", validators=[Optional()])
