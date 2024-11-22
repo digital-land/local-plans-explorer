@@ -44,7 +44,7 @@
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-button-group">
         {% if continue_url %}
-          <a href="{{ continue_url }}" class="govuk-button">{% if index %}Continue{% else %}Continue{% endif %}</a>
+          <a href="{{ continue_url }}" class="govuk-button">Continue</a>
         {% endif %}
         <a href="{{ url_for('local_plan.get_plan', reference=timetable.local_plan ) }}" class="govuk-button govuk-button--secondary">Close</a>
       </div>
