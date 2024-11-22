@@ -31,9 +31,14 @@
           <div class="govuk-form-group">
             {{ field.label(class='govuk-label') }}
             {% if field.type == "TextAreaField" %}
-            {{ field(class='govuk-textarea') }}
+              {{ field(class='govuk-textarea') }}
+            {% elif field.type == "URLField" %}
+              <div id="{{field.name}}-hint" class="govuk-hint">
+                {{field.render_kw.hint}}
+              </div>
+              {{ field(class='govuk-input') }}
             {% else %}
-            {{ field(class='govuk-input') }}
+              {{ field(class='govuk-input') }}
             {% endif %}
             {% if field.errors %}
               <ul>

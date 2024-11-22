@@ -31,6 +31,9 @@ class LocalPlanForm(FlaskForm):
             DataRequired(),
             Regexp("^https?://", message="URL must start with http or https"),
         ],
+        render_kw={
+            "hint": "For example, http://www.borough-council.gov.uk/the-local-plan"
+        },
     )
 
     adopted_date_year = StringField("Adopted date year", validators=[Optional()])
