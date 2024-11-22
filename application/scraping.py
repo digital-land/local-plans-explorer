@@ -7,7 +7,13 @@ from thefuzz import process
 
 
 def extract_links_from_page(url, plan, reference_data):
-    response = requests.get(url, verify=False)
+    try:
+        response = requests.get(url, verify=False)
+        response.raise_for_status()
+    except Exception as e:
+        print(f"Error fetching {url}: {e}")
+        return []
+
     soup = BeautifulSoup(response.content, "html.parser")
     links = soup.find_all("a", href=True)
     document_links = []

@@ -264,8 +264,25 @@ def find_documents(reference):
         CandidateDocument.status.is_(None),
     ).all()
 
+    breadcrumbs = {
+        "items": [
+            {"text": "Home", "href": url_for("main.index")},
+            {
+                "text": "Plans by organisation",
+                "href": url_for("organisation.organisations"),
+            },
+            {
+                "text": plan.name,
+                "href": url_for("local_plan.get_plan", reference=plan.reference),
+            },
+            {"text": "Find documents"},
+        ]
+    }
     return render_template(
-        "local_plan/find-documents.html", plan=plan, documents=documents
+        "local_plan/find-documents.html",
+        plan=plan,
+        documents=documents,
+        breadcrumbs=breadcrumbs,
     )
 
 

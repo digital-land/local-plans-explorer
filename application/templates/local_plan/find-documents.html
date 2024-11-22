@@ -6,6 +6,7 @@
 <h2 class="govuk-heading-m">Documents found</h2>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    {% if documents %}
     {% for document in documents %}
       <section class="app-summary-card">
         <header class="app-summary-card__header">
@@ -41,6 +42,9 @@
         </div>
       </section>
     {% endfor %}
+    {% else %}
+    <p class="govuk-body">No documents found</p>
+    {% endif %}
     <hr class="govuk-section-break govuk-section-break-m govuk-section-break--visible">
   </div>
   <div class="govuk-grid-column-one-third">
