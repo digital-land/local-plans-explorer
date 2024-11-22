@@ -29,7 +29,7 @@ class LocalPlanForm(FlaskForm):
         "URL for plan information",
         validators=[
             DataRequired(),
-            Regexp("^https?://", message="URL must start with http or https"),
+            Regexp("^https?://", message="URL must start with http:// or https://"),
         ],
         render_kw={
             "hint": "For example, http://www.borough-council.gov.uk/the-local-plan"

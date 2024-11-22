@@ -59,7 +59,7 @@ def test_add_estimated_dates(live_server, page, test_data):
     expect(page.locator("dl")).to_contain_text("2024")
     expect(page.locator("dl")).to_contain_text("Consultation period")
     expect(page.locator("dl")).to_contain_text("Consultation period 2025 - 2026")
-    page.get_by_role("link", name="Save and continue").click()
+    page.get_by_role("link", name="Continue").click()
     page.get_by_role("group", name="Publication local plan").get_by_label("Day").click()
     page.get_by_role("group", name="Publication local plan").get_by_label("Day").fill(
         "1"
@@ -104,7 +104,7 @@ def test_add_estimated_dates(live_server, page, test_data):
     expect(page.locator("dl")).to_contain_text("Publication local plan published")
     expect(page.locator("dl")).to_contain_text("1/2/2026")
     expect(page.locator("dl")).to_contain_text("Consultation period 6/2026 - 3/2027")
-    page.get_by_role("link", name="Save and continue").click()
+    page.get_by_role("link", name="Continue").click()
     page.get_by_role("group", name="Submit plan for examination").get_by_label(
         "Year"
     ).click()
@@ -122,7 +122,7 @@ def test_add_estimated_dates(live_server, page, test_data):
     expect(page.locator("dl")).to_contain_text("2027")
     expect(page.locator("dl")).to_contain_text("Adoption of local plan")
     expect(page.locator("dl")).to_contain_text("2030")
-    page.get_by_role("link", name="Save and close").click()
+    page.get_by_role("link", name="Close").click()
     expect(page.locator("h1")).to_contain_text("Somewhere Local Plan")
 
 
@@ -195,7 +195,7 @@ def test_add_actual_dates(live_server, page, test_data):
     expect(page.locator("dl")).to_contain_text(
         "Consultation period 2/3/2026 - 4/5/2027"
     )
-    page.get_by_role("link", name="Save and continue").click()
+    page.get_by_role("link", name="Continue").click()
     page.get_by_role("heading", name="Regulation 19", exact=True).click()
     expect(page.locator("#main-content")).to_contain_text("Regulation 19")
     page.get_by_role("group", name="Publication local plan").get_by_label("Day").click()
@@ -257,7 +257,7 @@ def test_add_actual_dates(live_server, page, test_data):
     expect(page.locator("dl")).to_contain_text(
         "Consultation period 8/9/2029 - 10/11/2030"
     )
-    page.get_by_role("link", name="Save and continue").click()
+    page.get_by_role("link", name="Continue").click()
     expect(page.locator("#main-content")).to_contain_text(
         "Planning inspectorate examination"
     )
@@ -315,7 +315,7 @@ def test_add_actual_dates(live_server, page, test_data):
     )
     expect(page.locator("section")).to_contain_text("14/3/2050")
 
-    page.get_by_role("link", name="Save and continue").click()
+    page.get_by_role("link", name="Continue").click()
     page.get_by_role("group", name="Planning inspectorate found").get_by_label(
         "Day"
     ).click()
@@ -352,5 +352,5 @@ def test_add_actual_dates(live_server, page, test_data):
         "Planning inspectorate report published"
     )
     expect(page.locator("section")).to_contain_text("16/5/2070")
-    page.get_by_role("link", name="Save and continue").click()
+    page.get_by_role("link", name="Continue").click()
     expect(page.locator("h1")).to_contain_text("Somewhere Local Plan")
