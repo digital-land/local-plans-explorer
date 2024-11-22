@@ -45,6 +45,12 @@ def validate_geometry(form, field):
 
 class BoundaryForm(FlaskForm):
     name = StringField("Name of boundary", validators=[DataRequired()])
+    geometry_type = RadioField(
+        "Geometry format",
+        choices=[("wkt", "WKT (Well-Known Text)"), ("geojson", "GeoJSON")],
+        validators=[DataRequired()],
+        description="Choose the format you want to use to input the boundary",
+    )
     geometry = TextAreaField(
         "Plan boundary geometry as WKT",
         validators=[Optional(), validate_geometry],
@@ -53,7 +59,7 @@ class BoundaryForm(FlaskForm):
     geojson = TextAreaField(
         "Plan boundary geometry as GeoJSON",
         validators=[Optional()],
-        description="Or provide the boundary geometry in GeoJSON format",
+        description="Enter the boundary geometry in GeoJSON format",
     )
     description = TextAreaField("Brief description of boundary")
     organisations = StringField("Organisation", validators=[Optional()])
@@ -62,10 +68,15 @@ class BoundaryForm(FlaskForm):
         if not super().validate(extra_validators=extra_validators):
             return False
 
-        # Ensure at least one of geometry or geojson is provided
-        if not self.geometry.data and not self.geojson.data:
+        if self.geometry_type.data == "wkt" and not self.geometry.data:
             self.geometry.errors.append(
-                "Either WKT geometry or GeoJSON must be provided"
+                "WKT geometry is required when WKT format is selected"
+            )
+            return False
+
+        if self.geometry_type.data == "geojson" and not self.geojson.data:
+            self.geojson.errors.append(
+                "GeoJSON is required when GeoJSON format is selected"
             )
             return False
 

@@ -46,10 +46,10 @@ def add(local_plan_reference):
             form.name.errors.append("Boundary with this name already exists")
             return render_template("boundary/add.html", plan=plan, form=form)
 
-        if form.geometry.data:
+        if form.geometry_type.data == "wkt":
             geometry = form.geometry.data
             geojson = form.geometry.parsed_geojson
-        else:
+        else:  # geojson
             geojson = loads(form.geojson.data)
             geometry = _convert_to_wkt(geojson)
 
