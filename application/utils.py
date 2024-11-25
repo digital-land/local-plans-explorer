@@ -120,6 +120,11 @@ def populate_object(form, obj):
         del form.lds_published_date_month
         del form.lds_published_date_day
 
+        if hasattr(form, "status"):
+            status_name = form.status.data.split(".")[1]
+            obj.status = Status[status_name]
+            del form.status
+
     form.populate_obj(obj)
 
     previous_orgs = [organisation.organisation for organisation in obj.organisations]

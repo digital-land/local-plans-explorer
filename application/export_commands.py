@@ -51,6 +51,8 @@ def export_data():
         .all()
     )
 
+    print(f"{len(local_plans)} local plans found for export")
+
     boundaries_to_export = set([])
 
     if local_plans:

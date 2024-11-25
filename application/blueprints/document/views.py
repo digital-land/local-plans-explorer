@@ -118,13 +118,12 @@ def edit(local_plan_reference, reference):
     if doc is None:
         return abort(404)
 
-    organisation__string = ";".join([org.organisation for org in doc.organisations])
+    organisation_string = ";".join([org.organisation for org in doc.organisations])
 
-    doc.organisations.clear()
     form = EditDocumentForm(obj=doc, document=doc)
 
-    if not form.organisations.data:
-        form.organisations.data = organisation__string
+    if not form.is_submitted():
+        form.organisations.data = organisation_string
 
     organisations = (
         Organisation.query.filter(Organisation.end_date.is_(None))
@@ -145,6 +144,7 @@ def edit(local_plan_reference, reference):
     ]
 
     if form.validate_on_submit():
+        doc.organisations.clear()
         document = populate_object(form, doc)
         db.session.add(document)
         db.session.commit()
