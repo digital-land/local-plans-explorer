@@ -219,4 +219,4 @@ def string_to_status(status_string):
         return Status[enum_name]
     except (IndexError, KeyError):
         print(f"Invalid status string: {status_string}")
-        return None
+        return Status.FOR_REVIEW
