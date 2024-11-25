@@ -5,11 +5,13 @@ from application.models import Status
 
 def get_date_part(d_str, part):
     parts = d_str.split("-")
-    if part == "YYYY":
+    if len(parts) == 1 and part == "YYYY":
         return parts[0]
-    if part == "MM":
+    if len(parts) == 2 and part == "MM":
         return parts[1]
-    return parts[2]
+    if len(parts) == 3 and part == "DD":
+        return parts[2]
+    return ""
 
 
 def get_status_colour(status: Status) -> str:
