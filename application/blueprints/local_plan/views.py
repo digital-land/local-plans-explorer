@@ -158,7 +158,7 @@ def edit(reference):
 
     organisation__string = ";".join([org.organisation for org in plan.organisations])
 
-    del plan.organisations
+    plan.organisations.clear()
 
     form = LocalPlanForm(obj=plan)
 
