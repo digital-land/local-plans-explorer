@@ -88,13 +88,16 @@ def edit(local_plan_reference, reference):
     if lp_boundary is None:
         return abort(404)
 
-    organisation__string = ";".join(
+    # Store current organizations string for form population
+    organisation_string = ";".join(
         [org.organisation for org in lp_boundary.organisations]
     )
-    del lp_boundary.organisations
+
     form = EditBoundaryForm(obj=lp_boundary, boundary=lp_boundary)
-    if not form.organisations.data:
-        form.organisations.data = organisation__string
+
+    # Only set organizations data if form not submitted
+    if not form.is_submitted():
+        form.organisations.data = organisation_string
 
     organisations = (
         Organisation.query.filter(Organisation.end_date.is_(None))
@@ -127,6 +130,7 @@ def edit(local_plan_reference, reference):
 
         if not geometry_changed:
             print("Update the existing boundary")
+            lp_boundary.organisations.clear()  # Move clear inside transaction
             lp_boundary.name = form.name.data
             lp_boundary.description = form.description.data
             if form.organisations.data:

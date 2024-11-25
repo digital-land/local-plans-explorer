@@ -87,21 +87,21 @@
       </div>
 
       {# WKT input #}
-      <div class="govuk-form-group" id="wkt-input" style="display: none;">
+      <div class="govuk-form-group geometry-input" id="wkt-input" style="display: none;">
         {{ form.geometry.label(class='govuk-label') }}
         {% if form.geometry.description %}
           <div class="govuk-hint">{{ form.geometry.description }}</div>
         {% endif %}
-        {{ form.geometry(class='govuk-textarea', rows='10') }}
+        {{ form.geometry(class='govuk-textarea geometry-field', rows='10', disabled=true) }}
       </div>
 
       {# GeoJSON input #}
-      <div class="govuk-form-group" id="geojson-input" style="display: none;">
+      <div class="govuk-form-group geometry-input" id="geojson-input" style="display: none;">
         {{ form.geojson.label(class='govuk-label') }}
         {% if form.geojson.description %}
           <div class="govuk-hint">{{ form.geojson.description }}</div>
         {% endif %}
-        {{ form.geojson(class='govuk-textarea', rows='10') }}
+        {{ form.geojson(class='govuk-textarea geometry-field', rows='10', disabled=true) }}
       </div>
 
       {# Status field #}
@@ -137,14 +137,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const geometryTypeInputs = document.querySelectorAll('input[name="geometry_type"]');
     const wktInput = document.getElementById('wkt-input');
     const geojsonInput = document.getElementById('geojson-input');
+    const geometryFields = document.querySelectorAll('.geometry-field');
 
     function updateVisibleInputs(selectedValue) {
+        // First disable all geometry fields
+        geometryFields.forEach(field => {
+            field.disabled = true;
+        });
+
+        // Hide all geometry inputs
+        document.querySelectorAll('.geometry-input').forEach(input => {
+            input.style.display = 'none';
+        });
+
+        // Show and enable only the selected input
         if (selectedValue === 'wkt') {
             wktInput.style.display = 'block';
-            geojsonInput.style.display = 'none';
+            wktInput.querySelector('.geometry-field').disabled = false;
         } else if (selectedValue === 'geojson') {
-            wktInput.style.display = 'none';
             geojsonInput.style.display = 'block';
+            geojsonInput.querySelector('.geometry-field').disabled = false;
         }
     }
 
