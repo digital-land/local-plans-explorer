@@ -4,7 +4,7 @@ from shapely.geometry import MultiPolygon, Polygon, mapping
 from wtforms import RadioField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Optional, ValidationError
 
-from application.models import Status
+# from application.models import Status
 
 
 def validate_geometry(form, field):
@@ -111,14 +111,14 @@ class EditBoundaryForm(BoundaryForm):
                 return False
 
         # Validate status if provided
-        if self.status.data == Status.FOR_PLATFORM.name:
-            if self.boundary and self.boundary.local_plans[0].status not in [
-                Status.FOR_PLATFORM,
-                Status.EXPORTED,
-            ]:
-                msg = "Can't set status to 'For platform' as the local plan status is '{}'"
-                msg = msg.format(self.boundary.local_plans[0].status.value)
-                self.status.errors.append(msg)
-                return False
+        # if self.status.data == Status.FOR_PLATFORM.name:
+        #     if self.boundary and self.boundary.local_plans[0].status not in [
+        #         Status.FOR_PLATFORM,
+        #         Status.EXPORTED,
+        #     ]:
+        #         msg = "Can't set status to 'For platform' as the local plan status is '{}'"
+        #         msg = msg.format(self.boundary.local_plans[0].status.value)
+        #         self.status.errors.append(msg)
+        #         return False
 
         return True
