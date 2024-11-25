@@ -14,7 +14,7 @@ class Config(object):
     SQLALCHEMY_RECORD_QUERIES = False
     DEBUG = False
     WTF_CSRF_ENABLED = True
-    AUTHENTICATION_ON = True
+    AUTHENTICATION_ON = False
     GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
     GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
     SAFE_URLS = set(os.getenv("SAFE_URLS", "").split(","))
