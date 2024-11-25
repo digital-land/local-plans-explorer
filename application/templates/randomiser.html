@@ -44,7 +44,7 @@
                   </g>
               </svg>
           </div>
-          <p class="govuk-body" style="color: #fff;">{{ counts.orgs }} planning authorit{{ 'y' if counts.orgs == 1 else 'ies' }} are missing an adopted local plan - TODO fix this</p>
+          <p class="govuk-body" style="color: #fff;">{{ counts.orgs }} planning authorit{{ 'y' if counts.orgs == 1 else 'ies' }} are missing a local plan</p>
           <div><a href="{{ url_for('main.randomiser', random='organisation') }}" class="btn govuk-!-margin-bottom-0 govuk-button app-button--inverted{% if counts.orgs == 0 %} govuk-button--disabled{% endif %}" id="spin"{% if counts.orgs == 0 %} disabled{% endif %}><span class="btn-label">Take me to one!</span></a></div>
       </div>
 
