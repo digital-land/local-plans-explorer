@@ -121,8 +121,7 @@ def populate_object(form, obj):
         del form.lds_published_date_day
 
         if hasattr(form, "status") and form.status.data:
-            status_name = form.status.data.split(".")[1]
-            obj.status = Status[status_name]
+            obj.status = string_to_status(form.status.data)
             del form.status
 
     form.populate_obj(obj)
@@ -208,3 +207,14 @@ class EventCategoryConverter(BaseConverter):
         event_category = event_category.name.lower()
         event_category = event_category.replace("_", "-")
         return event_category
+
+
+def string_to_status(status_string):
+    try:
+        enum_name = status_string.split(".")[
+            1
+        ]  # Gets "EXPORTED" from "Status.EXPORTED"
+        return Status[enum_name]
+    except (IndexError, KeyError):
+        print(f"Invalid status string: {status_string}")
+        return None
