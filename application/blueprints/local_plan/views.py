@@ -321,7 +321,7 @@ def accept_document(reference, doc_id):
     form.document_types.data = document_types
 
     if form.validate_on_submit():
-        reference = _make_doc_reference(form)
+        reference = _make_doc_reference(form, plan.reference)
         doc = LocalPlanDocument(
             reference=reference,
             local_plan=plan.reference,
@@ -503,13 +503,23 @@ def _allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def _make_doc_reference(form):
+def _make_doc_reference(form, plan_reference):
     reference = slugify(form.name.data)
-    if LocalPlanDocument.query.get(reference) is None:
+    if (
+        LocalPlanDocument.query.filter_by(
+            reference=reference, local_plan=plan_reference
+        ).first()
+        is None
+    ):
         return reference
 
     reference = f"{reference}-{datetime.now().strftime('%Y-%m-%d')}"
-    if LocalPlanDocument.query.get(reference) is None:
+    if (
+        LocalPlanDocument.query.filter_by(
+            reference=reference, local_plan=plan_reference
+        ).first()
+        is None
+    ):
         return reference
 
     return f"{reference}-{generate_random_string(6)}"
