@@ -120,7 +120,7 @@ def populate_object(form, obj):
         del form.lds_published_date_month
         del form.lds_published_date_day
 
-        if hasattr(form, "status"):
+        if hasattr(form, "status") and form.status.data:
             status_name = form.status.data.split(".")[1]
             obj.status = Status[status_name]
             del form.status
