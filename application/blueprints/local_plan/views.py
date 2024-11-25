@@ -321,7 +321,7 @@ def accept_document(reference, doc_id):
     form.document_types.data = document_types
 
     if form.validate_on_submit():
-        reference = _make_doc_reference(form.name.data)
+        reference = _make_doc_reference(form)
         doc = LocalPlanDocument(
             reference=reference,
             local_plan=plan.reference,
