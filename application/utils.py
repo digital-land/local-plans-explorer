@@ -211,9 +211,11 @@ class EventCategoryConverter(BaseConverter):
 
 def string_to_status(status_string):
     try:
-        enum_name = status_string.split(".")[
-            1
-        ]  # Gets "EXPORTED" from "Status.EXPORTED"
+        enum_parts = status_string.split(".")
+        if len(enum_parts) == 1:
+            enum_name = enum_parts[0]
+        else:
+            enum_name = enum_parts[1]
         return Status[enum_name]
     except (IndexError, KeyError):
         print(f"Invalid status string: {status_string}")
