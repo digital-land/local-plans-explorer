@@ -8,6 +8,7 @@ import github
 from flask.cli import AppGroup
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
+from sqlalchemy.sql import func
 
 from application.export import (
     LocalPlanBoundaryModel,
@@ -34,6 +35,7 @@ def export_data():
     updated_data = False
     current_file_path = Path(__file__).resolve()
     data_directory = os.path.join(current_file_path.parent.parent, "data", "export")
+    BATCH_SIZE = 100
 
     if not os.path.exists(data_directory):
         os.makedirs(data_directory)
@@ -43,38 +45,42 @@ def export_data():
         data_directory, "local-plan-document.csv"
     )
 
-    local_plans = (
-        LocalPlan.query.filter(
-            LocalPlan.status.in_([Status.FOR_PLATFORM, Status.EXPORTED])
-        )
-        .order_by(LocalPlan.reference)
-        .all()
-    )
+    # Process local plans in batches
+    query = LocalPlan.query.filter(
+        LocalPlan.status.in_([Status.FOR_PLATFORM, Status.EXPORTED])
+    ).order_by(LocalPlan.reference)
 
-    print(f"{len(local_plans)} local plans found for export")
+    total_plans = query.count()
+    print(f"{total_plans} local plans found for export")
 
-    boundaries_to_export = set([])
-
-    if local_plans:
+    if total_plans > 0:
+        boundaries_to_export = set()
         with open(local_plan_file_path, mode="w") as file:
-            fieldnames = list(LocalPlanModel.model_fields.keys())
-            fieldnames = [field.replace("_", "-") for field in fieldnames]
+            fieldnames = [
+                field.replace("_", "-") for field in LocalPlanModel.model_fields.keys()
+            ]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
-            for obj in local_plans:
-                if obj.boundary_status in [Status.FOR_PLATFORM, Status.EXPORTED]:
-                    boundaries_to_export.add(obj.local_plan_boundary)
-                m = LocalPlanModel.model_validate(obj)
-                data = m.model_dump(by_alias=True)
-                writer.writerow(data)
-                obj.status = Status.EXPORTED
-                db.session.add(obj)
+
+            for offset in range(0, total_plans, BATCH_SIZE):
+                plans_batch = query.limit(BATCH_SIZE).offset(offset).all()
+                for obj in plans_batch:
+                    if obj.boundary_status in [Status.FOR_PLATFORM, Status.EXPORTED]:
+                        boundaries_to_export.add(obj.local_plan_boundary)
+                    m = LocalPlanModel.model_validate(obj)
+                    writer.writerow(m.model_dump(by_alias=True))
+                    obj.status = Status.EXPORTED
+                    db.session.add(obj)
+
                 db.session.commit()
-        print(f"{len(local_plans)} local plans exported")
+                db.session.expire_all()  # Clear session
+
+        print(f"{total_plans} local plans exported")
         updated_data = True
     else:
         print("No local plans found for export")
 
+    # Process documents in batches
     stmt = (
         select(LocalPlanDocument)
         .join(LocalPlan, LocalPlanDocument.plan)
@@ -86,47 +92,77 @@ def export_data():
         .order_by(LocalPlanDocument.reference)
     )
 
-    local_plan_documents = db.session.scalars(stmt).unique().all()
+    total_docs = db.session.execute(
+        select(func.count()).select_from(stmt.subquery())
+    ).scalar()
 
-    if local_plan_documents:
+    if total_docs > 0:
         with open(local_plan__document_file_path, mode="w") as file:
-            fieldnames = list(LocalPlanDocumentModel.model_fields.keys())
-            fieldnames = [field.replace("_", "-") for field in fieldnames]
+            fieldnames = [
+                field.replace("_", "-")
+                for field in LocalPlanDocumentModel.model_fields.keys()
+            ]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
-            for doc in local_plan_documents:
-                m = LocalPlanDocumentModel.model_validate(doc)
-                data = m.model_dump(by_alias=True)
-                writer.writerow(data)
-                doc.status = Status.EXPORTED
-                db.session.add(doc)
+
+            for offset in range(0, total_docs, BATCH_SIZE):
+                docs_batch = (
+                    db.session.scalars(stmt.limit(BATCH_SIZE).offset(offset))
+                    .unique()
+                    .all()
+                )
+                for doc in docs_batch:
+                    m = LocalPlanDocumentModel.model_validate(doc)
+                    writer.writerow(m.model_dump(by_alias=True))
+                    doc.status = Status.EXPORTED
+                    db.session.add(doc)
+
                 db.session.commit()
-            print(f"{len(local_plan_documents)} local plan documents exported")
+                db.session.expire_all()
+
+            print(f"{total_docs} local plan documents exported")
             updated_data = True
     else:
         print("No local plan documents found for export")
 
-    boundaries = LocalPlanBoundary.query.filter(
-        LocalPlanBoundary.reference.in_(boundaries_to_export)
-    ).all()
-
-    if boundaries:
+    # Process boundaries in batches
+    if boundaries_to_export:
         boundary_file_path = os.path.join(data_directory, "local-plan-boundary.csv")
-        with open(boundary_file_path, mode="w") as file:
-            fieldnames = list(LocalPlanBoundaryModel.model_fields.keys())
-            fieldnames = [field.replace("_", "-") for field in fieldnames]
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()
-            for boundary in boundaries:
-                m = LocalPlanBoundaryModel.model_validate(boundary)
-                data = m.model_dump(by_alias=True)
-                writer.writerow(data)
-                for local_plan in boundary.local_plans:
-                    local_plan.boundary_status = Status.EXPORTED
-                    db.session.add(local_plan)
-        db.session.commit()
-        print(f"{len(boundaries)} local plan boundaries exported")
-        updated_data = True
+        total_boundaries = LocalPlanBoundary.query.filter(
+            LocalPlanBoundary.reference.in_(boundaries_to_export)
+        ).count()
+
+        if total_boundaries > 0:
+            with open(boundary_file_path, mode="w") as file:
+                fieldnames = [
+                    field.replace("_", "-")
+                    for field in LocalPlanBoundaryModel.model_fields.keys()
+                ]
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer.writeheader()
+
+                for offset in range(0, total_boundaries, BATCH_SIZE):
+                    boundaries_batch = (
+                        LocalPlanBoundary.query.filter(
+                            LocalPlanBoundary.reference.in_(boundaries_to_export)
+                        )
+                        .limit(BATCH_SIZE)
+                        .offset(offset)
+                        .all()
+                    )
+
+                    for boundary in boundaries_batch:
+                        m = LocalPlanBoundaryModel.model_validate(boundary)
+                        writer.writerow(m.model_dump(by_alias=True))
+                        for local_plan in boundary.local_plans:
+                            local_plan.boundary_status = Status.EXPORTED
+                            db.session.add(local_plan)
+
+                    db.session.commit()
+                    db.session.expire_all()
+
+                print(f"{total_boundaries} local plan boundaries exported")
+                updated_data = True
 
     return updated_data
 
