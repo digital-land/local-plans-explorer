@@ -250,7 +250,7 @@ def export_timetable():
             data = {}
             for index, (key, value) in enumerate(event.event_data.items()):
                 event_date = event.collect_iso_date_fields(key)
-                if not event_date:
+                if not event_date or event_date == "--":
                     continue
                 kebabbed_key = key.replace("_", "-")
                 ref = f"{event.reference}-{kebabbed_key}"
@@ -267,7 +267,10 @@ def export_timetable():
             events.append(model.model_dump(by_alias=True))
 
         # Add adopted date after processing all events for this timetable
-        if timetable.local_plan_obj.adopted_date:
+        if (
+            timetable.local_plan_obj.adopted_date
+            and timetable.local_plan_obj.adopted_date != "--"
+        ):
             adopted_date_data = {
                 "reference": f"{timetable.reference}-plan-adopted",
                 "event-date": timetable.local_plan_obj.adopted_date,
