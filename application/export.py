@@ -127,4 +127,4 @@ class LocalPlanTimetableModel(DateModel):
     notes: Optional[str] = None
     description: Optional[str] = None
     event_date: str
-    event_type: str
+    local_plan_event: str

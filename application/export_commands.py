@@ -237,7 +237,7 @@ def export_timetable():
                 "local-plan": timetable.local_plan,
                 "notes": "Local development scheme published",
                 "description": "Local development scheme published",
-                "event-type": "timetable-published",
+                "local-plan-event": "timetable-published",
                 "entry-date": timetable.entry_date,
                 "start-date": timetable.start_date,
                 "end-date": timetable.end_date,
@@ -259,7 +259,7 @@ def export_timetable():
                 data["local-plan"] = timetable.local_plan
                 data["notes"] = value.get("notes")
                 data["description"] = event.description or ""
-                data["event-type"] = kebabbed_key
+                data["local-plan-event"] = kebabbed_key
                 data["entry-date"] = event.entry_date
                 data["start-date"] = event.start_date
                 data["end-date"] = event.end_date
@@ -277,7 +277,7 @@ def export_timetable():
                 "local-plan": timetable.local_plan,
                 "notes": None,
                 "description": "Plan adopted",
-                "event-type": "plan-adopted",
+                "local-plan-event": "plan-adopted",
                 "entry-date": timetable.entry_date,
                 "start-date": timetable.start_date,
                 "end-date": timetable.end_date,
