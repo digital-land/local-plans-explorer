@@ -1,12 +1,11 @@
 import datetime
 import re
-import uuid
 from collections import OrderedDict
 from enum import Enum
 from typing import List, Optional, Union
 
 from sqlalchemy import Date, DateTime, ForeignKey, Integer, Text
-from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB, UUID
+from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -18,11 +17,6 @@ class Status(Enum):
     FOR_PLATFORM = "For platform"
     NOT_FOR_PLATFORM = "Not for platform"
     EXPORTED = "Exported"
-
-
-class DocumentStatus(Enum):
-    ACCEPT = "Accept"
-    REJECT = "Reject"
 
 
 class DateModel(db.Model):
@@ -148,19 +142,9 @@ class LocalPlan(BaseModel):
         ENUM(Status), default=Status.FOR_REVIEW
     )
 
-    candidate_documents: Mapped[List["CandidateDocument"]] = relationship(
-        back_populates="plan", lazy="joined"
-    )
-
     timetable: Mapped[Optional["LocalPlanTimetable"]] = relationship(
         back_populates="local_plan_obj", uselist=False
     )
-
-    def unprocessed_canidate_documents(self):
-        return CandidateDocument.query.filter(
-            CandidateDocument.local_plan == self.reference,
-            CandidateDocument.status.is_(None),
-        ).all()
 
 
 class LocalPlanDocument(BaseModel):
@@ -191,34 +175,6 @@ class LocalPlanDocument(BaseModel):
             .all()
         )
         return doc_types
-
-
-class CandidateDocument(db.Model):
-    __tablename__ = "candidate_document"
-
-    id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
-    name: Mapped[Optional[str]] = mapped_column(Text)
-    local_plan: Mapped[str] = mapped_column(ForeignKey("local_plan.reference"))
-    plan: Mapped["LocalPlan"] = relationship(
-        back_populates="candidate_documents", lazy="joined"
-    )
-    documentation_url: Mapped[Optional[str]] = mapped_column(Text)
-    document_url: Mapped[Optional[str]] = mapped_column(Text)
-    document_type: Mapped[Optional[str]] = mapped_column(Text)
-    status: Mapped[Optional[DocumentStatus]] = mapped_column(
-        ENUM(DocumentStatus), nullable=True
-    )
-    entry_date: Mapped[datetime.date] = mapped_column(
-        Date, default=datetime.datetime.today
-    )
-
-    def get_document_type(self):
-        doc_type = LocalPlanDocumentType.query.filter(
-            LocalPlanDocumentType.name == self.document_type
-        ).one_or_none()
-        return doc_type
 
 
 class Organisation(DateModel):

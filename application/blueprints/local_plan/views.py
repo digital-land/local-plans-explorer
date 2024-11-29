@@ -5,18 +5,12 @@ import geopandas as gpd
 from flask import Blueprint, abort, redirect, render_template, request, url_for
 from slugify import slugify
 
-from application.blueprints.document.forms import DocumentForm
-from application.blueprints.document.views import make_document_reference
 from application.blueprints.local_plan.forms import LocalPlanForm
 from application.extensions import db
 from application.models import (
-    CandidateDocument,
-    DocumentStatus,
     EventCategory,
     LocalPlan,
     LocalPlanBoundary,
-    LocalPlanDocument,
-    LocalPlanDocumentType,
     Organisation,
     Status,
 )
@@ -218,171 +212,6 @@ def archived_plans():
             LocalPlan.status == Status.NOT_FOR_PLATFORM
         ).all()
     return render_template("local_plan/archived.html", plans=plans)
-
-
-@local_plan.route("/<string:reference>/find-documents")
-@login_required
-def find_documents(reference):
-    from application.scraping import extract_links_from_page
-
-    plan = LocalPlan.query.get(reference)
-    if plan is None:
-        abort(404)
-
-    document_types = [doc.name for doc in LocalPlanDocumentType.query.all()]
-    document_links = extract_links_from_page(
-        plan.documentation_url, plan, document_types
-    )
-
-    for link in document_links:
-        document_url = link["document_url"]
-        existing_doc = LocalPlanDocument.query.filter(
-            LocalPlanDocument.document_url == document_url,
-            LocalPlanDocument.local_plan == plan.reference,
-        ).one_or_none()
-
-        documents = []
-        if existing_doc is None:
-            existing_candidate = CandidateDocument.query.filter(
-                CandidateDocument.document_url == document_url,
-                CandidateDocument.local_plan == plan.reference,
-            ).one_or_none()
-            if existing_candidate is None:
-                doc_type = link.pop("document_type", None)
-                if doc_type is not None:
-                    doc_type = LocalPlanDocumentType.query.filter(
-                        LocalPlanDocumentType.name == doc_type
-                    ).one_or_none()
-                candidate_document = CandidateDocument(**link)
-                candidate_document.document_type = (
-                    doc_type.reference if doc_type else None
-                )
-                db.session.add(candidate_document)
-                db.session.commit()
-
-    documents = CandidateDocument.query.filter(
-        CandidateDocument.local_plan == plan.reference,
-        CandidateDocument.status.is_(None),
-    ).all()
-
-    breadcrumbs = {
-        "items": [
-            {"text": "Home", "href": url_for("main.index")},
-            {
-                "text": "Plans by organisation",
-                "href": url_for("organisation.organisations"),
-            },
-            {
-                "text": plan.name,
-                "href": url_for("local_plan.get_plan", reference=plan.reference),
-            },
-            {"text": "Find documents"},
-        ]
-    }
-    return render_template(
-        "local_plan/find-documents.html",
-        plan=plan,
-        documents=documents,
-        breadcrumbs=breadcrumbs,
-    )
-
-
-@local_plan.route("/<string:reference>/accept/<string:doc_id>", methods=["GET", "POST"])
-@login_required
-def accept_document(reference, doc_id):
-    plan = LocalPlan.query.get(reference)
-    if plan is None:
-        abort(404)
-
-    candidate = CandidateDocument.query.get(doc_id)
-
-    if candidate is None:
-        abort(404)
-
-    document_types = [
-        doc_type.reference
-        for doc_type in LocalPlanDocumentType.query.filter(
-            LocalPlanDocumentType.reference == candidate.document_type
-        ).all()
-    ]
-
-    form = DocumentForm(obj=candidate)
-    organisations = (
-        Organisation.query.filter(Organisation.end_date.is_(None))
-        .order_by(Organisation.name)
-        .all()
-    )
-    organisation_choices = [(org.organisation, org.name) for org in organisations]
-    form.organisations.choices = [(" ", " ")] + organisation_choices
-    organisation__string = ";".join([org.organisation for org in plan.organisations])
-    form.organisations.data = organisation__string
-    form.document_types.choices = [
-        (dt.reference, dt.name) for dt in LocalPlanDocumentType.query.all()
-    ]
-    form.document_types.data = document_types
-
-    if form.validate_on_submit():
-        reference = make_document_reference(form.name.data, plan.reference)
-        doc = LocalPlanDocument(
-            reference=reference,
-            local_plan=plan.reference,
-            name=form.name.data,
-            documentation_url=form.documentation_url.data,
-            document_url=form.document_url.data,
-            organisations=plan.organisations,
-            document_types=document_types if document_types else None,
-        )
-        candidate.status = DocumentStatus.ACCEPT
-        db.session.add(doc)
-        db.session.add(candidate)
-        db.session.commit()
-
-        unprocessed = CandidateDocument.query.filter(
-            CandidateDocument.local_plan == plan.reference,
-            CandidateDocument.status.is_(None),
-        ).all()
-
-        if unprocessed:
-            return redirect(
-                url_for("local_plan.find_documents", reference=plan.reference)
-            )
-        return redirect(url_for("local_plan.get_plan", reference=plan.reference))
-
-    return render_template(
-        "document/add.html",
-        plan=plan,
-        form=form,
-        action=url_for(
-            "local_plan.accept_document", reference=plan.reference, doc_id=candidate.id
-        ),
-    )
-
-
-@local_plan.route("/<string:reference>/reject/<string:doc_id>")
-@login_required
-def reject_document(reference, doc_id):
-    plan = LocalPlan.query.get(reference)
-    if plan is None:
-        abort(404)
-
-    candidate = CandidateDocument.query.get(doc_id)
-
-    if candidate is None:
-        abort(404)
-
-    candidate.status = DocumentStatus.REJECT
-    db.session.add(candidate)
-    db.session.commit()
-
-    unprocessed = CandidateDocument.query.filter(
-        CandidateDocument.local_plan == plan.reference,
-        CandidateDocument.status.is_(None),
-    ).all()
-
-    if unprocessed:
-        return redirect(url_for("local_plan.find_documents", reference=plan.reference))
-
-    return redirect(url_for("local_plan.get_plan", reference=plan.reference))
 
 
 @local_plan.route("/<string:reference>/geography/add", methods=["GET", "POST"])
