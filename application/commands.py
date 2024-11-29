@@ -2,6 +2,7 @@ import csv
 import os
 import subprocess
 import sys
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
@@ -767,3 +768,164 @@ def load_backup_from_file_in_docker(file):
     )
 
     print("Data loaded successfully")
+
+
+@data_cli.command("fix-duplicate-document-references")
+def fix_duplicate_document_references():
+    """Find and fix any duplicate document references"""
+    from sqlalchemy import text
+
+    from application.blueprints.document.views import make_document_reference
+
+    # First make the constraint deferrable
+    db.session.execute(
+        text(
+            """
+            ALTER TABLE document_organisation
+            DROP CONSTRAINT document_organisation_local_plan_document_reference_local__fkey,
+            ADD CONSTRAINT document_organisation_local_plan_document_reference_local__fkey
+            FOREIGN KEY (local_plan_document_reference, local_plan_document_local_plan)
+            REFERENCES local_plan_document(reference, local_plan)
+            DEFERRABLE INITIALLY DEFERRED;
+            """
+        )
+    )
+    db.session.commit()
+
+    # First find all duplicate references
+    duplicate_refs = db.session.execute(
+        text(
+            """
+            SELECT reference
+            FROM local_plan_document
+            GROUP BY reference
+            HAVING COUNT(local_plan) > 1
+            """
+        )
+    ).fetchall()
+
+    print(f"Found {len(duplicate_refs)} references that have duplicates")
+
+    for ref in duplicate_refs:
+        reference = ref[0]
+        # Get all documents with this reference
+        docs = db.session.execute(
+            text(
+                """
+                SELECT reference, local_plan, name
+                FROM local_plan_document
+                WHERE reference = :reference
+                ORDER BY local_plan
+                """
+            ),
+            {"reference": reference},
+        ).fetchall()
+
+        print(f"\nFound {len(docs)} documents with reference '{reference}'")
+
+        for doc in docs:
+            try:
+                old_ref = doc.reference
+                new_ref = make_document_reference(doc.reference, doc.local_plan)
+                print(f"Updating document for plan {doc.local_plan}")
+
+                # Do updates in a single transaction
+                db.session.execute(
+                    text(
+                        """
+                        BEGIN;
+                        UPDATE local_plan_document
+                        SET reference = :new_ref
+                        WHERE reference = :old_ref
+                        AND local_plan = :local_plan;
+
+                        UPDATE document_organisation
+                        SET local_plan_document_reference = :new_ref
+                        WHERE local_plan_document_reference = :old_ref
+                        AND local_plan_document_local_plan = :local_plan;
+
+                        COMMIT;
+                        """
+                    ),
+                    {
+                        "new_ref": new_ref,
+                        "old_ref": old_ref,
+                        "local_plan": doc.local_plan,
+                    },
+                )
+
+                print(f"Updated document reference from '{old_ref}' to '{new_ref}'")
+
+            except Exception as e:
+                db.session.execute(text("ROLLBACK;"))
+                print(f"Error updating document {old_ref}: {str(e)}")
+                continue
+
+    # Restore the constraint to its original state
+    db.session.execute(
+        text(
+            """
+            ALTER TABLE document_organisation
+            DROP CONSTRAINT document_organisation_local_plan_document_reference_local__fkey,
+            ADD CONSTRAINT document_organisation_local_plan_document_reference_local__fkey
+            FOREIGN KEY (local_plan_document_reference, local_plan_document_local_plan)
+            REFERENCES local_plan_document(reference, local_plan)
+            NOT DEFERRABLE;
+            """
+        )
+    )
+    db.session.commit()
+
+    print("\nAll duplicate references have been fixed")
+
+
+@data_cli.command("dedupe-documents")
+def dedupe_documents():
+    """Remove duplicate LocalPlanDocuments that share the same local plan, organisations and document URL"""
+    print("Finding duplicate documents...")
+
+    # Get all documents grouped by their identifying characteristics
+    documents = LocalPlanDocument.query.all()
+    duplicates = defaultdict(list)
+
+    for doc in documents:
+        # Create tuple of identifying characteristics
+        key = (
+            doc.local_plan,
+            doc.document_url,
+            # Convert organisations list to frozen set for hashability
+            frozenset(org.organisation for org in doc.organisations),
+        )
+        duplicates[key].append(doc)
+
+    end_date_count = 0
+
+    # Process each group of potential duplicates
+    for key, docs in duplicates.items():
+        if len(docs) > 1:
+            # Sort by reference length to keep shortest
+            docs.sort(key=lambda x: len(x.reference))
+            keeper = docs[0]
+
+            print(f"\nFound {len(docs)} duplicates for document URL: {key[1]}")
+            print(f"Keeping document with reference: {keeper.reference}")
+
+            # Set end date for all but the keeper
+            for doc in docs[1:]:
+                try:
+                    print(
+                        f"Setting end date for duplicate with reference: {doc.reference}"
+                    )
+                    doc.end_date = datetime.now().date()
+                    end_date_count += 1
+                except Exception as e:
+                    print(f"Error updating document {doc.reference}: {str(e)}")
+                    db.session.rollback()
+                    continue
+
+    try:
+        db.session.commit()
+        print(f"\nSuccessfully set end date for {end_date_count} duplicate documents")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error committing changes: {str(e)}")

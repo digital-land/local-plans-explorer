@@ -6,6 +6,7 @@ from flask import Blueprint, abort, redirect, render_template, request, url_for
 from slugify import slugify
 
 from application.blueprints.document.forms import DocumentForm
+from application.blueprints.document.views import make_document_reference
 from application.blueprints.local_plan.forms import LocalPlanForm
 from application.extensions import db
 from application.models import (
@@ -321,7 +322,7 @@ def accept_document(reference, doc_id):
     form.document_types.data = document_types
 
     if form.validate_on_submit():
-        reference = _make_doc_reference(form, plan.reference)
+        reference = make_document_reference(form.name.data, plan.reference)
         doc = LocalPlanDocument(
             reference=reference,
             local_plan=plan.reference,
@@ -501,25 +502,3 @@ def _allowed_file(filename):
 
     ALLOWED_EXTENSIONS = current_app.config["ALLOWED_EXTENSIONS"]
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def _make_doc_reference(form, plan_reference):
-    reference = slugify(form.name.data)
-    if (
-        LocalPlanDocument.query.filter_by(
-            reference=reference, local_plan=plan_reference
-        ).first()
-        is None
-    ):
-        return reference
-
-    reference = f"{reference}-{datetime.now().strftime('%Y-%m-%d')}"
-    if (
-        LocalPlanDocument.query.filter_by(
-            reference=reference, local_plan=plan_reference
-        ).first()
-        is None
-    ):
-        return reference
-
-    return f"{reference}-{generate_random_string(6)}"

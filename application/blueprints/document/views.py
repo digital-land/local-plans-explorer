@@ -53,7 +53,7 @@ def add(local_plan_reference):
         .all()
     ]
     if form.validate_on_submit():
-        reference = _make_reference(form, plan.reference)
+        reference = make_document_reference(form.name.data, plan.reference)
         doc = LocalPlanDocument(
             reference=reference,
             name=form.name.data,
@@ -186,32 +186,29 @@ def edit(local_plan_reference, reference):
     )
 
 
-def _make_reference(form, plan_reference):
-    reference = slugify(form.name.data)
-    doc = LocalPlanDocument.query.filter(
-        LocalPlanDocument.local_plan == plan_reference,
+def make_document_reference(name, plan_reference):
+    reference = slugify(name)
+    count = LocalPlanDocument.query.filter(
         LocalPlanDocument.reference == reference,
-    ).one_or_none()
+    ).count()
 
-    if doc is None:
+    if count == 0:
         return reference
 
     reference = slugify(f"{reference}-{plan_reference}")
-    doc = LocalPlanDocument.query.filter(
-        LocalPlanDocument.local_plan == plan_reference,
+    count = LocalPlanDocument.query.filter(
         LocalPlanDocument.reference == reference,
-    ).one_or_none()
+    ).count()
 
-    if doc is None:
+    if count == 0:
         return reference
 
     reference = f"{reference}-{datetime.now().strftime('%Y-%m-%d')}"
-    doc = LocalPlanDocument.query.filter(
-        LocalPlanDocument.local_plan == plan_reference,
+    count = LocalPlanDocument.query.filter(
         LocalPlanDocument.reference == reference,
-    ).one_or_none()
+    ).count()
 
-    if doc is None:
+    if count == 0:
         return reference
 
     return f"{reference}-{generate_random_string(6)}"
