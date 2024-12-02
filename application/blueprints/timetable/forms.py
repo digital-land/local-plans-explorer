@@ -3,10 +3,8 @@ from datetime import datetime
 from flask import render_template, request
 from flask_wtf import FlaskForm
 from markupsafe import Markup
-from wtforms import Field, TextAreaField, ValidationError
-from wtforms.validators import Optional
-
-from application.models import EventCategory
+from wtforms import Field, SelectField, TextAreaField, ValidationError
+from wtforms.validators import DataRequired, Optional
 
 
 class DatePartsInputWidget:
@@ -37,8 +35,39 @@ class DatePartField(Field):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.errors = []  # Initialize errors as a list instead of tuple
-        self._errors_with_parts = []
+        self.errors = []
+        self._part_errors = []
+
+    def process_data(self, value):
+        """Process the Python data applied to this field.
+        This will be called during form construction by the form's `kwargs` or
+        `obj` argument.
+        """
+        if value:
+            # Handle string date from database
+            if isinstance(value, str):
+                try:
+                    parts = value.split("-")
+                    if len(parts) == 3:
+                        self.data = {
+                            "year": parts[0],
+                            "month": str(int(parts[1])),  # Remove leading zeros
+                            "day": str(int(parts[2])),  # Remove leading zeros
+                        }
+                    elif len(parts) == 2:
+                        self.data = {
+                            "year": parts[0],
+                            "month": str(int(parts[1])),
+                            "day": "",
+                        }
+                    else:
+                        self.data = {"year": parts[0], "month": "", "day": ""}
+                except (ValueError, IndexError):
+                    self.data = {"day": "", "month": "", "year": ""}
+            else:
+                self.data = {"day": "", "month": "", "year": ""}
+        else:
+            self.data = {"day": "", "month": "", "year": ""}
 
     def _value(self):
         if self.data:
@@ -50,125 +79,125 @@ class DatePartField(Field):
         return {"day": "", "month": "", "year": ""}
 
     def process_formdata(self, valuelist):
-        # Get raw input values without stripping yet
-        raw_day = request.form.get(f"{self.name}_day", "")
-        raw_month = request.form.get(f"{self.name}_month", "")
-        raw_year = request.form.get(f"{self.name}_year", "")
-
-        # Store raw values first
+        """Process data received over the wire from a form."""
         self.data = {
-            "day": raw_day.strip(),
-            "month": raw_month.strip(),
-            "year": raw_year.strip(),
+            "day": request.form.get(f"{self.name}_day", "").strip(),
+            "month": request.form.get(f"{self.name}_month", "").strip(),
+            "year": request.form.get(f"{self.name}_year", "").strip(),
         }
 
     def pre_validate(self, form):
-        """Validate the date parts before the form-level validation"""
-        day_str = self.data.get("day", "")
-        month_str = self.data.get("month", "")
-        year_str = self.data.get("year", "")
+        day = self.data.get("day", "")
+        month = self.data.get("month", "")
+        year = self.data.get("year", "")
 
-        # Collect all errors
-        errors = []
+        # Reset errors
+        self._part_errors = []
+        self.errors = []
 
-        # If all fields are empty, that's valid
-        if not any([day_str, month_str, year_str]):
-            return True
-
-        # Validate year if provided
-        if year_str:
-            if not year_str.isdigit() or len(year_str) != 4:
-                errors.append(
-                    DatePartValidationError("Year must be in YYYY format", part="year")
-                )
-        else:
-            if day_str or month_str:
-                errors.append(
-                    DatePartValidationError(
-                        "Year is required if day or month is provided", part="year"
-                    )
-                )
-
-        # Validate month if provided
-        if month_str:
-            if not month_str.isdigit():
-                errors.append(
-                    DatePartValidationError(
-                        "Month must be a number between 1 and 12", part="month"
-                    )
-                )
-            else:
-                month = int(month_str)
-                if not (1 <= month <= 12):
-                    errors.append(
-                        DatePartValidationError(
-                            "Month must be a number between 1 and 12", part="month"
-                        )
-                    )
-        else:
-            if day_str:
-                errors.append(
-                    DatePartValidationError(
-                        "Month is required when day is provided", part="month"
-                    )
-                )
-
-        # Validate day if provided
-        if day_str:
-            if not day_str.isdigit():
-                errors.append(
-                    DatePartValidationError(
-                        "Day must be a number between 1 and 31", part="day"
-                    )
-                )
-            else:
-                day = int(day_str)
-                if not (1 <= day <= 31):
-                    errors.append(
-                        DatePartValidationError(
-                            "Day must be a number between 1 and 31", part="day"
-                        )
-                    )
-                # Only check valid date if we have all parts and they're numeric
-                elif (
-                    year_str
-                    and month_str
-                    and year_str.isdigit()
-                    and month_str.isdigit()
-                ):
-                    try:
-                        datetime(int(year_str), int(month_str), day)
-                    except ValueError:
-                        errors.append(
-                            DatePartValidationError(
-                                f"Invalid day for {month_str}/{year_str}", part="day"
-                            )
-                        )
-
-        # If we have any errors, raise them all
-        if errors:
-            # Store all errors
-            self._errors_with_parts = [
-                {"message": str(e), "part": e.part} for e in errors
-            ]
-            # Add all error messages to the field's errors list
-            self.errors.extend(str(e) for e in errors)
+        # Year is required
+        if not year:
+            self._add_error("Year is required", "year")
             return False
+
+        # Validate dependencies
+        if day and not month:
+            self._add_error("Month is required when day is provided", "month")
+            return False
+
+        if (day or month) and not year:
+            self._add_error("Year is required when month or day is provided", "year")
+            return False
+
+        # Validate year format
+        if year:
+            if not year.isdigit() or len(year) != 4:
+                self._add_error("Year must be in YYYY format", "year")
+                return False
+
+        # Validate month
+        if month:
+            try:
+                month_int = int(month)
+                if not 1 <= month_int <= 12:
+                    self._add_error("Month must be between 1 and 12", "month")
+                    return False
+            except ValueError:
+                self._add_error("Month must be a number", "month")
+                return False
+
+        # Validate day
+        if day:
+            try:
+                day_int = int(day)
+                if not 1 <= day_int <= 31:
+                    self._add_error("Day must be between 1 and 31", "day")
+                    return False
+
+                # Validate complete date if we have all parts
+                if year and month:
+                    try:
+                        datetime(int(year), int(month), day_int)
+                    except ValueError:
+                        self._add_error(f"Invalid day for {month}/{year}", "day")
+                        return False
+            except ValueError:
+                self._add_error("Day must be a number", "day")
+                return False
 
         return True
 
+    def _add_error(self, message, part):
+        error = DatePartValidationError(message, part=part)
+        self._part_errors.append(error)
+        self.errors.append(str(error))
+
     def get_errors_with_parts(self):
         """Return list of errors with their associated parts"""
-        return getattr(self, "_errors_with_parts", [])
+        return [
+            {"message": str(error), "part": error.part} for error in self._part_errors
+        ]
 
     def validate(self, form, extra_validators=None):
-        self._errors_with_parts = []  # Reset errors
+        self._part_errors = []  # Reset errors
         self.errors = []  # Reset errors
-        return self.pre_validate(form)
+        success = self.pre_validate(form)
+        if not success:
+            # Ensure errors are propagated to the form level
+            self.errors = [str(error) for error in self._part_errors]
+        return success
 
 
-class BaseEventForm(FlaskForm):
+class EventForm(FlaskForm):
+    event_type = SelectField("Local plan event type", validators=[DataRequired()])
+    event_date = DatePartField("Event date", validators=[Optional()])
     notes = TextAreaField("Notes")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Always set choices when form is instantiated
+        self.event_type.choices = self._get_event_choices()
+
+    def process(self, formdata=None, obj=None, **kwargs):
+        # First set the choices
+        self.event_type.choices = self._get_event_choices()
+
+        # If we have an obj (like a LocalPlanEvent), convert its event type reference
+        if obj is not None and hasattr(obj, "local_plan_event_type_reference"):
+            # Set the event type value directly
+            kwargs["event_type"] = obj.local_plan_event_type_reference
+
+        # Now call the parent process method
+        super().process(formdata, obj, **kwargs)
+
+    @staticmethod
+    def _get_event_choices():
+        from application.models import LocalPlanEventType
+
+        return [("", "")] + [
+            (evt.reference, evt.name)
+            for evt in LocalPlanEventType.query.order_by(LocalPlanEventType.name).all()
+        ]
 
     def get_error_summary(self):
         """Get summary of form errors for display"""
@@ -221,194 +250,3 @@ class BaseEventForm(FlaskForm):
                 elif field.data and str(field.data).strip():
                     return False
         return True
-
-
-class EstimatedRegulation18Form(BaseEventForm):
-    estimated_reg_18_draft_local_plan_published = DatePartField(
-        "Draft local plan published", validators=[Optional()]
-    )
-    estimated_reg_18_public_consultation_start = DatePartField(
-        "Regulation 18 consultation start", validators=[Optional()]
-    )
-    estimated_reg_18_public_consultation_end = DatePartField(
-        "Regulation 18 consultation end", validators=[Optional()]
-    )
-    notes = TextAreaField("What does the consultation cover?", validators=[Optional()])
-
-    def __init__(self, obj=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if request.method == "GET" and obj:
-            self.estimated_reg_18_draft_local_plan_published.process_data(
-                obj.get("estimated_reg_18_draft_local_plan_published")
-            )
-            self.estimated_reg_18_public_consultation_start.process_data(
-                obj.get("estimated_reg_18_public_consultation_start")
-            )
-            self.estimated_reg_18_public_consultation_end.process_data(
-                obj.get("estimated_reg_18_public_consultation_end")
-            )
-            self.notes.data = obj.get("notes", "")
-
-
-class EstimatedRegulation19Form(BaseEventForm):
-    estimated_reg_19_publication_local_plan_published = DatePartField(
-        "Publication local plan published", validators=[Optional()]
-    )
-    estimated_reg_19_public_consultation_start = DatePartField(
-        "Regulation 19 consultation start", validators=[Optional()]
-    )
-    estimated_reg_19_public_consultation_end = DatePartField(
-        "Regulation 19 consultation end", validators=[Optional()]
-    )
-    notes = TextAreaField("What does the consultation cover?", validators=[Optional()])
-
-    def __init__(self, obj=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if request.method == "GET" and obj:
-            self.estimated_reg_19_publication_local_plan_published.process_data(
-                obj.get("estimated_reg_19_publication_local_plan_published")
-            )
-            self.estimated_reg_19_public_consultation_start.process_data(
-                obj.get("estimated_reg_19_public_consultation_start")
-            )
-            self.estimated_reg_19_public_consultation_end.process_data(
-                obj.get("estimated_reg_19_public_consultation_end")
-            )
-            self.notes.data = obj.get("notes", "")
-
-
-class EsitmatedExaminationAndAdoptionForm(BaseEventForm):
-    estimated_submit_plan_for_examination = DatePartField(
-        "Submit plan for examination", validators=[Optional()]
-    )
-    estimated_plan_adoption_date = DatePartField(
-        "Adoption of local plan", validators=[Optional()]
-    )
-
-    def __init__(self, obj=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if request.method == "GET" and obj:
-            self.estimated_submit_plan_for_examination.process_data(
-                obj.get("estimated_submit_plan_for_examination")
-            )
-            self.estimated_plan_adoption_date.process_data(
-                obj.get("estimated_plan_adoption_date")
-            )
-
-
-class Regulation18Form(BaseEventForm):
-    reg_18_draft_local_plan_published = DatePartField(
-        "Draft local plan published", validators=[Optional()]
-    )
-    reg_18_public_consultation_start = DatePartField(
-        "Regulation 18 consultation start", validators=[Optional()]
-    )
-    reg_18_public_consultation_end = DatePartField(
-        "Regulation 18 consultation end", validators=[Optional()]
-    )
-    notes = TextAreaField("What does the consultation cover?", validators=[Optional()])
-
-    def __init__(self, obj=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if request.method == "GET" and obj:
-            self.reg_18_draft_local_plan_published.process_data(
-                obj.get("reg_18_draft_local_plan_published")
-            )
-            self.reg_18_public_consultation_start.process_data(
-                obj.get("reg_18_public_consultation_start")
-            )
-            self.reg_18_public_consultation_end.process_data(
-                obj.get("reg_18_public_consultation_end")
-            )
-            self.notes.data = obj.get("notes", "")
-
-
-class Regulation19Form(BaseEventForm):
-    reg_19_publication_local_plan_published = DatePartField(
-        "Publication local plan published", validators=[Optional()]
-    )
-    reg_19_public_consultation_start = DatePartField(
-        "Regulation 19 consultation start", validators=[Optional()]
-    )
-    reg_19_public_consultation_end = DatePartField(
-        "Regulation 19 consultation end", validators=[Optional()]
-    )
-    notes = TextAreaField("What does the consultation cover?", validators=[Optional()])
-
-    def __init__(self, obj=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if request.method == "GET" and obj:
-            self.reg_19_publication_local_plan_published.process_data(
-                obj.get("reg_19_publication_local_plan_published")
-            )
-            self.reg_19_public_consultation_start.process_data(
-                obj.get("reg_19_public_consultation_start")
-            )
-            self.reg_19_public_consultation_end.process_data(
-                obj.get("reg_19_public_consultation_end")
-            )
-            self.notes.data = obj.get("notes", "")
-
-
-class PlanningInspectorateExaminationForm(BaseEventForm):
-    submit_plan_for_examination = DatePartField(
-        "Plan submitted", validators=[Optional()]
-    )
-    planning_inspectorate_examination_start = DatePartField(
-        "Examination start date", validators=[Optional()]
-    )
-    planning_inspectorate_examination_end = DatePartField(
-        "Examination end date", validators=[Optional()]
-    )
-
-    def __init__(self, obj=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if request.method == "GET" and obj:
-            self.submit_plan_for_examination.process_data(
-                obj.get("submit_plan_for_examination")
-            )
-            self.planning_inspectorate_examination_start.process_data(
-                obj.get("planning_inspectorate_examination_start")
-            )
-            self.planning_inspectorate_examination_end.process_data(
-                obj.get("planning_inspectorate_examination_end")
-            )
-
-
-class PlanningInspectorateFindingsForm(BaseEventForm):
-    planning_inspectorate_found_sound = DatePartField(
-        "Planning inspectorate found sound", validators=[Optional()]
-    )
-    inspector_report_published = DatePartField(
-        "Report published", validators=[Optional()]
-    )
-
-    def __init__(self, obj=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if request.method == "GET" and obj:
-            self.planning_inspectorate_found_sound.process_data(
-                obj.get("planning_inspectorate_found_sound")
-            )
-            self.inspector_report_published.process_data(
-                obj.get("inspector_report_published")
-            )
-
-
-def get_event_form(event_category, obj=None):
-    match event_category:
-        case EventCategory.ESTIMATED_REGULATION_18:
-            return EstimatedRegulation18Form(obj=obj)
-        case EventCategory.ESTIMATED_REGULATION_19:
-            return EstimatedRegulation19Form(obj=obj)
-        case EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION:
-            return EsitmatedExaminationAndAdoptionForm(obj=obj)
-        case EventCategory.REGULATION_18:
-            return Regulation18Form(obj=obj)
-        case EventCategory.REGULATION_19:
-            return Regulation19Form(obj=obj)
-        case EventCategory.PLANNING_INSPECTORATE_EXAMINATION:
-            return PlanningInspectorateExaminationForm(obj=obj)
-        case EventCategory.PLANNING_INSPECTORATE_FINDINGS:
-            return PlanningInspectorateFindingsForm(obj=obj)
-        case _:
-            raise ValueError("Invalid event_category.")

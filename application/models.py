@@ -309,6 +309,11 @@ class LocalPlanEvent(BaseModel):
     event_category: Mapped[EventCategory] = mapped_column(ENUM(EventCategory))
 
     event_data: Mapped[Optional[dict]] = mapped_column(MutableDict.as_mutable(JSONB))
+    event_date: Mapped[Optional[str]] = mapped_column(Text)
+    local_plan_event_type: Mapped[Optional["LocalPlanEventType"]] = relationship()
+    local_plan_event_type_reference: Mapped[Optional[str]] = mapped_column(
+        ForeignKey("local_plan_event_type.reference")
+    )
 
     created_date: Mapped[datetime.datetime] = mapped_column(
         DateTime, default=datetime.datetime.now
@@ -320,11 +325,11 @@ class LocalPlanEvent(BaseModel):
     notes: Mapped[Optional[str]] = mapped_column(Text)
 
     def event_status(self):
-        for key, value in self.event_data.items():
-            if key == "notes" or key == "csrf_token":
-                continue
-            if all(value.get(k, "").strip() != "" for k in ["day", "month", "year"]):
-                return "completed"
+        # for key, value in self.event_data.items():
+        #     if key == "notes" or key == "csrf_token":
+        #         continue
+        #     if all(value.get(k, "").strip() != "" for k in ["day", "month", "year"]):
+        #         return "completed"
         return "started"
 
     def plan_published(self):
@@ -663,36 +668,34 @@ class LocalPlanTimetable(DateModel):
     local_plan_obj: Mapped["LocalPlan"] = relationship(back_populates="timetable")
     events: Mapped[List["LocalPlanEvent"]] = relationship(lazy="joined")
 
-    def event_category_progress(self, event_category):
-        events = [
-            event for event in self.events if event.event_category == event_category
-        ]
-        if not events:
-            return "not started"
-        if all(event.event_status() == "completed" for event in events):
-            return "completed"
-        if any(event.event_status() == "started" for event in events):
-            return "started"
+    def ordered_events(self, reverse=True):
+        from datetime import datetime
 
-    def get_events_by_category(self, category):
-        return [event for event in self.events if event.event_category == category]
+        def parse_date(date_str):
+            if not date_str:
+                return None
 
-    def get_actual_events(self):
-        return [
-            event
+            # Try different date formats from most specific to least
+            formats = ["%Y-%m-%d", "%Y-%m", "%Y"]
+            for fmt in formats:
+                try:
+                    return datetime.strptime(date_str, fmt)
+                except ValueError:
+                    continue
+            return None
+
+        # Filter events with dates and parse them
+        dated_events = [
+            (event, parse_date(event.event_date))
             for event in self.events
-            if event.event_category
-            in [
-                EventCategory.TIMETABLE_PUBLISHED,
-                EventCategory.REGULATION_18,
-                EventCategory.REGULATION_19,
-                EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
-                EventCategory.PLANNING_INSPECTORATE_FINDINGS,
-            ]
+            if event.event_date is not None
         ]
 
-    def has_actual_events(self):
-        return len(self.get_actual_events()) > 0
+        # Sort by parsed date
+        dated_events.sort(key=lambda x: x[1], reverse=reverse)
+
+        # Return just the event objects
+        return [event for event, _ in dated_events]
 
     def timeline(self):
         entries = []

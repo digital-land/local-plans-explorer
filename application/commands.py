@@ -14,7 +14,6 @@ from slugify import slugify
 from sqlalchemy import not_, select, text
 from sqlalchemy.inspection import inspect
 
-from application.blueprints.timetable.forms import get_event_form
 from application.extensions import db
 from application.models import (
     EventCategory,
@@ -593,110 +592,110 @@ def migrate_doc_types():
             print(f"Updated document types for {document.reference}")
 
 
-@data_cli.command("seed-timetable")
-def seed_timetable():
-    current_file_path = Path(__file__).resolve()
-    data_directory = os.path.join(current_file_path.parent.parent, "data")
-    file_path = os.path.join(data_directory, "timetable-seed-data.csv")
+# @data_cli.command("seed-timetable")
+# def seed_timetable():
+#     current_file_path = Path(__file__).resolve()
+#     data_directory = os.path.join(current_file_path.parent.parent, "data")
+#     file_path = os.path.join(data_directory, "timetable-seed-data.csv")
 
-    records = {}
+#     records = {}
 
-    with open(file_path, mode="r") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            local_plan_reference = row.get("local-plan", "").strip()
-            plan = LocalPlan.query.get(local_plan_reference)
-            if plan is None:
-                print(f"Local plan not found for reference {local_plan_reference}")
-                continue
-            reference = row["reference"]
-            if reference not in records:
-                records[reference] = [row]
-            else:
-                records[reference].append(row)
+#     with open(file_path, mode="r") as file:
+#         reader = csv.DictReader(file)
+#         for row in reader:
+#             local_plan_reference = row.get("local-plan", "").strip()
+#             plan = LocalPlan.query.get(local_plan_reference)
+#             if plan is None:
+#                 print(f"Local plan not found for reference {local_plan_reference}")
+#                 continue
+#             reference = row["reference"]
+#             if reference not in records:
+#                 records[reference] = [row]
+#             else:
+#                 records[reference].append(row)
 
-    for reference, rows in records.items():
-        local_plan_reference = rows[0]["local-plan"]
-        plan = LocalPlan.query.get(local_plan_reference)
-        if plan is None:
-            print(f"Local plan not found for reference {reference}")
-            continue
-        if plan.timetable is None:
-            print(f"Creating timetable for {local_plan_reference}")
-            timetable_name = f"{plan.name} timetable"
-            timetable_reference = f"{plan.reference}-timetable"
-            plan.timetable = LocalPlanTimetable(
-                reference=timetable_reference, name=timetable_name, events=[]
-            )
-            db.session.add(plan)
-            db.session.commit()
+#     for reference, rows in records.items():
+#         local_plan_reference = rows[0]["local-plan"]
+#         plan = LocalPlan.query.get(local_plan_reference)
+#         if plan is None:
+#             print(f"Local plan not found for reference {reference}")
+#             continue
+#         if plan.timetable is None:
+#             print(f"Creating timetable for {local_plan_reference}")
+#             timetable_name = f"{plan.name} timetable"
+#             timetable_reference = f"{plan.reference}-timetable"
+#             plan.timetable = LocalPlanTimetable(
+#                 reference=timetable_reference, name=timetable_name, events=[]
+#             )
+#             db.session.add(plan)
+#             db.session.commit()
 
-        local_plan_event = LocalPlanEvent.query.get(reference)
-        if local_plan_event is not None:
-            print(f"Event {reference} already exists")
-            continue
-        event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
-        local_plan_event = LocalPlanEvent(reference=event_reference)
-        data = {}
-        for row in rows:
-            event_type = LocalPlanEventType.query.get(row["local-plan-event"])
-            event_category = _get_event_category(event_type.reference)
-            if event_type is None:
-                print(f"Event type not found for reference {row['event-type']}")
-                continue
-            date_fields = row.get("event-date").split("-")
-            if len(date_fields) == 3:
-                year, month, day = date_fields
-            if len(date_fields) == 2:
-                year, month = date_fields
-                day = ""
-            if len(date_fields) == 1 and date_fields[0] != "":
-                year = date_fields[0]
-                month, day = "", ""
-            data[event_type.reference.replace("-", "_")] = {
-                "day": day,
-                "month": month,
-                "year": year,
-                "notes": row.get("notes", ""),
-            }
-            _populate_missing_event_types(data, event_category)
-        event_category = _get_event_category(event_type.reference)
-        local_plan_event.event_category = event_category
-        local_plan_event.event_data = data
-        plan.timetable.events.append(local_plan_event)
-        db.session.add(plan.timetable)
-        db.session.commit()
-
-
-def _get_event_category(event_type):
-    event_type = LocalPlanEventType.query.get(event_type)
-    if event_type is None:
-        return None
-    return event_type.event_category
+#         local_plan_event = LocalPlanEvent.query.get(reference)
+#         if local_plan_event is not None:
+#             print(f"Event {reference} already exists")
+#             continue
+#         event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
+#         local_plan_event = LocalPlanEvent(reference=event_reference)
+#         data = {}
+#         for row in rows:
+#             event_type = LocalPlanEventType.query.get(row["local-plan-event"])
+#             event_category = _get_event_category(event_type.reference)
+#             if event_type is None:
+#                 print(f"Event type not found for reference {row['event-type']}")
+#                 continue
+#             date_fields = row.get("event-date").split("-")
+#             if len(date_fields) == 3:
+#                 year, month, day = date_fields
+#             if len(date_fields) == 2:
+#                 year, month = date_fields
+#                 day = ""
+#             if len(date_fields) == 1 and date_fields[0] != "":
+#                 year = date_fields[0]
+#                 month, day = "", ""
+#             data[event_type.reference.replace("-", "_")] = {
+#                 "day": day,
+#                 "month": month,
+#                 "year": year,
+#                 "notes": row.get("notes", ""),
+#             }
+#             _populate_missing_event_types(data, event_category)
+#         event_category = _get_event_category(event_type.reference)
+#         local_plan_event.event_category = event_category
+#         local_plan_event.event_data = data
+#         plan.timetable.events.append(local_plan_event)
+#         db.session.add(plan.timetable)
+#         db.session.commit()
 
 
-def _populate_missing_event_types(data, event_category):
-    from application.factory import create_app
+# def _get_event_category(event_type):
+#     event_type = LocalPlanEventType.query.get(event_type)
+#     if event_type is None:
+#         return None
+#     return event_type.event_category
 
-    app = create_app(
-        os.getenv("FLASK_CONFIG") or "application.config.DevelopmentConfig"
-    )
-    with app.app_context():
-        with app.test_request_context():
-            try:
-                form = get_event_form(event_category)
-                field_names = list(form._fields.keys())
-                for field in field_names:
-                    if field != "notes" and field != "csrf_token":
-                        if field not in data:
-                            data[field] = {
-                                "day": "",
-                                "month": "",
-                                "year": "",
-                                "notes": "",
-                            }
-            except ValueError as e:
-                print(e)
+
+# def _populate_missing_event_types(data, event_category):
+#     from application.factory import create_app
+
+#     app = create_app(
+#         os.getenv("FLASK_CONFIG") or "application.config.DevelopmentConfig"
+#     )
+#     with app.app_context():
+#         with app.test_request_context():
+#             try:
+#                 form = get_event_form(event_category)
+#                 field_names = list(form._fields.keys())
+#                 for field in field_names:
+#                     if field != "notes" and field != "csrf_token":
+#                         if field not in data:
+#                             data[field] = {
+#                                 "day": "",
+#                                 "month": "",
+#                                 "year": "",
+#                                 "notes": "",
+#                             }
+#             except ValueError as e:
+#                 print(e)
 
 
 def _find_category_by_event_type(event_type):
@@ -926,6 +925,70 @@ def dedupe_documents():
     try:
         db.session.commit()
         print(f"\nSuccessfully set end date for {end_date_count} duplicate documents")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error committing changes: {str(e)}")
+
+
+@data_cli.command("split-events")
+def split_events():
+    """Split compound events in LocalPlanEvent into separate rows"""
+    print("Splitting compound events...")
+
+    # Get all event types and build snake_case to kebab-case mapping
+    event_types = {}
+    for event_type in LocalPlanEventType.query.all():
+        # Convert kebab-case reference to snake_case for JSON keys
+        snake_case = event_type.reference.replace("-", "_")
+        event_types[snake_case] = event_type.reference
+
+    events = LocalPlanEvent.query.all()
+    new_events = []
+    updated = 0
+
+    for event in events:
+        if not event.event_data:
+            continue
+
+        # Process each event type found in event_data
+        for json_key, event_type_ref in event_types.items():
+            if json_key in event.event_data:
+                date_parts = event.event_data.get(json_key)
+                if not date_parts:
+                    continue
+
+                # Build ISO date string from available parts
+                date_str = date_parts.get("year", "")
+                if date_parts.get("month"):
+                    date_str += f"-{date_parts['month']}"
+                if date_parts.get("day"):
+                    date_str += f"-{date_parts['day']}"
+
+                if date_str:
+                    # Create new event with the extracted date
+                    new_event = LocalPlanEvent(
+                        reference=f"{event.reference}-{event_type_ref}",
+                        local_plan_timetable=event.local_plan_timetable,
+                        local_plan_event_type_reference=event_type_ref,
+                        event_category=event.event_category,
+                        event_date=date_str,
+                        notes=event.event_data.get("notes"),
+                        entry_date=event.entry_date,
+                        start_date=event.start_date,
+                    )
+                    new_events.append(new_event)
+                    updated += 1
+
+        # Mark original event as ended
+        event.end_date = datetime.now().date()
+
+    try:
+        # Add all new events
+        for new_event in new_events:
+            db.session.add(new_event)
+
+        db.session.commit()
+        print(f"\nSuccessfully created {updated} new events from compound events")
     except Exception as e:
         db.session.rollback()
         print(f"Error committing changes: {str(e)}")

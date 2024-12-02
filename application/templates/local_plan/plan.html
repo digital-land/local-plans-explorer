@@ -69,127 +69,69 @@
           <span class="govuk-tag govuk-tag--{{plan.status | status_colour }}">{{plan.status.value}}</span>
         </div>
       </section>
-      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     </div>
     {% if plan.status.name != "NOT_FOR_PLATFORM" %}
       <div class="govuk-grid-column-one-third">
-        <div class="app-summary-list" role="complementary">
+        <div class="app-related-items" role="complementary">
           <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
-            Local plan actions
+            Linked data
           </h2>
-          <p class="govuk-hint govuk-!-font-size-14">Edit the plan record to add/correct information or change it's status.</p>
-          <p class="govuk-hint govuk-!-font-size-14">To include the plan in the local-plan.csv export for the data platform, set it's status to "For platform".</p>
+          <p class="govuk-hint govuk-!-font-size-14">You can view and add linked data to this plan</p>
+          <nav role="navigation" aria-labelledby="view-the-data">
+            <ul class="govuk-list govuk-!-font-size-16">
+              <li>
+                <a class="govuk-link" href="#timetable">Timetable events</a>
+              </li>
+              <li>
+                <a class="govuk-link" href="#documents">Associated documents</a>
+              </li>
+            </ul>
+          </nav>
+
         </div>
       </div>
     {% endif %}
   </div>
+  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
   {% if plan.status.name != "NOT_FOR_PLATFORM" %}
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <section class="app-timetable">
-          <header class="app-timetable__header">
-            <h2 class="app-timetable__title">
-              Estimated timetable
-            </h2>
-          </header>
-          <div class="app-timetable__body">
-            <ul class="govuk-list app-timetable__list">
-              <li><a href="{{ stage_urls[event_category.ESTIMATED_REGULATION_18] }}">Regulation 18</a>
-                {% if plan.timetable %}
-                  {% set progress = plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_18) %}
-                  <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
-                {% else %}
-                  <span class="govuk-tag govuk-tag--grey">Not started</span>
-                {% endif %}
-              </li>
-              <li><a href="{{ stage_urls[event_category.ESTIMATED_REGULATION_19] }}">Regulation 19</a>
-                {% if plan.timetable %}
-                {% set progress = plan.timetable.event_category_progress(event_category.ESTIMATED_REGULATION_19) %}
-                  <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
-                {% else %}
-                  <span class="govuk-tag govuk-tag--grey">Not started</span>
-                {% endif %}
-              </li>
-              <li><a href="{{ stage_urls[event_category.ESTIMATED_EXAMINATION_AND_ADOPTION] }}">Examination and adoption</a>
-                {% if plan.timetable %}
-                  {% set progress = plan.timetable.event_category_progress(event_category.ESTIMATED_EXAMINATION_AND_ADOPTION) %}
-                    <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
-                {% else %}
-                  <span class="govuk-tag govuk-tag--grey">Not started</span>
-                {% endif %}</li>
-            </ul>
-          </div>
-        </section>
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        </div>
-        <div class="govuk-grid-column-one-third">
-          <div class="app-summary-list" role="complementary">
-            <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
-              Estimated timetable
-            </h2>
-            <p class="govuk-hint govuk-!-font-size-14">You can use the local plan development scheme to add or edit events in the timetable.</p>
-        </div>
-      </div>
-    </div>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <section class="app-timetable">
-          <header class="app-timetable__header">
-            <h2 class="app-timetable__title">
-              Actual timetable
-            </h2>
-            {% if plan.timetable and plan.timetable.has_actual_events() %}
-              <a href="{{ url_for('timetable.index', local_plan_reference=plan.reference, timetable_reference=plan.timetable.reference ) }}" class="govuk-link">View as timeline<span class="govuk-visually-hidden"> timetable</span></a>
-            {% endif %}
-          </header>
-          <div class="app-timetable__body">
-            <ul class="govuk-list app-timetable__list">
-              <li><a href="{{ stage_urls[event_category.REGULATION_18] }}">Regulation 18</a>
-                {% if plan.timetable %}
-                  {% set progress = plan.timetable.event_category_progress(event_category.REGULATION_18) %}
-                  <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
-                {% else %}
-                  <span class="govuk-tag govuk-tag--grey">Not started</span>
-                {% endif %}
-              </li>
-              <li><a href="{{ stage_urls[event_category.REGULATION_19] }}">Regulation 19</a>
-                {% if plan.timetable %}
-                {% set progress = plan.timetable.event_category_progress(event_category.REGULATION_19) %}
-                  <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
-                {% else %}
-                  <span class="govuk-tag govuk-tag--grey">Not started</span>
-                {% endif %}
-              </li>
-              <li><a href="{{ stage_urls[event_category.PLANNING_INSPECTORATE_EXAMINATION] }}">Planning inspectorate examination</a>
-                {% if plan.timetable %}
-                  {% set progress = plan.timetable.event_category_progress(event_category.PLANNING_INSPECTORATE_EXAMINATION) %}
-                    <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
-                {% else %}
-                  <span class="govuk-tag govuk-tag--grey">Not started</span>
-                {% endif %}</li>
-                <li><a href="{{ stage_urls[event_category.PLANNING_INSPECTORATE_FINDINGS] }}">Planning inspectorate findings</a>
-                  {% if plan.timetable %}
-                    {% set progress = plan.timetable.event_category_progress(event_category.PLANNING_INSPECTORATE_FINDINGS) %}
-                      <span class="govuk-tag govuk-tag--{{ progress | timetable_status_colour }}">{{ progress | capitalize }}</span>
-                  {% else %}
-                    <span class="govuk-tag govuk-tag--grey">Not started</span>
-                  {% endif %}</li>
-            </ul>
-          </div>
-        </section>
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        </div>
-        <div class="govuk-grid-column-one-third">
-          <div class="app-summary-list" role="complementary">
-            <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
-              Actual timetable
-            </h2>
-            <p class="govuk-hint govuk-!-font-size-14">You can use the local plan development scheme to add or edit events in the timetable.</p>
-        </div>
-      </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 id="timetable" class="govuk-heading-m">Event log</h2>
+      <p class="govuk-body">This data should be a collection of events that happen during the plan-making process. Event records may have already happened or might happen on a future date.</p>
+      <p class="govuk-body">This data can be used to create a timetable for the plan.</p>
     </div>
+  </div>
 
+  <table class="govuk-table app-timetable app-table--sortable">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Event</th>
+        <th scope="col" class="govuk-table__header" data-sort="none">Event date</th>
+        <th scope="col" class="govuk-table__header">Organisation</th>
+        <th scope="col" class="govuk-table__header app-cell--meta app-cell--actions"></th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for event in events %}
+      <tr class="govuk-table__row" data-timetable-entry-reference="{{ event.reference }}" data-timetable-entry-plan="{{ event.timetable.reference }}">
+        <td scope="row" class="govuk-table__header">{{ event.local_plan_event_type.name }}</td>
+        <td class="govuk-table__cell">{{ event.event_date }}</td>
+        <td class="govuk-table__cell">{% for org in event.timetable.local_plan_obj.organisations %}{{ org.name }}{{ ', ' if not loop.last }}{% endfor %}</td>
+        <td class="govuk-table__cell app-cell--meta app-cell--actions">
+          {% if not event.end_date %}
+          <ul class="govuk-list govuk-!-margin-bottom-0 govuk-!-font-size-16">
+            <li><a href="{{ url_for('timetable.edit_event', local_plan_reference=plan.reference, timetable_reference=event.timetable.reference, event_reference=event.reference) }}" class="govuk-link">Edit</a></li>
+          </ul>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{{ url_for('timetable.add_event', local_plan_reference=plan.reference, timetable_reference=plan.timetable.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> Add event</a>
+  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
@@ -264,7 +206,7 @@
       </div>
       <div class="govuk-grid-column-one-third">
         <div class="app-summary-list" role="complementary">
-          <h2 class="govuk-heading-s govuk-!-margin-bottom-0" id="view-the-data">
+          <h2 id="documents" class="govuk-heading-s govuk-!-margin-bottom-0">
             Documents
           </h2>
           <p class="govuk-hint govuk-!-font-size-14">You can check/edit documents that are marked as for review.</p>
@@ -331,6 +273,11 @@
     </div>
 {% endif %}
 {% endblock content %}
+
+{% block digitalLandScripts -%}
+  {{ super() }}
+  <script src="{{ assetPath | default('/static') }}/javascripts/table.js"></script>
+{%- endblock %}
 
 {% block pageScripts %}
   {% if geography and plan.status.name != "NOT_FOR_PLATFORM" %} %}

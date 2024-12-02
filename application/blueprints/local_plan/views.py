@@ -58,33 +58,8 @@ def get_plan(reference):
     document_counts = _get_document_counts(plan.documents)
 
     stage_urls = {}
-    for event_category in [
-        EventCategory.ESTIMATED_REGULATION_18,
-        EventCategory.ESTIMATED_REGULATION_19,
-        EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION,
-        EventCategory.REGULATION_18,
-        EventCategory.REGULATION_19,
-        EventCategory.PLANNING_INSPECTORATE_EXAMINATION,
-        EventCategory.PLANNING_INSPECTORATE_FINDINGS,
-    ]:
-        if plan.timetable and plan.timetable.event_category_progress(
-            event_category
-        ) in [
-            "started",
-            "completed",
-        ]:
-            stage_urls[event_category] = url_for(
-                "timetable.timetable_events",
-                local_plan_reference=plan.reference,
-                timetable_reference=plan.timetable.reference,
-                event_category=event_category,
-            )
-        else:
-            stage_urls[event_category] = url_for(
-                "timetable.add_new_timetable_event",
-                local_plan_reference=plan.reference,
-                event_category=event_category,
-            )
+
+    events = plan.timetable.ordered_events()
 
     breadcrumbs = {
         "items": [
@@ -105,6 +80,7 @@ def get_plan(reference):
         document_counts=document_counts,
         event_category=EventCategory,
         stage_urls=stage_urls,
+        events=events,
         breadcrumbs=breadcrumbs,
     )
 

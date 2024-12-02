@@ -1,26 +1,128 @@
 {% extends 'layouts/base.html' %}
-{% import 'macros/timetable-form.html' as timetable_form %}
 
 {% block content %}
 
+<span class="govuk-caption-xl">Local plan timetable: {{ local_plan.timetable.reference }}</span>
+<h1 class="govuk-heading-l">{{action_text}} event</h1>
+<p class="govuk-body-m">
+  With dates, some data is better than no data, so:
+  <ul class="govuk-list govuk-list--bullet">
+    <li>2014 is fine</li>
+    <li>3-2014 is better</li>
+    <li>27-3-2014 is brilliant</li><br>
+  </ul>
+</p>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-m">{%if estimated %}Estimated{% else %}Actual{% endif %} dates</span>
-    <h1 class="govuk-heading-l">{{ event_category_title | capitalize }}</h1>
-    <p class="govuk-body-m">
-      With dates, some data is better than no data, so:
-      <ul class="govuk-list govuk-list--bullet">
-        <li>2014 is fine</li>
-        <li>3-2014 is better</li>
-        <li>27-3-2014 is brilliant</li><br>
-      </ul>
-    </p>
-  </div>
-</div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    {{ timetable_form.render_form(form, plan, event_category, action_url, include_plan_published=include_plan_published, skip_url=skip_url, skip_text=skip_text) }}
+    {% if form.errors %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There was a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              {% for error in form.get_error_summary() %}
+                <li>
+                  <a href="{{ error.href }}">{{ error.text }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form class="govuk-form" method="POST" action="{{ action }}">
+      {{ form.hidden_tag() }}
+
+      <div class="govuk-form-group">
+        {{ form.event_type.label(class='govuk-label') }}
+        {{ form.event_type(class='govuk-select', id='event_type') }}
+      </div>
+      <div class="govuk-form-group {% if form.event_date.errors %}govuk-form-group--error{% endif %}">
+        <fieldset class="govuk-fieldset" role="group" aria-describedby="event-date-hint">
+          <legend class="govuk-fieldset__legend">
+              {{ form.event_date.label}}
+          </legend>
+          <div id="event-date-hint" class="govuk-hint">
+            For example, 27 3 2007
+          </div>
+
+          {% if form.event_date.errors %}
+            {% for error in form.event_date.get_errors_with_parts() %}
+              <p class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ error.message }}
+              </p>
+            {% endfor %}
+          {% endif %}
+
+          <div class="govuk-date-input" id="event-date">
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group {% if 'day' in form.event_date._part_errors|map(attribute='part') %}govuk-form-group--error{% endif %}">
+                <label class="govuk-label govuk-date-input__label" for="event_date_day">
+                  Day
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                       id="event_date_day"
+                       name="event_date_day"
+                       type="text"
+                       inputmode="numeric"
+                       value="{{ form.event_date.data.day }}">
+              </div>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group {% if 'month' in form.event_date._part_errors|map(attribute='part') %}govuk-form-group--error{% endif %}">
+                <label class="govuk-label govuk-date-input__label" for="event_date_month">
+                  Month
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                       id="event_date_month"
+                       name="event_date_month"
+                       type="text"
+                       inputmode="numeric"
+                       value="{{ form.event_date.data.month }}">
+              </div>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group {% if 'year' in form.event_date._part_errors|map(attribute='part') %}govuk-form-group--error{% endif %}">
+                <label class="govuk-label govuk-date-input__label" for="event_date_year">
+                  Year
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-4"
+                       id="event_date_year"
+                       name="event_date_year"
+                       type="text"
+                       inputmode="numeric"
+                       value="{{ form.event_date.data.year }}">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="govuk-form-group">
+        {{ form.notes.label(class='govuk-label') }}
+        {{ form.notes(class='govuk-textarea') }}
+      </div>
+
+      <div class="govuk-button-group">
+        <button class="govuk-button" type="submit">Save</button>
+        <a class="govuk-link" href="{{ url_for('local_plan.get_plan', reference=local_plan.reference) }}">Cancel</a>
+      </div>
+    </form>
   </div>
 </div>
 
 {% endblock %}
+
+{% block pageScripts %}
+  <script src="{{ url_for('static', filename='javascripts/vendor/accessible-autocomplete.min.js') }}"></script>
+  <script>
+    const $eventType = document.getElementById('event_type')
+    accessibleAutocomplete.enhanceSelectElement({
+      selectElement: $eventType
+    })
+  </script>
+{% endblock pageScripts %}
