@@ -7,13 +7,7 @@ from slugify import slugify
 
 from application.blueprints.local_plan.forms import LocalPlanForm
 from application.extensions import db
-from application.models import (
-    EventCategory,
-    LocalPlan,
-    LocalPlanBoundary,
-    Organisation,
-    Status,
-)
+from application.models import LocalPlan, LocalPlanBoundary, Organisation, Status
 from application.utils import (
     combine_geographies,
     generate_random_string,
@@ -59,7 +53,10 @@ def get_plan(reference):
 
     stage_urls = {}
 
-    events = plan.timetable.ordered_events()
+    if plan.timetable:
+        events = plan.timetable.ordered_events()
+    else:
+        events = []
 
     breadcrumbs = {
         "items": [
@@ -78,7 +75,6 @@ def get_plan(reference):
         geography=geography,
         bounding_box=bounding_box,
         document_counts=document_counts,
-        event_category=EventCategory,
         stage_urls=stage_urls,
         events=events,
         breadcrumbs=breadcrumbs,

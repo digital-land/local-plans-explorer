@@ -152,6 +152,4 @@ def register_globals(app):
 
 
 def register_converters(app):
-    from application.utils import EventCategoryConverter
-
-    app.url_map.converters["event_category"] = EventCategoryConverter
+    pass

@@ -98,11 +98,12 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h2 id="timetable" class="govuk-heading-m">Event log</h2>
-      <p class="govuk-body">This data should be a collection of events that happen during the plan-making process. Event records may have already happened or might happen on a future date.</p>
+      <h2 id="timetable" class="govuk-heading-m">Timetable</h2>
+      <p class="govuk-body">This data should be a collection of events that happen during the plan-making process. You can record events that have already happened or might happen on a future date.</p>
       <p class="govuk-body">This data can be used to create a timetable for the plan.</p>
     </div>
   </div>
+
 
   <table class="govuk-table app-timetable app-table--sortable">
     <thead class="govuk-table__head">
@@ -120,17 +121,26 @@
         <td class="govuk-table__cell">{{ event.event_date }}</td>
         <td class="govuk-table__cell">{% for org in event.timetable.local_plan_obj.organisations %}{{ org.name }}{{ ', ' if not loop.last }}{% endfor %}</td>
         <td class="govuk-table__cell app-cell--meta app-cell--actions">
-          {% if not event.end_date %}
           <ul class="govuk-list govuk-!-margin-bottom-0 govuk-!-font-size-16">
-            <li><a href="{{ url_for('timetable.edit_event', local_plan_reference=plan.reference, timetable_reference=event.timetable.reference, event_reference=event.reference) }}" class="govuk-link">Edit</a></li>
+            <li><a href="{{ url_for('timetable.edit_event', local_plan_reference=plan.reference, timetable_reference=event.timetable.reference, event_reference=event.reference) }}">Edit</a></li>
+            <li><a href="{{ url_for('timetable.delete_event', local_plan_reference=plan.reference, timetable_reference=event.timetable.reference, event_reference=event.reference) }}" class="govuk-link govuk-link--destructive js-delete-event"
+                data-event-reference="{{ event.reference }}"
+                data-timetable-reference="{{ event.timetable.reference }}"
+                data-plan-reference="{{ plan.reference }}">Delete</a></li>
           </ul>
-          {% endif %}
+
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-  <a href="{{ url_for('timetable.add_event', local_plan_reference=plan.reference, timetable_reference=plan.timetable.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> Add event</a>
+  {% if plan.timetable %}
+    {% set add_url = url_for('timetable.add_event', local_plan_reference=plan.reference, timetable_reference=plan.timetable.reference)%}
+  {% else %}
+    {% set add_url = url_for('timetable.new_timetable_and_event', local_plan_reference=plan.reference)%}
+  {% endif %}
+  <a href="{{ add_url }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> Add event</a>
+
   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
 
     <div class="govuk-grid-row">
@@ -277,6 +287,7 @@
 {% block digitalLandScripts -%}
   {{ super() }}
   <script src="{{ assetPath | default('/static') }}/javascripts/table.js"></script>
+  <script src="{{ assetPath | default('/static') }}/javascripts/timetable.js"></script>
 {%- endblock %}
 
 {% block pageScripts %}

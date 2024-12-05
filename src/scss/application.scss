@@ -55,6 +55,14 @@
   .govuk-table__cell {
     vertical-align: middle
   }
+
+  .govuk-table__header:first-child,
+  .govuk-table__cell:first-child {
+    width: 33.3%;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
 }
 
 .app-cell--meta {
@@ -69,7 +77,7 @@
   }
 
   & ~ .app-cell--actions {
-    padding-left: 15px;
+    padding-left: 10px;
     border-left: 1px solid  govuk-colour("mid-grey");
   }
 }

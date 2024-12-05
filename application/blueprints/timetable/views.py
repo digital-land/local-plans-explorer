@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from flask import Blueprint, abort, redirect, render_template, url_for
 
 from application.blueprints.timetable.forms import EventForm
 from application.extensions import db
 from application.models import (
     EventCategory,
+    LocalPlan,
     LocalPlanEvent,
     LocalPlanEventType,
     LocalPlanTimetable,
@@ -58,9 +61,9 @@ def timetable_event(local_plan_reference, timetable_reference, event_reference):
     return event.name
 
 
-@timetable.route("/<string:timetable_reference>/<event_category:event_category>")
+@timetable.route("/<string:timetable_reference>")
 @login_required
-def timetable_events(local_plan_reference, timetable_reference, event_category):
+def timetable_events(local_plan_reference, timetable_reference):
     timetable = LocalPlanTimetable.query.filter(
         LocalPlanTimetable.local_plan == local_plan_reference,
         LocalPlanTimetable.reference == timetable_reference,
@@ -70,6 +73,81 @@ def timetable_events(local_plan_reference, timetable_reference, event_category):
         return abort(404)
 
     return timetable.events
+
+
+@timetable.route(
+    "/event/add",
+    methods=["GET", "POST"],
+)
+@login_required
+def new_timetable_and_event(local_plan_reference):
+    local_plan = LocalPlan.query.get(local_plan_reference)
+    if local_plan is None:
+        return abort(404)
+
+    action_text = "Add"
+    action_url = url_for(
+        "timetable.new_timetable_and_event",
+        local_plan_reference=local_plan_reference,
+    )
+    form = EventForm()
+    breadcrumbs = {
+        "items": [
+            {"text": "Home", "href": url_for("main.index")},
+            {
+                "text": "Plans by organisation",
+                "href": url_for("organisation.organisations"),
+            },
+            {
+                "text": local_plan.name,
+                "href": url_for("local_plan.get_plan", reference=local_plan.reference),
+            },
+            {"text": "Add event"},
+        ]
+    }
+
+    if form.validate_on_submit():
+        event_date = form.event_date.data.get("year")
+        if form.event_date.data.get("month"):
+            month = form.event_date.data.get("month")
+            event_date += f"-{int(month):02d}"
+        if form.event_date.data.get("day"):
+            day = form.event_date.data.get("day")
+            event_date += f"-{int(day):02d}"
+        event_type = form.event_type.data
+        local_plan_event_type = LocalPlanEventType.query.get(
+            event_type.replace("_", "-")
+        )
+        if local_plan_event_type is None:
+            abort(404)
+
+        timetable = LocalPlanTimetable(
+            reference=f"{local_plan.reference}-timetable",
+            local_plan=local_plan.reference,
+        )
+        local_plan.timetable = timetable
+        local_plan_event = LocalPlanEvent(
+            reference=f"{timetable.reference}-{len(timetable.events)}",
+            event_date=event_date,
+            event_category=EventCategory.TIMETABLE_PUBLISHED.name,
+            local_plan_event_type_reference=local_plan_event_type.reference,
+            notes=form.notes.data,
+        )
+        timetable.events = [local_plan_event]
+        db.session.add(local_plan)
+        db.session.add(timetable)
+        db.session.add(local_plan_event)
+        db.session.commit()
+        return redirect(url_for("local_plan.get_plan", reference=local_plan_reference))
+
+    return render_template(
+        "timetable/event-form.html",
+        form=form,
+        local_plan=local_plan,
+        breadcrumbs=breadcrumbs,
+        action=action_url,
+        action_text=action_text,
+    )
 
 
 @timetable.route(
@@ -211,3 +289,18 @@ def edit_event(local_plan_reference, timetable_reference, event_reference):
         action=action,
         action_text=action_text,
     )
+
+
+@timetable.route(
+    "/<string:timetable_reference>/event/<string:event_reference>/delete",
+    methods=["GET"],
+)
+@login_required
+def delete_event(local_plan_reference, timetable_reference, event_reference):
+    event = LocalPlanEvent.query.get(event_reference)
+    if event is None:
+        return abort(404)
+    event.end_date = datetime.now()
+    db.session.add(event)
+    db.session.commit()
+    return redirect(url_for("local_plan.get_plan", reference=local_plan_reference))

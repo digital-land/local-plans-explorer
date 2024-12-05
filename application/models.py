@@ -1,6 +1,5 @@
 import datetime
 import re
-from collections import OrderedDict
 from enum import Enum
 from typing import List, Optional, Union
 
@@ -300,8 +299,6 @@ class EventCategory(Enum):
 class LocalPlanEventType(BaseModel):
     __tablename__ = "local_plan_event_type"
 
-    event_category: Mapped[Optional[EventCategory]] = mapped_column(ENUM(EventCategory))
-
 
 class LocalPlanEvent(BaseModel):
     __tablename__ = "local_plan_event"
@@ -323,88 +320,6 @@ class LocalPlanEvent(BaseModel):
     )
     timetable: Mapped["LocalPlanTimetable"] = relationship(back_populates="events")
     notes: Mapped[Optional[str]] = mapped_column(Text)
-
-    def event_status(self):
-        # for key, value in self.event_data.items():
-        #     if key == "notes" or key == "csrf_token":
-        #         continue
-        #     if all(value.get(k, "").strip() != "" for k in ["day", "month", "year"]):
-        #         return "completed"
-        return "started"
-
-    def plan_published(self):
-        prefix = (
-            "estimated_" if "estimated" in self.event_category.value.lower() else ""
-        )
-        match self.event_category:
-            case EventCategory.ESTIMATED_REGULATION_18 | EventCategory.REGULATION_18:
-                return self.collect_date_fields(
-                    f"{prefix}reg_18_draft_local_plan_published"
-                )
-            case EventCategory.ESTIMATED_REGULATION_19 | EventCategory.REGULATION_19:
-                return self.collect_date_fields(
-                    f"{prefix}reg_19_publication_local_plan_published"
-                )
-            case _:
-                return None
-
-    def plan_published_text(self):
-        stage = self.event_category.stage()
-        if stage == "18":
-            plan_published_text = "Draft local plan published"
-        elif stage == "19":
-            plan_published_text = "Publication local plan published"
-        else:
-            plan_published_text = None
-        return plan_published_text
-
-    def consultation_start(self):
-        prefix = (
-            "estimated_" if "estimated" in self.event_category.value.lower() else ""
-        )
-        stage = self.event_category.stage()
-        match self.event_category:
-            case (
-                EventCategory.ESTIMATED_REGULATION_18
-                | EventCategory.REGULATION_18
-                | EventCategory.ESTIMATED_REGULATION_19
-                | EventCategory.REGULATION_19
-            ):
-                return self.collect_date_fields(
-                    f"{prefix}reg_{stage}_public_consultation_start"
-                )
-            case _:
-                return None
-
-    def consultation_end(self):
-        prefix = (
-            "estimated_" if "estimated" in self.event_category.value.lower() else ""
-        )
-        stage = self.event_category.stage()
-        match self.event_category:
-            case (
-                EventCategory.ESTIMATED_REGULATION_18
-                | EventCategory.REGULATION_18
-                | EventCategory.ESTIMATED_REGULATION_19
-                | EventCategory.REGULATION_19
-            ):
-                return self.collect_date_fields(
-                    f"{prefix}reg_{stage}_public_consultation_end"
-                )
-            case _:
-                return None
-
-    def submit_plan_for_examination(self):
-        prefix = (
-            "estimated_" if "estimated" in self.event_category.value.lower() else ""
-        )
-        return self.collect_date_fields(f"{prefix}submit_plan_for_examination")
-
-    def plan_adoption_date(self):
-        prefix = (
-            "estimated_" if "estimated" in self.event_category.value.lower() else ""
-        )
-        return self.collect_date_fields(f"{prefix}plan_adoption_date")
 
     def collect_date_fields(self, key):
         try:
@@ -449,215 +364,6 @@ class LocalPlanEvent(BaseModel):
             return ""
         return event_type.name
 
-    def ordered_event_data(self):
-        if self.event_category in [EventCategory.PLANNING_INSPECTORATE_EXAMINATION]:
-            ordered = OrderedDict()
-            ordered["submit_plan_for_examination"] = self.event_data.get(
-                "submit_plan_for_examination"
-            )
-            ordered["planning_inspectorate_examination_start"] = self.event_data.get(
-                "planning_inspectorate_examination_start"
-            )
-            ordered["planning_inspectorate_examination_end"] = self.event_data.get(
-                "planning_inspectorate_examination_end"
-            )
-            return ordered
-        if self.event_category in [EventCategory.PLANNING_INSPECTORATE_FINDINGS]:
-            ordered = OrderedDict()
-            ordered["planning_inspectorate_found_sound"] = self.event_data.get(
-                "planning_inspectorate_found_sound"
-            )
-            ordered["inspector_report_published"] = self.event_data.get(
-                "inspector_report_published"
-            )
-            ordered["inspector_report_published"] = self.event_data.get(
-                "inspector_report_published"
-            )
-            return ordered
-        elif self.event_category in [EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION]:
-            ordered = OrderedDict()
-            ordered["estimated_submit_plan_for_examination"] = self.event_data.get(
-                "estimated_submit_plan_for_examination"
-            )
-            ordered["estimated_plan_adoption_date"] = self.event_data.get(
-                "estimated_plan_adoption_date"
-            )
-            return ordered
-        elif self.event_category in [
-            EventCategory.ESTIMATED_REGULATION_18,
-            EventCategory.REGULATION_18,
-        ]:
-            prefix = (
-                "estimated_" if "estimated" in self.event_category.value.lower() else ""
-            )
-            ordered = OrderedDict()
-            ordered[f"{prefix}reg_18_draft_local_plan_published"] = self.event_data.get(
-                f"{prefix}reg_18_draft_local_plan_published"
-            )
-            ordered[f"{prefix}reg_18_public_consultation_start"] = self.event_data.get(
-                f"{prefix}reg_18_public_consultation_start"
-            )
-            ordered[f"{prefix}reg_18_public_consultation_end"] = self.event_data.get(
-                f"{prefix}reg_18_public_consultation_end"
-            )
-            return ordered
-        elif self.event_category in [
-            EventCategory.ESTIMATED_REGULATION_19,
-            EventCategory.REGULATION_19,
-        ]:
-            prefix = (
-                "estimated_" if "estimated" in self.event_category.value.lower() else ""
-            )
-            ordered = OrderedDict()
-            ordered[
-                f"{prefix}reg_19_publication_local_plan_published"
-            ] = self.event_data.get(f"{prefix}reg_19_publication_local_plan_published")
-            ordered[f"{prefix}reg_19_public_consultation_start"] = self.event_data.get(
-                f"{prefix}reg_19_public_consultation_start"
-            )
-            ordered[f"{prefix}reg_19_public_consultation_end"] = self.event_data.get(
-                f"{prefix}reg_19_public_consultation_end"
-            )
-            return ordered
-        return self.event_data
-
-    def is_first_event_of_category(self):
-        earlier_events = self.query.filter(
-            LocalPlanEvent.timetable == self.timetable,
-            LocalPlanEvent.event_category == self.event_category,
-            LocalPlanEvent.created_date < self.created_date,
-        ).all()
-        return True if not earlier_events else False
-
-    def as_timeline_entry(self):
-        match self.event_category:
-            case EventCategory.TIMETABLE_PUBLISHED:
-                date = self.collect_date_fields("timetable_published")
-                if date:
-                    return [
-                        TimelineEntry(
-                            name="Timetable published",
-                            start_date=date,
-                            end_date=None,
-                            notes=self.notes if self.notes else "",
-                        )
-                    ]
-
-            case EventCategory.REGULATION_18:
-                entries = []
-                if self.is_first_event_of_category():
-                    date = self.collect_date_fields("reg_18_draft_local_plan_published")
-                    if date:
-                        entries.append(
-                            TimelineEntry(
-                                name="Draft local plan published",
-                                start_date=date,
-                                end_date=None,
-                                notes="",
-                            )
-                        )
-
-                start_date = self.collect_date_fields(
-                    "reg_18_public_consultation_start"
-                )
-                if start_date:
-                    end_date = self.collect_date_fields(
-                        "reg_18_public_consultation_end"
-                    )
-                    entries.append(
-                        TimelineEntry(
-                            name="Regulation 18 consultation",
-                            start_date=start_date,
-                            end_date=end_date,
-                            notes=self.notes if self.notes else "",
-                        )
-                    )
-                return entries
-
-            case EventCategory.REGULATION_19:
-                entries = []
-                if self.is_first_event_of_category():
-                    date = self.collect_date_fields(
-                        "reg_19_publication_local_plan_published"
-                    )
-                    if date:
-                        entries.append(
-                            TimelineEntry(
-                                name="Publication local plan published",
-                                start_date=date,
-                                end_date=None,
-                                notes="",
-                            )
-                        )
-
-                start_date = self.collect_date_fields(
-                    "reg_19_public_consultation_start"
-                )
-                if start_date:
-                    end_date = self.collect_date_fields(
-                        "reg_19_public_consultation_end"
-                    )
-                    entries.append(
-                        TimelineEntry(
-                            name="Regulation 19 consultation",
-                            start_date=start_date,
-                            end_date=end_date,
-                            notes=self.notes if self.notes else "",
-                        )
-                    )
-                return entries
-
-            case EventCategory.PLANNING_INSPECTORATE_EXAMINATION:
-                entries = []
-                date = self.collect_date_fields("submit_plan_for_examination")
-                if date:
-                    entries.append(
-                        TimelineEntry(
-                            name="Submit plan for examination",
-                            start_date=date,
-                            end_date=None,
-                            notes=self.notes if self.notes else "",
-                        )
-                    )
-
-                start_date = self.collect_date_fields(
-                    "planning_inspectorate_examination_start"
-                )
-                if start_date:
-                    end_date = self.collect_date_fields(
-                        "planning_inspectorate_examination_end"
-                    )
-                    entries.append(
-                        TimelineEntry(
-                            name="Planning inspectorate examination period",
-                            start_date=start_date,
-                            end_date=end_date,
-                            notes=self.notes if self.notes else "",
-                        )
-                    )
-                return entries
-
-            case EventCategory.PLANNING_INSPECTORATE_FINDINGS:
-                entries = []
-                keys = self.event_category.ordered_event_types()
-                for key in keys:
-                    event_type = LocalPlanEventType.query.get(key.replace("_", "-"))
-                    if event_type:
-                        date = self.collect_date_fields(key)
-                        if date:
-                            entries.append(
-                                TimelineEntry(
-                                    name=event_type.name,
-                                    start_date=date,
-                                    end_date=None,
-                                    notes=self.notes if self.notes else "",
-                                )
-                            )
-                return entries
-
-            case _:
-                return []
-
 
 class LocalPlanTimetable(DateModel):
     __tablename__ = "local_plan_timetable"
@@ -688,7 +394,7 @@ class LocalPlanTimetable(DateModel):
         dated_events = [
             (event, parse_date(event.event_date))
             for event in self.events
-            if event.event_date is not None
+            if event.event_date is not None and event.end_date is None
         ]
 
         # Sort by parsed date
@@ -700,52 +406,52 @@ class LocalPlanTimetable(DateModel):
     def timeline(self):
         entries = []
 
-        # Check for Draft local plan published event
-        draft_plan_entry = None
-        has_draft_plan = False
+        # # Check for Draft local plan published event
+        # draft_plan_entry = None
+        # has_draft_plan = False
 
-        for event in self.get_actual_events():
-            # Check each event's entries for draft plan published
-            event_entries = event.as_timeline_entry()
-            for entry in event_entries:
-                if entry.name == "Draft local plan published":
-                    draft_plan_entry = entry
-                    has_draft_plan = True
-                else:
-                    entries.append(entry)
+        # for event in self.get_actual_events():
+        #     # Check each event's entries for draft plan published
+        #     event_entries = event.as_timeline_entry()
+        #     for entry in event_entries:
+        #         if entry.name == "Draft local plan published":
+        #             draft_plan_entry = entry
+        #             has_draft_plan = True
+        #         else:
+        #             entries.append(entry)
 
-        # If no draft plan entry found, create one with no date
-        if not has_draft_plan:
-            draft_plan_entry = TimelineEntry(
-                name="Draft local plan published",
-                start_date=None,
-                end_date=None,
-                notes="",
-            )
+        # # If no draft plan entry found, create one with no date
+        # if not has_draft_plan:
+        #     draft_plan_entry = TimelineEntry(
+        #         name="Draft local plan published",
+        #         start_date=None,
+        #         end_date=None,
+        #         notes="",
+        #     )
 
-        # Sort the main entries
-        entries.sort()
+        # # Sort the main entries
+        # entries.sort()
 
-        # Add adopted date if it exists
-        if self.local_plan_obj.adopted_date:
-            adopted_date = TimelineEntry(
-                name="Plan adopted",
-                start_date=self.local_plan_obj.adopted_date,
-                end_date=None,
-                notes="",
-            )
-        else:
-            adopted_date = TimelineEntry(
-                name="Plan adopted",
-                start_date=None,
-                end_date=None,
-                notes="",
-            )
-            entries = [adopted_date] + entries
+        # # Add adopted date if it exists
+        # if self.local_plan_obj.adopted_date:
+        #     adopted_date = TimelineEntry(
+        #         name="Plan adopted",
+        #         start_date=self.local_plan_obj.adopted_date,
+        #         end_date=None,
+        #         notes="",
+        #     )
+        # else:
+        #     adopted_date = TimelineEntry(
+        #         name="Plan adopted",
+        #         start_date=None,
+        #         end_date=None,
+        #         notes="",
+        #     )
+        #     entries = [adopted_date] + entries
 
-        # Always put draft at the end so it renders as the first event
-        # as timeline reads from top to bottom - oldest first latest last
-        entries = entries + [draft_plan_entry]
+        # # Always put draft at the end so it renders as the first event
+        # # as timeline reads from top to bottom - oldest first latest last
+        # entries = entries + [draft_plan_entry]
 
         return entries
 

@@ -10860,6 +10860,12 @@
 .app-timetable .govuk-table__cell {
   vertical-align: middle;
 }
+.app-timetable .govuk-table__header:first-child,
+.app-timetable .govuk-table__cell:first-child {
+  width: 33.3%;
+  word-wrap: break-word;
+  word-break: break-word;
+}
 
 .app-cell--meta {
   font-family: "GDS Transport", arial, sans-serif;
@@ -10896,7 +10902,7 @@
   border-left: none;
 }
 .app-cell--meta ~ .app-cell--actions {
-  padding-left: 15px;
+  padding-left: 10px;
   border-left: 1px solid #b1b4b6;
 }
 
