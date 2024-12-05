@@ -51,16 +51,8 @@
               </dd>
             </div>
             <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Adopted date</dt>
-              <dd class="govuk-summary-list__value">{{ plan.adopted_date if plan.adopted_date }}</dd>
-            </div>
-            <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Description</dt>
               <dd class="govuk-summary-list__value">{{ plan.description if plan.description }}</dd>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">LDS published date</dt>
-              <dd class="govuk-summary-list__value">{{ plan.lds_published_date if plan.lds_published_date }}</dd>
             </div>
           </dl>
         </div>
@@ -99,41 +91,40 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h2 id="timetable" class="govuk-heading-m">Timetable</h2>
-      <p class="govuk-body">This data should be a collection of events that happen during the plan-making process. You can record events that have already happened or might happen on a future date.</p>
-      <p class="govuk-body">This data can be used to create a timetable for the plan.</p>
+      <p class="govuk-body">You can record events that have already happened or might happen in the future.</p>
+      <p class="govuk-body">This data will be used to create a timetable for the plan.</p>
     </div>
   </div>
-
-
-  <table class="govuk-table app-timetable app-table--sortable">
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">Event</th>
-        <th scope="col" class="govuk-table__header" data-sort="none">Event date</th>
-        <th scope="col" class="govuk-table__header">Organisation</th>
-        <th scope="col" class="govuk-table__header app-cell--meta app-cell--actions"></th>
-      </tr>
-    </thead>
-    <tbody class="govuk-table__body">
-      {% for event in events %}
-      <tr class="govuk-table__row" data-timetable-entry-reference="{{ event.reference }}" data-timetable-entry-plan="{{ event.timetable.reference }}">
-        <td scope="row" class="govuk-table__header">{{ event.local_plan_event_type.name }}</td>
-        <td class="govuk-table__cell">{{ event.event_date }}</td>
-        <td class="govuk-table__cell">{% for org in event.timetable.local_plan_obj.organisations %}{{ org.name }}{{ ', ' if not loop.last }}{% endfor %}</td>
-        <td class="govuk-table__cell app-cell--meta app-cell--actions">
-          <ul class="govuk-list govuk-!-margin-bottom-0 govuk-!-font-size-16">
-            <li><a href="{{ url_for('timetable.edit_event', local_plan_reference=plan.reference, timetable_reference=event.timetable.reference, event_reference=event.reference) }}">Edit</a></li>
-            <li><a href="{{ url_for('timetable.delete_event', local_plan_reference=plan.reference, timetable_reference=event.timetable.reference, event_reference=event.reference) }}" class="govuk-link govuk-link--destructive js-delete-event"
-                data-event-reference="{{ event.reference }}"
-                data-timetable-reference="{{ event.timetable.reference }}"
-                data-plan-reference="{{ plan.reference }}">Delete</a></li>
-          </ul>
-
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  {% if plan.timetable %}
+    <table class="govuk-table app-timetable app-table--sortable">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Event</th>
+          <th scope="col" class="govuk-table__header" data-sort="none">Event date</th>
+          <th scope="col" class="govuk-table__header">Organisation</th>
+          <th scope="col" class="govuk-table__header app-cell--meta app-cell--actions"></th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for event in events %}
+        <tr class="govuk-table__row" data-timetable-entry-reference="{{ event.reference }}" data-timetable-entry-plan="{{ event.timetable.reference }}">
+          <td scope="row" class="govuk-table__header">{{ event.local_plan_event_type.name }}</td>
+          <td class="govuk-table__cell">{{ event.event_date }}</td>
+          <td class="govuk-table__cell">{% for org in event.timetable.local_plan_obj.organisations %}{{ org.name }}{{ ', ' if not loop.last }}{% endfor %}</td>
+          <td class="govuk-table__cell app-cell--meta app-cell--actions">
+            <ul class="govuk-list govuk-!-margin-bottom-0 govuk-!-font-size-16">
+              <li><a href="{{ url_for('timetable.edit_event', local_plan_reference=plan.reference, timetable_reference=event.timetable.reference, event_reference=event.reference) }}">Edit</a></li>
+              <li><a href="{{ url_for('timetable.delete_event', local_plan_reference=plan.reference, timetable_reference=event.timetable.reference, event_reference=event.reference) }}" class="govuk-link govuk-link--destructive js-delete-event"
+                  data-event-reference="{{ event.reference }}"
+                  data-timetable-reference="{{ event.timetable.reference }}"
+                  data-plan-reference="{{ plan.reference }}">Delete</a></li>
+            </ul>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
   {% if plan.timetable %}
     {% set add_url = url_for('timetable.add_event', local_plan_reference=plan.reference, timetable_reference=plan.timetable.reference)%}
   {% else %}

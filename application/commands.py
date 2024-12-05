@@ -992,3 +992,72 @@ def split_events():
     except Exception as e:
         db.session.rollback()
         print(f"Error committing changes: {str(e)}")
+
+
+@data_cli.command("migrate-plan-dates")
+def migrate_plan_dates():
+    """Migrate adopted_date and lds_published_date from LocalPlan to LocalPlanEvent"""
+    print("\nMigrating dates from LocalPlan to LocalPlanEvent...")
+
+    plans = LocalPlan.query.all()
+    new_events = []
+    skipped = 0
+    created = 0
+
+    for plan in plans:
+        dates_to_process = {
+            "adopted_date": {"date": plan.adopted_date, "event_type": "plan-adopted"},
+            "lds_published_date": {
+                "date": plan.lds_published_date,
+                "event_type": "timetable-published",
+            },
+        }
+
+        for date_field, config in dates_to_process.items():
+            date_str = config["date"]
+            if not date_str:
+                continue
+
+            # Validate date format (YYYY or YYYY-MM or YYYY-MM-DD)
+            date_parts = date_str.split("-")
+            if not (
+                len(date_parts) <= 3
+                and date_parts[0].isdigit()
+                and len(date_parts[0]) == 4
+            ):
+                print(
+                    f"Skipping invalid {date_field} for plan {plan.reference}: {date_str}"
+                )
+                skipped += 1
+                continue
+            # Create timetable if it doesn't exist
+            if plan.timetable is None:
+                timetable = LocalPlanTimetable(
+                    reference=f"{plan.reference}-timetable",
+                    local_plan=plan.reference,
+                    events=[],
+                )
+                plan.timetable = timetable
+                db.session.add(timetable)
+                db.session.commit()
+            # Create new event
+            event = LocalPlanEvent(
+                reference=f"{plan.reference}-{config['event_type']}-{len(plan.timetable.events)}",
+                local_plan_timetable=plan.timetable.reference,
+                local_plan_event_type_reference=config["event_type"],
+                event_category=_find_category_by_event_type(config["event_type"]),
+                event_date=date_str,
+            )
+            new_events.append(event)
+            created += 1
+
+    try:
+        for event in new_events:
+            db.session.add(event)
+        db.session.commit()
+        print(f"\nSuccessfully created {created} new events")
+        if skipped > 0:
+            print(f"Skipped {skipped} invalid dates")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error committing changes: {str(e)}")

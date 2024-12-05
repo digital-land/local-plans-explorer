@@ -35,15 +35,4 @@ class LocalPlanForm(FlaskForm):
             "hint": "For example, http://www.borough-council.gov.uk/the-local-plan"
         },
     )
-
-    adopted_date_year = StringField("Adopted date year", validators=[Optional()])
-    adopted_date_month = StringField("Adopted date month", validators=[Optional()])
-    adopted_date_day = StringField("Adopted date day", validators=[Optional()])
-
-    lds_published_date_year = StringField("LDS published year", validators=[Optional()])
-    lds_published_date_month = StringField(
-        "LDS published month", validators=[Optional()]
-    )
-    lds_published_date_day = StringField("LDS published day", validators=[Optional()])
-
     status = RadioField("Status", validators=[Optional()])
