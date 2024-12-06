@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 
-from application.export import LocalPlanEventModel, LocalPlanModel
-from application.models import LocalPlan, LocalPlanEvent, Status
+from application.export import LocalPlanModel, LocalPlanTimetableModel
+from application.models import LocalPlan, LocalPlanTimetable, Status
 
 export = Blueprint("export", __name__, url_prefix="/export")
 
@@ -18,15 +18,21 @@ def export_local_plans():
     return jsonify(data)
 
 
-@export.route("/local-plan-events", methods=["GET"])
-def export_local_plan_events():
+@export.route("/local-plan-timetables", methods=["GET"])
+def export_local_plan_timetables():
     data = []
-    for event in LocalPlanEvent.query.filter(
-        LocalPlanEvent.event_data.is_(None),
-        LocalPlanEvent.end_date.is_(None),
-        LocalPlanEvent.event_date.isnot(None),
-    ).all():
-        model = LocalPlanEventModel.model_validate(event)
+    timetables = (
+        LocalPlanTimetable.query.join(LocalPlanTimetable.local_plan)
+        .filter(
+            LocalPlanTimetable.event_data.is_(None),
+            LocalPlanTimetable.end_date.is_(None),
+            LocalPlanTimetable.event_date.isnot(None),
+            LocalPlan.status.in_([Status.FOR_PLATFORM, Status.EXPORTED]),
+        )
+        .all()
+    )
+    for timetable in timetables:
+        model = LocalPlanTimetableModel.model_validate(timetable)
         data.append(model.model_dump(by_alias=True))
     return jsonify(data)
 

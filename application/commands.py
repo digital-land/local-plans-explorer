@@ -16,14 +16,10 @@ from sqlalchemy.inspection import inspect
 
 from application.extensions import db
 from application.models import (
-    EventCategory,
     LocalPlan,
     LocalPlanBoundary,
     LocalPlanDocument,
     LocalPlanDocumentType,
-    LocalPlanEvent,
-    LocalPlanEventType,
-    LocalPlanTimetable,
     Organisation,
     Status,
     document_organisation,
@@ -321,12 +317,11 @@ def load_event_types():
             end_date = (
                 event_type.get("end-date") if event_type.get("end-date") else None
             )
-            event_category = _find_category_by_event_type(reference)
 
             sql = text(
                 """
-                    INSERT INTO local_plan_event_type (name, reference, entry_date, end_date, event_category)
-                    VALUES (:name, :reference, :entry_date, :end_date, :event_category)
+                    INSERT INTO local_plan_event_type (name, reference, entry_date, end_date)
+                    VALUES (:name, :reference, :entry_date, :end_date)
                     ON CONFLICT (reference)
                     DO UPDATE
                     SET end_date = EXCLUDED.end_date;
@@ -339,7 +334,6 @@ def load_event_types():
                     "reference": reference,
                     "entry_date": entry_date,
                     "end_date": end_date,
-                    "event_category": event_category,
                 },
             )
         db.session.commit()
@@ -469,84 +463,6 @@ def set_org_websites():
             continue
 
 
-@data_cli.command("housing-numbers-timetable-data")
-def load_housing_numbers_timetable_data():
-    current_file_path = Path(__file__).resolve()
-    data_directory = os.path.join(current_file_path.parent.parent, "data")
-    file_path = os.path.join(data_directory, "local-plan-housing-numbers-prototype.csv")
-
-    with open(file_path, mode="r") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            documentation_url = row.get("documentation_url")
-            if documentation_url.endswith("/"):
-                documentation_url = documentation_url[:-1]
-            if documentation_url:
-                plan = LocalPlan.query.filter(
-                    LocalPlan.documentation_url == documentation_url
-                ).first()
-                if plan is not None and plan.timetable is None:
-                    print("Updating plan timetable", plan.reference)
-                    plan.period_start_date = (
-                        (
-                            row.get("period_start_date")
-                            if row.get("period_start_date")
-                            else None
-                        ),
-                    )
-                    plan.period_end_date = (
-                        (
-                            row.get("period_end_date")
-                            if row.get("period_end_date")
-                            else None
-                        ),
-                    )
-                    plan.adopted_date = (
-                        row.get("adopted_date") if row.get("adopted_date") else None
-                    )
-                    db.session.add(plan)
-                    dates = [
-                        "published_date",
-                        "sound_date",
-                        "submitted_date",
-                        "adopted_date",
-                    ]
-                    event_types = {
-                        "published_date": "reg-19-publication-local-plan-published",
-                        "sound_date": "planning‑inspectorate‑found‑sound",
-                        "submitted_date": "submit‑plan‑for‑examination",
-                        "adopted_date": "plan‑adopted",
-                    }
-
-                    events = []
-                    for date_field in dates:
-                        date_value = row.get(date_field)
-                        if date_value:
-                            event_type = LocalPlanEventType.query.filter(
-                                LocalPlanEventType.reference == event_types[date_field]
-                            ).one_or_none()
-                            if event_type:
-                                to_date = datetime.strptime(date_value, "%Y-%m-%d")
-                                event = LocalPlanEvent(
-                                    local_plan_event=event_type.reference,
-                                    event_date=date_value,
-                                    event_day=to_date.day,
-                                    event_month=to_date.month,
-                                    event_year=to_date.year,
-                                )
-                                events.append(event)
-                    if events:
-                        reference = f"{plan.reference}-timetable"
-                        timetable = LocalPlanTimetable(
-                            reference=reference,
-                            events=events,
-                            local_plan=plan.reference,
-                        )
-                        plan.timetable = timetable
-                        db.session.add(timetable)
-                    db.session.commit()
-
-
 def _make_reference(name, period_start_date, period_end_date, organisation):
     reference = slugify(name)
     if LocalPlan.query.get(reference) is None:
@@ -590,142 +506,6 @@ def migrate_doc_types():
             db.session.add(document)
             db.session.commit()
             print(f"Updated document types for {document.reference}")
-
-
-# @data_cli.command("seed-timetable")
-# def seed_timetable():
-#     current_file_path = Path(__file__).resolve()
-#     data_directory = os.path.join(current_file_path.parent.parent, "data")
-#     file_path = os.path.join(data_directory, "timetable-seed-data.csv")
-
-#     records = {}
-
-#     with open(file_path, mode="r") as file:
-#         reader = csv.DictReader(file)
-#         for row in reader:
-#             local_plan_reference = row.get("local-plan", "").strip()
-#             plan = LocalPlan.query.get(local_plan_reference)
-#             if plan is None:
-#                 print(f"Local plan not found for reference {local_plan_reference}")
-#                 continue
-#             reference = row["reference"]
-#             if reference not in records:
-#                 records[reference] = [row]
-#             else:
-#                 records[reference].append(row)
-
-#     for reference, rows in records.items():
-#         local_plan_reference = rows[0]["local-plan"]
-#         plan = LocalPlan.query.get(local_plan_reference)
-#         if plan is None:
-#             print(f"Local plan not found for reference {reference}")
-#             continue
-#         if plan.timetable is None:
-#             print(f"Creating timetable for {local_plan_reference}")
-#             timetable_name = f"{plan.name} timetable"
-#             timetable_reference = f"{plan.reference}-timetable"
-#             plan.timetable = LocalPlanTimetable(
-#                 reference=timetable_reference, name=timetable_name, events=[]
-#             )
-#             db.session.add(plan)
-#             db.session.commit()
-
-#         local_plan_event = LocalPlanEvent.query.get(reference)
-#         if local_plan_event is not None:
-#             print(f"Event {reference} already exists")
-#             continue
-#         event_reference = f"{plan.timetable.reference}-{len(plan.timetable.events)}"
-#         local_plan_event = LocalPlanEvent(reference=event_reference)
-#         data = {}
-#         for row in rows:
-#             event_type = LocalPlanEventType.query.get(row["local-plan-event"])
-#             event_category = _get_event_category(event_type.reference)
-#             if event_type is None:
-#                 print(f"Event type not found for reference {row['event-type']}")
-#                 continue
-#             date_fields = row.get("event-date").split("-")
-#             if len(date_fields) == 3:
-#                 year, month, day = date_fields
-#             if len(date_fields) == 2:
-#                 year, month = date_fields
-#                 day = ""
-#             if len(date_fields) == 1 and date_fields[0] != "":
-#                 year = date_fields[0]
-#                 month, day = "", ""
-#             data[event_type.reference.replace("-", "_")] = {
-#                 "day": day,
-#                 "month": month,
-#                 "year": year,
-#                 "notes": row.get("notes", ""),
-#             }
-#             _populate_missing_event_types(data, event_category)
-#         event_category = _get_event_category(event_type.reference)
-#         local_plan_event.event_category = event_category
-#         local_plan_event.event_data = data
-#         plan.timetable.events.append(local_plan_event)
-#         db.session.add(plan.timetable)
-#         db.session.commit()
-
-
-# def _get_event_category(event_type):
-#     event_type = LocalPlanEventType.query.get(event_type)
-#     if event_type is None:
-#         return None
-#     return event_type.event_category
-
-
-# def _populate_missing_event_types(data, event_category):
-#     from application.factory import create_app
-
-#     app = create_app(
-#         os.getenv("FLASK_CONFIG") or "application.config.DevelopmentConfig"
-#     )
-#     with app.app_context():
-#         with app.test_request_context():
-#             try:
-#                 form = get_event_form(event_category)
-#                 field_names = list(form._fields.keys())
-#                 for field in field_names:
-#                     if field != "notes" and field != "csrf_token":
-#                         if field not in data:
-#                             data[field] = {
-#                                 "day": "",
-#                                 "month": "",
-#                                 "year": "",
-#                                 "notes": "",
-#                             }
-#             except ValueError as e:
-#                 print(e)
-
-
-def _find_category_by_event_type(event_type):
-    if "timetable" in event_type:
-        return EventCategory.TIMETABLE_PUBLISHED.name
-    if "estimated-reg-18" in event_type:
-        return EventCategory.ESTIMATED_REGULATION_18.name
-    if "estimated-reg-19" in event_type:
-        return EventCategory.ESTIMATED_REGULATION_19.name
-    if "reg-18" in event_type:
-        return EventCategory.REGULATION_18.name
-    if "reg-19" in event_type:
-        return EventCategory.REGULATION_19.name
-    if event_type in [
-        "estimated-submit-plan-for-examination",
-        "estimated-plan-adoption-date",
-    ]:
-        return EventCategory.ESTIMATED_EXAMINATION_AND_ADOPTION.name
-    if event_type in [
-        "submit-plan-for-examination",
-        "planning-inspectorate-examination-start",
-        "planning-inspectorate-examination-end",
-    ]:
-        return EventCategory.PLANNING_INSPECTORATE_EXAMINATION.name
-    if event_type in [
-        "planning-inspectorate-found-sound",
-        "inspector-report-published",
-        "plan-adopted",
-    ]:
-        return EventCategory.PLANNING_INSPECTORATE_FINDINGS.name
 
 
 @data_cli.command("docker-db-backup")
@@ -925,139 +705,6 @@ def dedupe_documents():
     try:
         db.session.commit()
         print(f"\nSuccessfully set end date for {end_date_count} duplicate documents")
-    except Exception as e:
-        db.session.rollback()
-        print(f"Error committing changes: {str(e)}")
-
-
-@data_cli.command("split-events")
-def split_events():
-    """Split compound events in LocalPlanEvent into separate rows"""
-    print("Splitting compound events...")
-
-    # Get all event types and build snake_case to kebab-case mapping
-    event_types = {}
-    for event_type in LocalPlanEventType.query.all():
-        # Convert kebab-case reference to snake_case for JSON keys
-        snake_case = event_type.reference.replace("-", "_")
-        event_types[snake_case] = event_type.reference
-
-    events = LocalPlanEvent.query.all()
-    new_events = []
-    updated = 0
-
-    for event in events:
-        if not event.event_data:
-            continue
-
-        # Process each event type found in event_data
-        for json_key, event_type_ref in event_types.items():
-            if json_key in event.event_data:
-                date_parts = event.event_data.get(json_key)
-                if not date_parts:
-                    continue
-
-                # Build ISO date string from available parts
-                date_str = date_parts.get("year", "")
-                if date_parts.get("month"):
-                    date_str += f"-{date_parts['month']}"
-                if date_parts.get("day"):
-                    date_str += f"-{date_parts['day']}"
-
-                if date_str:
-                    # Create new event with the extracted date
-                    new_event = LocalPlanEvent(
-                        reference=f"{event.reference}-{event_type_ref}",
-                        local_plan_timetable=event.local_plan_timetable,
-                        local_plan_event_type_reference=event_type_ref,
-                        event_category=event.event_category,
-                        event_date=date_str,
-                        notes=event.event_data.get("notes"),
-                        entry_date=event.entry_date,
-                        start_date=event.start_date,
-                    )
-                    new_events.append(new_event)
-                    updated += 1
-
-        # Mark original event as ended
-        event.end_date = datetime.now().date()
-
-    try:
-        # Add all new events
-        for new_event in new_events:
-            db.session.add(new_event)
-
-        db.session.commit()
-        print(f"\nSuccessfully created {updated} new events from compound events")
-    except Exception as e:
-        db.session.rollback()
-        print(f"Error committing changes: {str(e)}")
-
-
-@data_cli.command("migrate-plan-dates")
-def migrate_plan_dates():
-    """Migrate adopted_date and lds_published_date from LocalPlan to LocalPlanEvent"""
-    print("\nMigrating dates from LocalPlan to LocalPlanEvent...")
-
-    plans = LocalPlan.query.all()
-    new_events = []
-    skipped = 0
-    created = 0
-
-    for plan in plans:
-        dates_to_process = {
-            "adopted_date": {"date": plan.adopted_date, "event_type": "plan-adopted"},
-            "lds_published_date": {
-                "date": plan.lds_published_date,
-                "event_type": "timetable-published",
-            },
-        }
-
-        for date_field, config in dates_to_process.items():
-            date_str = config["date"]
-            if not date_str:
-                continue
-
-            # Validate date format (YYYY or YYYY-MM or YYYY-MM-DD)
-            date_parts = date_str.split("-")
-            if not (
-                len(date_parts) <= 3
-                and date_parts[0].isdigit()
-                and len(date_parts[0]) == 4
-            ):
-                print(
-                    f"Skipping invalid {date_field} for plan {plan.reference}: {date_str}"
-                )
-                skipped += 1
-                continue
-            # Create timetable if it doesn't exist
-            if plan.timetable is None:
-                timetable = LocalPlanTimetable(
-                    reference=f"{plan.reference}-timetable",
-                    local_plan=plan.reference,
-                    events=[],
-                )
-                plan.timetable = timetable
-                db.session.add(timetable)
-                db.session.commit()
-            # Create new event
-            event = LocalPlanEvent(
-                reference=f"{plan.reference}-{config['event_type']}-{len(plan.timetable.events)}",
-                local_plan_timetable=plan.timetable.reference,
-                local_plan_event_type_reference=config["event_type"],
-                event_category=_find_category_by_event_type(config["event_type"]),
-                event_date=date_str,
-            )
-            new_events.append(event)
-            created += 1
-
-    try:
-        for event in new_events:
-            db.session.add(event)
-        db.session.commit()
-        print(f"\nSuccessfully created {created} new events")
-        if skipped > 0:
-            print(f"Skipped {skipped} invalid dates")
     except Exception as e:
         db.session.rollback()
         print(f"Error committing changes: {str(e)}")

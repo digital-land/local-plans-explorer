@@ -111,16 +111,16 @@
       </thead>
       <tbody class="govuk-table__body">
         {% for event in events %}
-        <tr class="govuk-table__row" data-timetable-entry-reference="{{ event.reference }}" data-timetable-entry-plan="{{ event.timetable.reference }}">
+        <tr class="govuk-table__row" data-timetable-entry-reference="{{ event.reference }}" data-timetable-entry-plan="{{ event.reference }}">
           <td scope="row" class="govuk-table__header">{{ event.event_type.name }}</td>
           <td class="govuk-table__cell">{{ event.event_date }}</td>
           <td class="govuk-table__cell">{{ event.notes }}</td>
           <td class="govuk-table__cell app-cell--meta app-cell--actions">
             <ul class="govuk-list govuk-!-margin-bottom-0 govuk-!-font-size-16">
-              <li><a href="{{ url_for('timetable.edit_event', local_plan_reference=plan.reference, timetable_reference=event.timetable.reference, event_reference=event.reference) }}">Edit</a></li>
-              <li><a href="{{ url_for('timetable.remove_event', local_plan_reference=plan.reference, timetable_reference=event.timetable.reference, event_reference=event.reference) }}" class="govuk-link govuk-link--destructive js-remove-event"
+              <li><a href="{{ url_for('timetable.edit', local_plan_reference=plan.reference, timetable_reference=event.reference) }}">Edit</a></li>
+              <li><a href="{{ url_for('timetable.remove', local_plan_reference=plan.reference, timetable_reference=event.reference) }}" class="govuk-link govuk-link--destructive js-remove-event"
                   data-event-reference="{{ event.reference }}"
-                  data-timetable-reference="{{ event.timetable.reference }}"
+                  data-timetable-reference="{{ event.reference }}"
                   data-plan-reference="{{ plan.reference }}">Remove</a></li>
             </ul>
           </td>
@@ -129,12 +129,7 @@
       </tbody>
     </table>
   {% endif %}
-  {% if plan.timetable %}
-    {% set add_url = url_for('timetable.add_event', local_plan_reference=plan.reference, timetable_reference=plan.timetable.reference)%}
-  {% else %}
-    {% set add_url = url_for('timetable.new_timetable_and_event', local_plan_reference=plan.reference)%}
-  {% endif %}
-  <a href="{{ add_url }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> Add event</a>
+  <a href="{{ url_for('timetable.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> Add event</a>
 
   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
 

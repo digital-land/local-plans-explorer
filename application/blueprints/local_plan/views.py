@@ -54,7 +54,7 @@ def get_plan(reference):
     stage_urls = {}
 
     if plan.timetable:
-        events = plan.timetable.ordered_events()
+        events = plan.ordered_events()
     else:
         events = []
 

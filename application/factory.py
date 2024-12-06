@@ -127,10 +127,8 @@ def register_context_processors(app):
 
 def register_commands(app):
     from application.commands import data_cli
-    from application.export_commands import export_cli
 
     app.cli.add_command(data_cli)
-    app.cli.add_command(export_cli)
 
 
 def register_filters(app):
