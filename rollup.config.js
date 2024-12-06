@@ -12,5 +12,12 @@ module.exports = [
       file: 'application/static/javascripts/table.js',
       format: 'iife'
     }
+  },
+  {
+    input: 'src/javascripts/timetable.js',
+    output: {
+      file: 'application/static/javascripts/timetable.js',
+      format: 'iife'
+    }
   }
 ]

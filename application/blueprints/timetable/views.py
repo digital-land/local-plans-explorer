@@ -292,11 +292,11 @@ def edit_event(local_plan_reference, timetable_reference, event_reference):
 
 
 @timetable.route(
-    "/<string:timetable_reference>/event/<string:event_reference>/delete",
+    "/<string:timetable_reference>/event/<string:event_reference>/remove",
     methods=["GET"],
 )
 @login_required
-def delete_event(local_plan_reference, timetable_reference, event_reference):
+def remove_event(local_plan_reference, timetable_reference, event_reference):
     event = LocalPlanEvent.query.get(event_reference)
     if event is None:
         return abort(404)
