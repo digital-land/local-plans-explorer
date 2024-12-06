@@ -120,11 +120,8 @@ class LocalPlanBoundaryModel(LocalPlanBaseModel):
     geometry: str
 
 
-class LocalPlanTimetableModel(DateModel):
-    reference: str
-    name: Optional[str] = None
+class LocalPlanEventModel(LocalPlanBaseModel):
     local_plan: str
     notes: Optional[str] = None
-    description: Optional[str] = None
     event_date: str
     local_plan_event: str

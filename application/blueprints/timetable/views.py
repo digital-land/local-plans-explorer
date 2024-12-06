@@ -114,7 +114,7 @@ def new_timetable_and_event(local_plan_reference):
         if form.event_date.data.get("day"):
             day = form.event_date.data.get("day")
             event_date += f"-{int(day):02d}"
-        event_type = form.event_type.data
+        event_type = form.local_plan_event.data
         local_plan_event_type = LocalPlanEventType.query.get(
             event_type.replace("_", "-")
         )
@@ -130,7 +130,7 @@ def new_timetable_and_event(local_plan_reference):
             reference=f"{timetable.reference}-{len(timetable.events)}",
             event_date=event_date,
             event_category=EventCategory.TIMETABLE_PUBLISHED.name,
-            local_plan_event_type_reference=local_plan_event_type.reference,
+            local_plan_event=local_plan_event_type.reference,
             notes=form.notes.data,
         )
         timetable.events = [local_plan_event]
@@ -192,9 +192,9 @@ def add_event(local_plan_reference, timetable_reference):
         if form.event_date.data.get("day"):
             day = form.event_date.data.get("day")
             event_date += f"-{int(day):02d}"
-        event_type = form.event_type.data
+        local_plan_event = form.local_plan_event.data
         local_plan_event_type = LocalPlanEventType.query.get(
-            event_type.replace("_", "-")
+            local_plan_event.replace("_", "-")
         )
         if local_plan_event_type is None:
             abort(404)
@@ -203,7 +203,7 @@ def add_event(local_plan_reference, timetable_reference):
             reference=reference,
             event_date=event_date,
             event_category=EventCategory.TIMETABLE_PUBLISHED.name,
-            local_plan_event_type_reference=local_plan_event_type.reference,
+            local_plan_event=local_plan_event_type.reference,
             notes=form.notes.data,
         )
         timetable.events.append(local_plan_event)
@@ -269,13 +269,12 @@ def edit_event(local_plan_reference, timetable_reference, event_reference):
         if form.event_date.data.get("day"):
             day = form.event_date.data.get("day")
             event_date += f"-{int(day):02d}"
-        event_type = form.event_type.data
-        event_type = form.event_type.data
+        local_plan_event = form.local_plan_event.data
         local_plan_event_type = LocalPlanEventType.query.get(
-            event_type.replace("_", "-")
+            local_plan_event.replace("_", "-")
         )
         event.event_date = event_date
-        event.local_plan_event_type_reference = local_plan_event_type.reference
+        event.local_plan_event = local_plan_event_type.reference
         event.notes = form.notes.data
         db.session.add(event)
         db.session.commit()

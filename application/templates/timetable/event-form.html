@@ -38,8 +38,8 @@
       {{ form.hidden_tag() }}
 
       <div class="govuk-form-group">
-        {{ form.event_type.label(class='govuk-label') }}
-        {{ form.event_type(class='govuk-select', id='event_type') }}
+        {{ form.local_plan_event.label(class='govuk-label') }}
+        {{ form.local_plan_event(class='govuk-select', id='local_plan_event') }}
       </div>
       <div class="govuk-form-group {% if form.event_date.errors %}govuk-form-group--error{% endif %}">
         <fieldset class="govuk-fieldset" role="group" aria-describedby="event-date-hint">

@@ -112,8 +112,6 @@ class LocalPlan(BaseModel):
     period_start_date: Mapped[Optional[int]] = mapped_column(Integer)
     period_end_date: Mapped[Optional[int]] = mapped_column(Integer)
     documentation_url: Mapped[Optional[str]] = mapped_column(Text)
-    adopted_date: Mapped[Optional[str]] = mapped_column(Text)
-    lds_published_date: Mapped[Optional[str]] = mapped_column(Text)
 
     local_plan_boundary: Mapped[Optional[str]] = mapped_column(
         ForeignKey("local_plan_boundary.reference")
@@ -126,6 +124,13 @@ class LocalPlan(BaseModel):
     documents: Mapped[List["LocalPlanDocument"]] = relationship(
         back_populates="plan", lazy="select"
     )
+
+    @property
+    def adopted_date(self):
+        for event in self.timetable.events:
+            if event.event_type.reference == "plan-adopted":
+                return event.event_date
+        return ""
 
     organisations = db.relationship(
         "Organisation",
@@ -307,8 +312,8 @@ class LocalPlanEvent(BaseModel):
 
     event_data: Mapped[Optional[dict]] = mapped_column(MutableDict.as_mutable(JSONB))
     event_date: Mapped[Optional[str]] = mapped_column(Text)
-    local_plan_event_type: Mapped[Optional["LocalPlanEventType"]] = relationship()
-    local_plan_event_type_reference: Mapped[Optional[str]] = mapped_column(
+    event_type: Mapped[Optional["LocalPlanEventType"]] = relationship()
+    local_plan_event: Mapped[Optional[str]] = mapped_column(
         ForeignKey("local_plan_event_type.reference")
     )
 
@@ -320,6 +325,14 @@ class LocalPlanEvent(BaseModel):
     )
     timetable: Mapped["LocalPlanTimetable"] = relationship(back_populates="events")
     notes: Mapped[Optional[str]] = mapped_column(Text)
+
+    @property
+    def local_plan(self):
+        return self.timetable.local_plan
+
+    @property
+    def organisations(self):
+        return self.timetable.local_plan_obj.organisations
 
     def collect_date_fields(self, key):
         try:

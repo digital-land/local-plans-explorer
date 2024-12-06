@@ -169,23 +169,23 @@ class DatePartField(Field):
 
 
 class EventForm(FlaskForm):
-    event_type = SelectField("Local plan event type", validators=[DataRequired()])
+    local_plan_event = SelectField("Local plan event type", validators=[DataRequired()])
     event_date = DatePartField("Event date", validators=[Optional()])
     notes = TextAreaField("Notes")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Always set choices when form is instantiated
-        self.event_type.choices = self._get_event_choices()
+        self.local_plan_event.choices = self._get_event_choices()
 
     def process(self, formdata=None, obj=None, **kwargs):
         # First set the choices
-        self.event_type.choices = self._get_event_choices()
+        self.local_plan_event.choices = self._get_event_choices()
 
         # If we have an obj (like a LocalPlanEvent), convert its event type reference
-        if obj is not None and hasattr(obj, "local_plan_event_type_reference"):
+        if obj is not None and hasattr(obj, "local_plan_event"):
             # Set the event type value directly
-            kwargs["event_type"] = obj.local_plan_event_type_reference
+            kwargs["local_plan_event"] = obj.local_plan_event
 
         # Now call the parent process method
         super().process(formdata, obj, **kwargs)

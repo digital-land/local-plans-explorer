@@ -528,7 +528,7 @@ def load_housing_numbers_timetable_data():
                             if event_type:
                                 to_date = datetime.strptime(date_value, "%Y-%m-%d")
                                 event = LocalPlanEvent(
-                                    event_type=event_type.reference,
+                                    local_plan_event=event_type.reference,
                                     event_date=date_value,
                                     event_day=to_date.day,
                                     event_month=to_date.month,

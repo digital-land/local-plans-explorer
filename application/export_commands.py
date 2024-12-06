@@ -13,8 +13,8 @@ from sqlalchemy.sql import func
 from application.export import (
     LocalPlanBoundaryModel,
     LocalPlanDocumentModel,
+    LocalPlanEventModel,
     LocalPlanModel,
-    LocalPlanTimetableModel,
 )
 from application.extensions import db
 from application.models import (
@@ -229,64 +229,26 @@ def export_timetable():
     )
     events = []
     for timetable in timetables:
-        # Add LDS published date as first event if it exists
-        if timetable.local_plan_obj.lds_published_date:
-            lds_published_data = {
-                "reference": f"{timetable.reference}-timetable-published",
-                "event-date": timetable.local_plan_obj.lds_published_date,
-                "local-plan": timetable.local_plan,
-                "notes": "Local development scheme published",
-                "description": "Local development scheme published",
-                "local-plan-event": "timetable-published",
-                "entry-date": timetable.entry_date,
-                "start-date": timetable.start_date,
-                "end-date": timetable.end_date,
-            }
-            model = LocalPlanTimetableModel.model_validate(lds_published_data)
-            events.append(model.model_dump(by_alias=True))
-
-        # Continue with existing event processing
         for event in timetable.events:
-            data = {}
-            for index, (key, value) in enumerate(event.event_data.items()):
-                event_date = event.collect_iso_date_fields(key)
-                if not event_date or event_date == "--":
-                    continue
-                kebabbed_key = key.replace("_", "-")
-                ref = f"{event.reference}-{kebabbed_key}"
-                data["reference"] = f"{ref}-{index}"
-                data["event-date"] = event_date
+            if (
+                event.event_data is None
+                and event.local_plan_event_type_reference is not None
+            ):
+                data = {}
+                data["reference"] = event.reference
+                data["event-date"] = event.event_date
                 data["local-plan"] = timetable.local_plan
-                data["notes"] = value.get("notes")
+                data["notes"] = event.notes
                 data["description"] = event.description or ""
-                data["local-plan-event"] = kebabbed_key
+                data["local-plan-event"] = event.local_plan_event_type_reference
                 data["entry-date"] = event.entry_date
                 data["start-date"] = event.start_date
                 data["end-date"] = event.end_date
-            model = LocalPlanTimetableModel.model_validate(data)
-            events.append(model.model_dump(by_alias=True))
-
-        # Add adopted date after processing all events for this timetable
-        if (
-            timetable.local_plan_obj.adopted_date
-            and timetable.local_plan_obj.adopted_date != "--"
-        ):
-            adopted_date_data = {
-                "reference": f"{timetable.reference}-plan-adopted",
-                "event-date": timetable.local_plan_obj.adopted_date,
-                "local-plan": timetable.local_plan,
-                "notes": None,
-                "description": "Plan adopted",
-                "local-plan-event": "plan-adopted",
-                "entry-date": timetable.entry_date,
-                "start-date": timetable.start_date,
-                "end-date": timetable.end_date,
-            }
-            model = LocalPlanTimetableModel.model_validate(adopted_date_data)
-            events.append(model.model_dump(by_alias=True))
+                model = LocalPlanEventModel.model_validate(data)
+                events.append(model.model_dump(by_alias=True))
 
     with open(timetable_file_path, mode="w") as file:
-        fieldnames = list(LocalPlanTimetableModel.model_fields.keys())
+        fieldnames = list(LocalPlanEventModel.model_fields.keys())
         fieldnames = [field.replace("_", "-") for field in fieldnames]
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
