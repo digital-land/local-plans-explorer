@@ -1,0 +1,46 @@
+name: Export local plan data
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-heroku-cli-commands:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Run export command
+        run: flask export all  
+      
+      - name: Set up git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Download csv files
+        run: |
+          curl -o  data/export/local-plan.csv https://local-plans-explorer.digital-land.info/export/local-plan.csv
+          curl -o  data/export/local-plan-document.csv https://local-plans-explorer.digital-land.info/export/local-plan-document.csv
+          curl -o  data/export/local-plan-timetable.csv https://local-plans-explorer.digital-land.info/export/local-plan-timetable.csv
+          curl -o  data/export/local-plan-boundary.csv https://local-plans-explorer.digital-land.info/export/local-plan-boundary.csv
+
+      - name: Set up git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Commit and push changes
+        run: |
+          git add data
+          if ! git diff-index --quiet HEAD --; then
+            git commit -m "Updated local plans specification csv files"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
