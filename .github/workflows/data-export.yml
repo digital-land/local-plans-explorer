@@ -6,13 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-heroku-cli-commands:
+  run-data-export:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: Set up git
         run: |
           git config --global user.name 'github-actions[bot]'
