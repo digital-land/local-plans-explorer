@@ -11,7 +11,7 @@ from application.models import LocalPlan, LocalPlanDocument, LocalPlanTimetable,
 export = Blueprint("export", __name__, url_prefix="/export")
 
 
-@export.route("/local-plans.json", methods=["GET"])
+@export.route("/local-plan.json", methods=["GET"])
 def export_local_plans():
     local_plans = LocalPlan.query.filter(
         LocalPlan.status.in_([Status.FOR_PLATFORM, Status.EXPORTED])
@@ -23,7 +23,7 @@ def export_local_plans():
     return jsonify(data)
 
 
-@export.route("/local-plan-timetables.json", methods=["GET"])
+@export.route("/local-plan-timetable.json", methods=["GET"])
 def export_local_plan_timetables():
     data = []
     timetables = (
@@ -42,7 +42,7 @@ def export_local_plan_timetables():
     return jsonify(data)
 
 
-@export.route("/local-plan-boundaries.json", methods=["GET"])
+@export.route("/local-plan-boundary.json", methods=["GET"])
 def export_boundaries():
     local_plans = LocalPlan.query.filter(
         LocalPlan.status.in_([Status.FOR_PLATFORM, Status.EXPORTED]),
@@ -55,7 +55,7 @@ def export_boundaries():
     return jsonify(data)
 
 
-@export.route("/local-plan-documents.json", methods=["GET"])
+@export.route("/local-plan-document.json", methods=["GET"])
 def export_documents():
     data = []
     documents = LocalPlanDocument.query.filter(
