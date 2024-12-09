@@ -271,40 +271,6 @@ class LocalPlanTimetable(BaseModel):
     def organisations(self):
         return self.local_plan.organisations
 
-    def collect_date_fields(self, key):
-        try:
-            dates = self.event_data.get(key, None)
-            if dates is None:
-                return None
-            date_parts = []
-            if dates.get("day", None):
-                date_parts.append(dates["day"])
-            if dates.get("month", None):
-                date_parts.append(dates["month"])
-            if dates.get("year", None):
-                date_parts.append(dates["year"])
-            return "/".join(date_parts)
-        except Exception as e:
-            print(f"Error collecting date fields for key {key}: {e}")
-            return None
-
-    def collect_iso_date_fields(self, key):
-        try:
-            dates = self.event_data.get(key, None)
-            if dates is None:
-                return None
-            date_parts = []
-            if dates.get("year", None):
-                date_parts.append(dates["year"])
-            if dates.get("month", None):
-                date_parts.append(dates["month"])
-            if dates.get("day", None):
-                date_parts.append(dates["day"])
-            return "-".join(date_parts)
-        except Exception as e:
-            print(f"Error collecting ISO date fields for key {key}: {e}")
-            return None
-
     def get_event_type_name(self, key):
         if key not in self.event_data:
             return ""
