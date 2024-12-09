@@ -13,9 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         
-      - name: Run export command
-        run: flask export all  
-      
       - name: Set up git
         run: |
           git config --global user.name 'github-actions[bot]'
