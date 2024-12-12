@@ -34,7 +34,21 @@ def export_local_plans():
 @export.get("/local-plan-timetable.csv")
 def export_local_plan_timetables():
     data = []
-    timetables = (
+
+    ended_timetables = (
+        LocalPlanTimetable.query.join(LocalPlanTimetable.local_plan)
+        .filter(
+            LocalPlanTimetable.event_data.isnot(None),
+            LocalPlanTimetable.end_date.isnot(None),
+            LocalPlan.status.in_([Status.FOR_PLATFORM, Status.EXPORTED]),
+        )
+        .all()
+    )
+
+    for timetable in ended_timetables:
+        data.extend(_to_legacy_timetable(timetable))
+
+    current_timetables = (
         LocalPlanTimetable.query.join(LocalPlanTimetable.local_plan)
         .filter(
             LocalPlanTimetable.event_data.is_(None),
@@ -44,10 +58,11 @@ def export_local_plan_timetables():
         )
         .all()
     )
-    for timetable in timetables:
+    for timetable in current_timetables:
         model = LocalPlanTimetableModel.model_validate(timetable)
         data.append(model.model_dump(by_alias=True))
-    output = _to_csv(data, LocalPlanModel)
+
+    output = _to_csv(data, LocalPlanTimetableModel)
     return Response(
         output,
         mimetype="text/csv",
@@ -105,3 +120,47 @@ def _to_csv(data, model):
     for row in data:
         writer.writerow(row)
     return output.getvalue()
+
+
+def _to_legacy_timetable(timetable):
+    events = []
+    for index, (key, value) in enumerate(timetable.event_data.items()):
+        data = {}
+        event_date = _collect_iso_date_fields(timetable.event_data, key)
+        if not event_date or event_date == "--":
+            continue
+        kebabbed_key = key.replace("_", "-")
+        ref = f"{timetable.reference}-{kebabbed_key}"
+        data["reference"] = f"{ref}-{index}"
+        data["event-date"] = event_date
+        data["local-plan"] = timetable.local_plan.reference
+        data["notes"] = value.get("notes")
+        data["description"] = timetable.description or ""
+        data["local-plan-event"] = kebabbed_key
+        data["entry-date"] = timetable.entry_date
+        data["start-date"] = timetable.start_date
+        data["end-date"] = timetable.end_date
+        data["organisation"] = ""
+        data["name"] = ""
+        events.append(data)
+    return events
+
+
+def _collect_iso_date_fields(event_data, key):
+    if key == "notes":
+        return ""
+    try:
+        dates = event_data.get(key, None)
+        if dates is None:
+            return None
+        date_parts = []
+        if dates.get("year", None):
+            date_parts.append(dates["year"])
+        if dates.get("month", None):
+            date_parts.append(dates["month"])
+        if dates.get("day", None):
+            date_parts.append(dates["day"])
+        return "-".join(date_parts)
+    except Exception as e:
+        print(f"Error collecting ISO date fields for key {key}: {e}")
+        return None

@@ -120,11 +120,14 @@ class LocalPlanBoundaryModel(LocalPlanBaseModel):
     geometry: str
 
 
-class LocalPlanTimetableModel(LocalPlanBaseModel):
+class LocalPlanTimetableModel(DateModel):
+    reference: str
+    name: Optional[str] = None
     local_plan: LocalPlanModel
     notes: Optional[str] = None
     event_date: str
     local_plan_event: str
+    organisation: Optional[str] = None
 
     @field_serializer("local_plan")
     def serialize_local_plan(self, value):
@@ -132,7 +135,7 @@ class LocalPlanTimetableModel(LocalPlanBaseModel):
 
     @model_validator(mode="after")
     def replace_none_with_empty_string(cls, values):
-        for field in ["notes", "name"]:
+        for field in ["notes", "name", "organisation"]:
             if getattr(values, field) is None:
                 setattr(values, field, "")
         return values
