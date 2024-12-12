@@ -137,6 +137,9 @@ def edit(local_plan_reference, timetable_reference):
         timetable.event_date = event_date
         timetable.local_plan_event = local_plan_event_type.reference
         timetable.notes = form.notes.data
+        timetable.organisation = (
+            form.organisation.data if form.organisation.data else None
+        )
         db.session.add(timetable)
         db.session.commit()
         return redirect(url_for("local_plan.get_plan", reference=local_plan_reference))

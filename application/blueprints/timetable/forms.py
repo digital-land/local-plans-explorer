@@ -172,11 +172,13 @@ class EventForm(FlaskForm):
     local_plan_event = SelectField("Local plan event type", validators=[DataRequired()])
     event_date = DatePartField("Event date", validators=[Optional()])
     notes = TextAreaField("Notes")
+    organisation = SelectField("Organisation", validators=[Optional()])
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Always set choices when form is instantiated
         self.local_plan_event.choices = self._get_event_choices()
+        self.organisation.choices = self._get_organisation_choices()
 
     def process(self, formdata=None, obj=None, **kwargs):
         # First set the choices
@@ -197,6 +199,15 @@ class EventForm(FlaskForm):
         return [("", "")] + [
             (evt.reference, evt.name)
             for evt in LocalPlanEventType.query.order_by(LocalPlanEventType.name).all()
+        ]
+
+    @staticmethod
+    def _get_organisation_choices():
+        from application.models import Organisation
+
+        return [("", "")] + [
+            (org.organisation, org.name)
+            for org in Organisation.query.order_by(Organisation.name).all()
         ]
 
     def get_error_summary(self):

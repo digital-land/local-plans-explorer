@@ -36,7 +36,6 @@
 
     <form class="govuk-form" method="POST" action="{{ action }}">
       {{ form.hidden_tag() }}
-
       <div class="govuk-form-group">
         {{ form.local_plan_event.label(class='govuk-label') }}
         {{ form.local_plan_event(class='govuk-select', id='local_plan_event') }}
@@ -101,12 +100,14 @@
           </div>
         </fieldset>
       </div>
-
+      <div class="govuk-form-group">
+        {{ form.organisation.label(class='govuk-label') }}
+        {{ form.organisation(class='govuk-select', id='organisation') }}
+      </div>
       <div class="govuk-form-group">
         {{ form.notes.label(class='govuk-label') }}
         {{ form.notes(class='govuk-textarea') }}
       </div>
-
       <div class="govuk-button-group">
         <button class="govuk-button" type="submit">Save</button>
         <a class="govuk-link" href="{{ url_for('local_plan.get_plan', reference=local_plan.reference) }}">Cancel</a>
@@ -126,6 +127,12 @@
       selectElement: $eventType
     })
   </script>
-
   -->
+  <script src="{{ url_for('static', filename='javascripts/vendor/accessible-autocomplete.min.js') }}"></script>
+  <script>
+    const $eventType = document.getElementById('organisation')
+    accessibleAutocomplete.enhanceSelectElement({
+      selectElement: $eventType
+    })
+  </script>
 {% endblock pageScripts %}

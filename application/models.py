@@ -267,9 +267,10 @@ class LocalPlanTimetable(BaseModel):
     local_plan: Mapped["LocalPlan"] = relationship(back_populates="timetable")
     notes: Mapped[Optional[str]] = mapped_column(Text)
 
-    @property
-    def organisations(self):
-        return self.local_plan.organisations
+    organisation: Mapped[Optional[str]] = mapped_column(
+        ForeignKey("organisation.organisation"), nullable=True
+    )
+    organisation_obj: Mapped["Organisation"] = relationship()
 
     def get_event_type_name(self, key):
         if key not in self.event_data:

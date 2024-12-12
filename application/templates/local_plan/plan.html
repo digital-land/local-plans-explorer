@@ -101,6 +101,7 @@
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header">Event</th>
           <th scope="col" class="govuk-table__header" data-sort="none">Event date</th>
+          <th scope="col" class="govuk-table__header">Organisation</th>
           <th scope="col" class="govuk-table__header">Notes</th>
           <th scope="col" class="govuk-table__header app-cell--meta app-cell--actions"></th>
         </tr>
@@ -110,6 +111,7 @@
         <tr class="govuk-table__row" data-timetable-entry-reference="{{ event.reference }}" data-timetable-entry-plan="{{ event.reference }}">
           <td scope="row" class="govuk-table__header">{{ event.event_type.name }}</td>
           <td class="govuk-table__cell">{{ event.event_date }}</td>
+          <td class="govuk-table__cell">{% if event.organisation %}{{ event.organisation_obj.name }}{% endif %}</td>
           <td class="govuk-table__cell">{% if event.notes %}{{ event.notes }}{% endif %}</td>
           <td class="govuk-table__cell app-cell--meta app-cell--actions">
             <ul class="govuk-list govuk-!-margin-bottom-0 govuk-!-font-size-16">
