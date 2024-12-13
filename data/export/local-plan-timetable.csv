@@ -1,307 +1,510 @@
-entry-date,start-date,end-date,reference,name,organisations,local-plan,notes,event-date,local-plan-event
-2024-12-10,,,greater-manchester-spatial-framework-superseded-by-pep-plan-adopted-0,,local-authority:BUR,greater-manchester-spatial-framework-superseded-by-pep,,2024-03-21,plan-adopted
-2024-12-10,,,burnley-s-local-plan-submit-plan-for-examination-4,,local-authority:BUN,burnley-s-local-plan,,2017-07-20,submit-plan-for-examination
-2024-12-10,,,burnley-s-local-plan-reg-19-public-consultation-start-5,,local-authority:BUN,burnley-s-local-plan,,2017-04,reg-19-public-consultation-start
-2024-12-10,,,burnley-s-local-plan-reg-19-public-consultation-end-6,,local-authority:BUN,burnley-s-local-plan,,2017-05,reg-19-public-consultation-end
-2024-12-10,,,greater-nottingham-strategic-plan-estimated-plan-adoption-date-0,,local-authority:BRT,greater-nottingham-strategic-plan,,2026-03,estimated-plan-adoption-date
-2024-12-10,,,broads-local-plan-review-estimated-submit-plan-for-examination-1,,national-park-authority:Q4972284,broads-local-plan-review,,2025-05,estimated-submit-plan-for-examination
-2024-12-10,,,bristol-local-plan-2022-2040-estimated-plan-adoption-date-0,,local-authority:BST,bristol-local-plan-2022-2040,,2026-03,estimated-plan-adoption-date
-2024-11-11,,,london-borough-of-islington-local-plan-2023-timetable-0-reg-18-public-consultation-end,,local-authority:ISL,london-borough-of-islington-local-plan-2023,,2019-01-14,reg-18-public-consultation-end
-2024-12-10,,,greater-manchester-spatial-framework-superseded-by-pep-inspector-report-published-1,,local-authority:BUR,greater-manchester-spatial-framework-superseded-by-pep,,2024-02-14,inspector-report-published
-2024-12-10,,,burnley-s-local-plan-inspector-report-published-1,,local-authority:BUN,burnley-s-local-plan,,2018-07-09,inspector-report-published
-2024-12-10,,,burnley-s-local-plan-reg-18-public-consultation-end-8,,local-authority:BUN,burnley-s-local-plan,,2016-07,reg-18-public-consultation-end
-2024-12-10,,,greater-nottingham-strategic-plan-estimated-submit-plan-for-examination-1,,local-authority:BRT,greater-nottingham-strategic-plan,,2024-12,estimated-submit-plan-for-examination
-2024-12-10,,,broads-local-plan-review-estimated-plan-adoption-date-0,,national-park-authority:Q4972284,broads-local-plan-review,,2026-12,estimated-plan-adoption-date
-2024-12-10,,,bristol-local-plan-2022-2040-submit-plan-for-examination-1,,local-authority:BST,bristol-local-plan-2022-2040,,2024-04-25,submit-plan-for-examination
-2024-12-10,,,burnley-s-local-plan-planning-inspectorate-examination-start-2,,local-authority:BUN,burnley-s-local-plan,,2017-07,planning-inspectorate-examination-start
-2024-12-10,,,burnley-s-local-plan-planning-inspectorate-examination-end-3,,local-authority:BUN,burnley-s-local-plan,,2018-07,planning-inspectorate-examination-end
-2024-12-10,,,bristol-local-plan-2022-2040-reg-19-publication-local-plan-published-2,,local-authority:BST,bristol-local-plan-2022-2040,,2023-11-21,reg-19-publication-local-plan-published
-2024-12-10,,,burnley-s-local-plan-reg-18-public-consultation-start-7,,local-authority:BUN,burnley-s-local-plan,,2016-07,reg-18-public-consultation-start
-2024-11-11,,,london-borough-of-camden-local-plan-2017-timetable-0-planning-inspectorate-examination-end,,local-authority:CMD,london-borough-of-camden-local-plan-2017,,2017-05,planning-inspectorate-examination-end
-2024-11-11,,,london-borough-of-camden-local-plan-2017-timetable-1-inspector-report-published,,local-authority:CMD,london-borough-of-camden-local-plan-2017,,2017-05,inspector-report-published
-2024-12-06,,,dud-2009-plan-adopted-0,,local-authority:WLV;local-authority:WLL;local-authority:SAW;local-authority:DUD,dud-2009,,2011-02-03,plan-adopted
-2024-12-06,,,london-borough-of-havering-local-plan-2016-plan-adopted-0,,local-authority:HAV,london-borough-of-havering-local-plan-2016,,2021-11-17,plan-adopted
-2024-12-06,,,east-hampshire-local-plan-timetable-published-9,,local-authority:EHA,east-hampshire-local-plan,,2023-07,timetable-published
-2024-12-06,,,harlow-local-plan-plan-adopted-0,,local-authority:HAR,harlow-local-plan,,2020-12-10,plan-adopted
-2024-12-06,,,east-staffordshire-borough-council-local-plan-2012-plan-adopted-0,,local-authority:EST,east-staffordshire-borough-council-local-plan-2012,,2015-10-15,plan-adopted
-2024-12-06,,,birmingham-plan-2042-plan-adopted-11,,local-authority:BIR,birmingham-plan-2042,,2017-01-10,plan-adopted
-2024-12-06,,,broxbourne-borough-council-local-plan-2018-plan-adopted-0,,local-authority:BRX,broxbourne-borough-council-local-plan-2018,,2020-06-23,plan-adopted
-2024-12-06,,,mansfield-district-council-local-plan-2013-plan-adopted-0,,local-authority:MAS,mansfield-district-council-local-plan-2013,,2020-09-08,plan-adopted
-2024-12-06,,,east-herts-district-plan-2018-plan-adopted-0,,local-authority:EHE,east-herts-district-plan-2018,,2018-10-23,plan-adopted
-2024-12-06,,,central-bedfordshire-council-local-plan-2015-plan-adopted-0,,local-authority:CBF,central-bedfordshire-council-local-plan-2015,,2021-07-22,plan-adopted
-2024-12-06,,,bedford-borough-council-local-plan-2018-plan-adopted-2,,local-authority:BDF,bedford-borough-council-local-plan-2018,,2020-01-15,plan-adopted
-2024-12-06,,,london-borough-of-redbridge-local-plan-2015-plan-adopted-0,,local-authority:RDB,london-borough-of-redbridge-local-plan-2015,,2018-03-15,plan-adopted
-2024-12-06,,,broxtowe-borough-council-local-plan-part-1-2014-plan-adopted-0,,local-authority:BRT,broxtowe-borough-council-local-plan-part-1-2014,,2014-09-17,plan-adopted
-2024-12-06,,,east-suffolk-council-local-plan-2019-plan-adopted-0,,local-authority:ESK,east-suffolk-council-local-plan-2019,,2019-03-20,plan-adopted
-2024-12-06,,,broxtowe-borough-council-local-plan-part-2-2019-plan-adopted-0,,local-authority:BRT,broxtowe-borough-council-local-plan-part-2-2019,,2019-08-16,plan-adopted
-2024-12-06,,,harlow-district-council-local-plan-2011-plan-adopted-0,,local-authority:HAR,harlow-district-council-local-plan-2011,,2020-12-10,plan-adopted
-2024-12-06,,,london-borough-of-islington-local-plan-2023-plan-adopted-12,,local-authority:ISL,london-borough-of-islington-local-plan-2023,,2023-09-28,plan-adopted
-2024-12-06,,,london-borough-of-camden-local-plan-2017-plan-adopted-8,,local-authority:CMD,london-borough-of-camden-local-plan-2017,,2017-07-03,plan-adopted
-2024-12-06,,,kirklees-council-local-plan-2013-plan-adopted-0,,local-authority:KIR,kirklees-council-local-plan-2013,,2019-02-27,plan-adopted
-2024-12-06,,,welwyn-hatfield-local-plan-plan-adopted-0,,local-authority:WEW,welwyn-hatfield-local-plan,,2023-10-12,plan-adopted
-2024-12-06,,,vale-of-white-horse-district-council-local-plan-2016-plan-adopted-0,,local-authority:VAL,vale-of-white-horse-district-council-local-plan-2016,,2016-12-01,plan-adopted
-2024-12-06,,,thurrock-council-local-plan-2015-plan-adopted-0,,local-authority:THR,thurrock-council-local-plan-2015,,2015-01-28,plan-adopted
-2024-12-06,,,staffordshire-moorlands-district-council-local-plan-2014-plan-adopted-0,,local-authority:STF,staffordshire-moorlands-district-council-local-plan-2014,,2020-09-09,plan-adopted
-2024-12-06,,,darlington-borough-council-local-plan-2016-plan-adopted-0,,local-authority:DAL,darlington-borough-council-local-plan-2016,,2022-02-17,plan-adopted
-2024-12-06,,,south-cambridgeshire-district-council-local-plan-2018-plan-adopted-0,,local-authority:SCA,south-cambridgeshire-district-council-local-plan-2018,,2018-09-27,plan-adopted
-2024-12-06,,,east-lindsey-district-council-local-plan-2018-plan-adopted-3,,local-authority:ELI,east-lindsey-district-council-local-plan-2018,,2018-07-18,plan-adopted
-2024-12-06,,,adur-local-plan-2017-adopted-part-1-plan-adopted-0,,local-authority:ADU,adur-local-plan-2017-adopted-part-1,,2017-12-14,plan-adopted
-2024-12-06,,,eastleigh-borough-local-plan-2016-2036-plan-adopted-0,,local-authority:EAT,eastleigh-borough-local-plan-2016-2036,,2022-04-25,plan-adopted
-2024-12-06,,,hart-district-council-local-plan-2014-plan-adopted-6,,local-authority:HAT,hart-district-council-local-plan-2014,,2020-04-30,plan-adopted
-2024-12-06,,,huntingdonshire-s-local-plan-to-2036-plan-adopted-0,,local-authority:HUN,huntingdonshire-s-local-plan-to-2036,,2019-05-15,plan-adopted
-2024-12-06,,,lincolnshire-county-council-local-plan-2023-plan-adopted-0,,local-authority:LIN,lincolnshire-county-council-local-plan-2023,,2023-04-13,plan-adopted
-2024-12-06,,,doncaster-metropolitan-borough-council-local-plan-2015-plan-adopted-0,,local-authority:DNC,doncaster-metropolitan-borough-council-local-plan-2015,,2021-09-23,plan-adopted
-2024-12-06,,,hartlepool-local-plan-plan-adopted-0,,local-authority:HPL,hartlepool-local-plan,,2018-05-22,plan-adopted
-2024-12-06,,,bromsgrove-district-plan-plan-adopted-0,,local-authority:BRM,bromsgrove-district-plan,,2017-01-25,plan-adopted
-2024-12-06,,,bristol-development-framework-core-strategy-plan-adopted-0,,local-authority:BST,bristol-development-framework-core-strategy,,2011-06-21,plan-adopted
-2024-12-06,,,burnley-s-local-plan-plan-adopted-0,,local-authority:BUN,burnley-s-local-plan,,2018-07-31,plan-adopted
-2024-12-06,,,wakefield-local-development-plan-2036-plan-adopted-0,,local-authority:WKF,wakefield-local-development-plan-2036,,2024-01-24,plan-adopted
-2024-12-06,,,herefordshire-council-local-plan-2021-plan-adopted-0,,local-authority:HEF,herefordshire-council-local-plan-2021,,2015-10-16,plan-adopted
-2024-12-06,,,epping-forest-district-local-plan-plan-adopted-0,,local-authority:EPP,epping-forest-district-local-plan,,2023-03-06,plan-adopted
-2024-11-11,,,camden-local-plan-2026-timetable-2-estimated-plan-adoption-date,,local-authority:CMD,camden-local-plan-2026,,2026,estimated-plan-adoption-date
-2024-11-11,,,london-borough-of-camden-local-plan-2017-timetable-0-planning-inspectorate-examination-start,,local-authority:CMD,london-borough-of-camden-local-plan-2017,,2016-06,planning-inspectorate-examination-start
-2024-11-11,,,camden-local-plan-2026-timetable-3-reg-18-public-consultation-start,,local-authority:CMD,camden-local-plan-2026,,2020,reg-18-public-consultation-start
-2024-11-11,,,arun-district-council-local-plan-2011-timetable-0-submit-plan-for-examination,,local-authority:ARU,arun-district-council-local-plan-2011,,2015-01-30,submit-plan-for-examination
-2024-11-11,,,arun-district-council-local-plan-2011-timetable-0-planning-inspectorate-examination-start,,local-authority:ARU,arun-district-council-local-plan-2011,,2015-06-02,planning-inspectorate-examination-start
-2024-11-11,,,arun-district-council-local-plan-2011-timetable-0-planning-inspectorate-examination-end,,local-authority:ARU,arun-district-council-local-plan-2011,,2017-09-28,planning-inspectorate-examination-end
-2024-11-11,,,arun-district-council-local-plan-2011-timetable-1-inspector-report-published,,local-authority:ARU,arun-district-council-local-plan-2011,,2018-07,inspector-report-published
-2024-11-11,,,ashford-borough-council-local-plan-2019-timetable-0-submit-plan-for-examination,,local-authority:ASF,ashford-borough-council-local-plan-2019,,2017-12-21,submit-plan-for-examination
-2024-11-11,,,ashford-borough-council-local-plan-2019-timetable-0-planning-inspectorate-examination-start,,local-authority:ASF,ashford-borough-council-local-plan-2019,,2018-04-11,planning-inspectorate-examination-start
-2024-11-11,,,ashford-borough-council-local-plan-2019-timetable-0-planning-inspectorate-examination-end,,local-authority:ASF,ashford-borough-council-local-plan-2019,,2018-06-13,planning-inspectorate-examination-end
-2024-11-11,,,ashford-borough-council-local-plan-2019-timetable-1-plan-adopted,,local-authority:ASF,ashford-borough-council-local-plan-2019,,2019-02-21,plan-adopted
-2024-11-11,,,ashford-borough-council-local-plan-2019-timetable-1-inspector-report-published,,local-authority:ASF,ashford-borough-council-local-plan-2019,,2019-01-02,inspector-report-published
-2024-11-11,,,new-ashford-local-plan-to-2042-timetable-0-estimated-reg-18-draft-local-plan-published,,local-authority:ASF,new-ashford-local-plan-to-2042,,2025-04,estimated-reg-18-draft-local-plan-published
-2024-11-11,,,new-ashford-local-plan-to-2042-timetable-1-estimated-reg-19-publication-local-plan-published,,local-authority:ASF,new-ashford-local-plan-to-2042,,2026-02,estimated-reg-19-publication-local-plan-published
-2024-11-11,,,new-ashford-local-plan-to-2042-timetable-2-estimated-submit-plan-for-examination,,local-authority:ASF,new-ashford-local-plan-to-2042,,2026-09,estimated-submit-plan-for-examination
-2024-11-11,,,new-ashford-local-plan-to-2042-timetable-2-estimated-plan-adoption-date,,local-authority:ASF,new-ashford-local-plan-to-2042,,2027-05-01,estimated-plan-adoption-date
-2024-11-11,,,london-borough-of-camden-local-plan-2017-timetable-0-submit-plan-for-examination,,local-authority:CMD,london-borough-of-camden-local-plan-2017,,2016-06-24,submit-plan-for-examination
-2024-11-11,,,london-borough-of-camden-local-plan-2017-timetable-1-planning-inspectorate-found-sound,,local-authority:CMD,london-borough-of-camden-local-plan-2017,,2017-05-10,planning-inspectorate-found-sound
-2024-11-11,,,camden-local-plan-2026-timetable-0-timetable-published,,local-authority:CMD,camden-local-plan-2026,,2023-12,timetable-published
-2024-11-11,,,camden-local-plan-2026-timetable-1-estimated-reg-19-public-consultation-start,,local-authority:CMD,camden-local-plan-2026,,2024,estimated-reg-19-public-consultation-start
-2024-11-11,,,camden-local-plan-2026-timetable-1-estimated-reg-19-public-consultation-end,,local-authority:CMD,camden-local-plan-2026,,2025,estimated-reg-19-public-consultation-end
-2024-11-11,,,camden-local-plan-2026-timetable-2-estimated-submit-plan-for-examination,,local-authority:CMD,camden-local-plan-2026,,2025,estimated-submit-plan-for-examination
-2024-11-11,,,camden-local-plan-2026-timetable-3-reg-18-public-consultation-end,,local-authority:CMD,camden-local-plan-2026,,2021,reg-18-public-consultation-end
-2024-11-11,,,camden-local-plan-2026-timetable-4-reg-18-public-consultation-start,,local-authority:CMD,camden-local-plan-2026,,2022,reg-18-public-consultation-start
-2024-11-11,,,camden-local-plan-2026-timetable-4-reg-18-public-consultation-end,,local-authority:CMD,camden-local-plan-2026,,2022,reg-18-public-consultation-end
-2024-11-11,,,camden-local-plan-2026-timetable-5-reg-18-public-consultation-start,,local-authority:CMD,camden-local-plan-2026,,2024-01-17,reg-18-public-consultation-start
-2024-11-11,,,camden-local-plan-2026-timetable-5-reg-18-public-consultation-end,,local-authority:CMD,camden-local-plan-2026,,2024-03-13,reg-18-public-consultation-end
-2024-11-11,,,london-borough-of-ealing-local-plan-2011-timetable-0-estimated-submit-plan-for-examination,,local-authority:EAL,london-borough-of-ealing-local-plan-2011,,2024-05,estimated-submit-plan-for-examination
-2024-11-11,,,london-borough-of-ealing-local-plan-2011-timetable-0-estimated-plan-adoption-date,,local-authority:EAL,london-borough-of-ealing-local-plan-2011,,2024-12,estimated-plan-adoption-date
-2024-11-11,,,london-borough-of-ealing-local-plan-2011-timetable-1-reg-18-draft-local-plan-published,,local-authority:EAL,london-borough-of-ealing-local-plan-2011,,2022-11-30,reg-18-draft-local-plan-published
-2024-11-11,,,london-borough-of-ealing-local-plan-2011-timetable-1-reg-18-public-consultation-start,,local-authority:EAL,london-borough-of-ealing-local-plan-2011,,2022-11-30,reg-18-public-consultation-start
-2024-11-11,,,london-borough-of-ealing-local-plan-2011-timetable-1-reg-18-public-consultation-end,,local-authority:EAL,london-borough-of-ealing-local-plan-2011,,2023-02-08,reg-18-public-consultation-end
-2024-11-11,,,london-borough-of-ealing-local-plan-2011-timetable-2-reg-19-publication-local-plan-published,,local-authority:EAL,london-borough-of-ealing-local-plan-2011,,2024-02-28,reg-19-publication-local-plan-published
-2024-11-11,,,london-borough-of-ealing-local-plan-2011-timetable-2-reg-19-public-consultation-start,,local-authority:EAL,london-borough-of-ealing-local-plan-2011,,2024-02-28,reg-19-public-consultation-start
-2024-11-11,,,london-borough-of-ealing-local-plan-2011-timetable-2-reg-19-public-consultation-end,,local-authority:EAL,london-borough-of-ealing-local-plan-2011,,2024-04-10,reg-19-public-consultation-end
-2024-11-11,,,east-lindsey-district-council-local-plan-2018-timetable-0-submit-plan-for-examination,,local-authority:ELI,east-lindsey-district-council-local-plan-2018,,2017-04-19,submit-plan-for-examination
-2024-11-11,,,london-borough-of-islington-local-plan-2023-timetable-0-reg-18-public-consultation-start,,local-authority:ISL,london-borough-of-islington-local-plan-2023,,2018-11-20,reg-18-public-consultation-start
-2024-11-11,,,london-borough-of-islington-local-plan-2023-timetable-1-reg-19-public-consultation-start,,local-authority:ISL,london-borough-of-islington-local-plan-2023,,2019-09-05,reg-19-public-consultation-start
-2024-11-11,,,london-borough-of-islington-local-plan-2023-timetable-1-reg-19-public-consultation-end,,local-authority:ISL,london-borough-of-islington-local-plan-2023,,2019-10-18,reg-19-public-consultation-end
-2024-11-11,,,london-borough-of-islington-local-plan-2023-timetable-2-submit-plan-for-examination,,local-authority:ISL,london-borough-of-islington-local-plan-2023,,2020-02,submit-plan-for-examination
-2024-11-11,,,london-borough-of-islington-local-plan-2023-timetable-2-planning-inspectorate-examination-start,,local-authority:ISL,london-borough-of-islington-local-plan-2023,,2021-09,planning-inspectorate-examination-start
-2024-11-11,,,london-borough-of-islington-local-plan-2023-timetable-2-planning-inspectorate-examination-end,,local-authority:ISL,london-borough-of-islington-local-plan-2023,,2021-10,planning-inspectorate-examination-end
-2024-11-11,,,london-borough-of-lewisham-local-plan-2020-timetable-0-reg-18-draft-local-plan-published,,local-authority:LEW,london-borough-of-lewisham-local-plan-2020,,2021-01-15,reg-18-draft-local-plan-published
-2024-11-11,,,london-borough-of-lewisham-local-plan-2020-timetable-0-reg-18-public-consultation-start,,local-authority:LEW,london-borough-of-lewisham-local-plan-2020,,2015-10,reg-18-public-consultation-start
-2024-11-11,,,london-borough-of-lewisham-local-plan-2020-timetable-0-reg-18-public-consultation-end,,local-authority:LEW,london-borough-of-lewisham-local-plan-2020,,2015-11,reg-18-public-consultation-end
-2024-11-11,,,london-borough-of-lewisham-local-plan-2020-timetable-1-reg-18-public-consultation-start,,local-authority:LEW,london-borough-of-lewisham-local-plan-2020,,2021-01-15,reg-18-public-consultation-start
-2024-11-11,,,london-borough-of-lewisham-local-plan-2020-timetable-1-reg-18-public-consultation-end,,local-authority:LEW,london-borough-of-lewisham-local-plan-2020,,2021-04-11,reg-18-public-consultation-end
-2024-11-11,,,london-borough-of-lewisham-local-plan-2020-timetable-2-reg-19-public-consultation-start,,local-authority:LEW,london-borough-of-lewisham-local-plan-2020,,2023-03-01,reg-19-public-consultation-start
-2024-11-11,,,london-borough-of-lewisham-local-plan-2020-timetable-2-reg-19-public-consultation-end,,local-authority:LEW,london-borough-of-lewisham-local-plan-2020,,2023-04-25,reg-19-public-consultation-end
-2024-11-11,,,london-borough-of-lewisham-local-plan-2020-timetable-3-submit-plan-for-examination,,local-authority:LEW,london-borough-of-lewisham-local-plan-2020,,2023-11-03,submit-plan-for-examination
-2024-11-11,,,new-local-plan-0-0-timetable-0-estimated-reg-18-draft-local-plan-published,,local-authority:TAN,new-local-plan-0-0,,2023-11-03,estimated-reg-18-draft-local-plan-published
-2024-11-11,,,new-local-plan-0-0-timetable-1-estimated-reg-19-publication-local-plan-published,,local-authority:TAN,new-local-plan-0-0,,2023-11-03,estimated-reg-19-publication-local-plan-published
-2024-11-11,,,new-local-plan-0-0-timetable-2-estimated-submit-plan-for-examination,,local-authority:TAN,new-local-plan-0-0,,2023-11-03,estimated-submit-plan-for-examination
-2024-11-11,,,thurrock-local-plan-2040-timetable-0-timetable-published,,local-authority:THR,thurrock-local-plan-2040,,2023-09,timetable-published
-2024-11-11,,,thurrock-local-plan-2040-timetable-1-estimated-reg-18-draft-local-plan-published,,local-authority:THR,thurrock-local-plan-2040,,2023-12,estimated-reg-18-draft-local-plan-published
-2024-11-11,,,thurrock-local-plan-2040-timetable-1-estimated-reg-18-public-consultation-end,,local-authority:THR,thurrock-local-plan-2040,,2023-12,estimated-reg-18-public-consultation-end
-2024-11-11,,,thurrock-local-plan-2040-timetable-1-estimated-reg-18-public-consultation-start,,local-authority:THR,thurrock-local-plan-2040,,2023-12,estimated-reg-18-public-consultation-start
-2024-11-11,,,thurrock-local-plan-2040-timetable-2-estimated-reg-19-public-consultation-start,,local-authority:THR,thurrock-local-plan-2040,,2024-09,estimated-reg-19-public-consultation-start
-2024-11-11,,,thurrock-local-plan-2040-timetable-2-estimated-reg-19-public-consultation-end,,local-authority:THR,thurrock-local-plan-2040,,2024-09,estimated-reg-19-public-consultation-end
-2024-11-11,,,thurrock-local-plan-2040-timetable-2-estimated-reg-19-publication-local-plan-published,,local-authority:THR,thurrock-local-plan-2040,,2024-09,estimated-reg-19-publication-local-plan-published
-2024-11-11,,,thurrock-local-plan-2040-timetable-3-estimated-submit-plan-for-examination,,local-authority:THR,thurrock-local-plan-2040,,2025-03,estimated-submit-plan-for-examination
-2024-11-11,,,thurrock-local-plan-2040-timetable-3-estimated-plan-adoption-date,,local-authority:THR,thurrock-local-plan-2040,,2026-07,estimated-plan-adoption-date
-2024-11-25,,,basingstoke-and-deane-borough-council-local-plan-2011-timetable-1-inspector-report-published,,local-authority:BAN,basingstoke-and-deane-borough-council-local-plan-2011,,2016-04-06,inspector-report-published
-2024-11-25,,,new-canterbury-district-local-plan-2020-2040-timetable-2-reg-18-public-consultation-start,,local-authority:CAT,new-canterbury-district-local-plan-2020-2040,Draft Canterbury District Local Plan,2022-10,reg-18-public-consultation-start
-2024-11-25,,,new-canterbury-district-local-plan-2020-2040-timetable-2-reg-18-public-consultation-end,,local-authority:CAT,new-canterbury-district-local-plan-2020-2040,Draft Canterbury District Local Plan,2023-01,reg-18-public-consultation-end
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-1-estimated-reg-19-public-consultation-start,,local-authority:ASH,ashfield-local-plan-2023-2040,,2023-12-04,estimated-reg-19-public-consultation-start
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-1-estimated-reg-19-public-consultation-end,,local-authority:ASH,ashfield-local-plan-2023-2040,,2024-01-29,estimated-reg-19-public-consultation-end
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-1-estimated-reg-19-publication-local-plan-published,,local-authority:ASH,ashfield-local-plan-2023-2040,,2023-11,estimated-reg-19-publication-local-plan-published
-2024-11-25,,,harborough-new-local-plan-2020-2041-timetable-0-estimated-reg-18-public-consultation-end,,local-authority:HAO,harborough-new-local-plan-2020-2041,,2025-03,estimated-reg-18-public-consultation-end
-2024-11-25,,,harborough-new-local-plan-2020-2041-timetable-0-estimated-reg-18-public-consultation-start,,local-authority:HAO,harborough-new-local-plan-2020-2041,,2025-01,estimated-reg-18-public-consultation-start
-2024-11-25,,,hart-district-council-local-plan-2014-timetable-0-inspector-report-published,,local-authority:HAT,hart-district-council-local-plan-2014,,2020-02-10,inspector-report-published
-2024-11-25,,,bedford-borough-council-local-plan-2040-timetable-2-reg-19-publication-local-plan-published,,local-authority:BDF,bedford-borough-council-local-plan-2040,,2022-06-15,reg-19-publication-local-plan-published
-2024-11-25,,,bedford-borough-council-local-plan-2040-timetable-2-reg-19-public-consultation-start,,local-authority:BDF,bedford-borough-council-local-plan-2040,,2022-06-15,reg-19-public-consultation-start
-2024-11-25,,,bedford-borough-council-local-plan-2040-timetable-2-reg-19-public-consultation-end,,local-authority:BDF,bedford-borough-council-local-plan-2040,,2022-07-29,reg-19-public-consultation-end
-2024-11-25,,,fareham-local-plan-2037-timetable-1-reg-19-public-consultation-start,,local-authority:FAR,fareham-local-plan-2037,,2021-06-18,reg-19-public-consultation-start
-2024-11-25,,,fareham-local-plan-2037-timetable-1-reg-19-public-consultation-end,,local-authority:FAR,fareham-local-plan-2037,,2021-07-30,reg-19-public-consultation-end
-2024-11-25,,,fareham-local-plan-2037-timetable-0-submit-plan-for-examination,,local-authority:FAR,fareham-local-plan-2037,,2021-09-30,submit-plan-for-examination
-2024-11-25,,,fareham-local-plan-2037-timetable-0-planning-inspectorate-examination-start,,local-authority:FAR,fareham-local-plan-2037,,2021-09-30,planning-inspectorate-examination-start
-2024-11-25,,,fareham-local-plan-2037-timetable-2-reg-19-public-consultation-start,,local-authority:FAR,fareham-local-plan-2037,,2020-11-06,reg-19-public-consultation-start
-2024-11-25,,,fareham-local-plan-2037-timetable-2-reg-19-public-consultation-end,,local-authority:FAR,fareham-local-plan-2037,,2020-12-18,reg-19-public-consultation-end
-2024-11-25,,,babergh-district-council-local-plan-2023-timetable-0-submit-plan-for-examination,,local-authority:BAB;local-authority:MSU,babergh-district-council-local-plan-2023,,2021-03-31,submit-plan-for-examination
-2024-11-25,,,babergh-district-council-local-plan-2023-timetable-0-planning-inspectorate-examination-end,,local-authority:BAB;local-authority:MSU,babergh-district-council-local-plan-2023,,2023-09-19,planning-inspectorate-examination-end
-2024-11-25,,,greater-cambridge-local-plan-2021-2041-timetable-1-estimated-reg-19-publication-local-plan-published,,local-authority:CAB,greater-cambridge-local-plan-2021-2041,Summer/Autumn 2026,2026,estimated-reg-19-publication-local-plan-published
-2024-11-25,,,greater-cambridge-local-plan-2021-2041-timetable-0-estimated-reg-18-draft-local-plan-published,,local-authority:CAB,greater-cambridge-local-plan-2021-2041,Autumn/Winter 2025,2025,estimated-reg-18-draft-local-plan-published
-2024-11-25,,,greater-cambridge-local-plan-2021-2041-timetable-2-estimated-submit-plan-for-examination,,local-authority:CAB,greater-cambridge-local-plan-2021-2041,,2026-12,estimated-submit-plan-for-examination
-2024-11-25,,,fareham-local-plan-2037-timetable-3-reg-18-public-consultation-start,,local-authority:FAR,fareham-local-plan-2037,6 weeks summer 2019 - Issues and Options,2019,reg-18-public-consultation-start
-2024-11-25,,,fareham-local-plan-2037-timetable-3-reg-18-public-consultation-end,,local-authority:FAR,fareham-local-plan-2037,6 weeks summer 2019 - Issues and Options,2019,reg-18-public-consultation-end
-2024-11-25,,,babergh-district-council-local-plan-2023-timetable-1-inspector-report-published,,local-authority:BAB;local-authority:MSU,babergh-district-council-local-plan-2023,,2023-09-19,inspector-report-published
-2024-11-25,,,fenland-local-plan-2021-2040-timetable-0-reg-18-draft-local-plan-published,,local-authority:FEN,fenland-local-plan-2021-2040,Issues and Option Consultation,2019-10,reg-18-draft-local-plan-published
-2024-11-25,,,fenland-local-plan-2021-2040-timetable-0-reg-18-public-consultation-start,,local-authority:FEN,fenland-local-plan-2021-2040,Issues and Option Consultation,2019-10,reg-18-public-consultation-start
-2024-11-25,,,fenland-local-plan-2021-2040-timetable-0-reg-18-public-consultation-end,,local-authority:FEN,fenland-local-plan-2021-2040,Issues and Option Consultation,2019-10,reg-18-public-consultation-end
-2024-11-25,,,fenland-local-plan-2021-2040-timetable-3-submit-plan-for-examination,,local-authority:FEN,fenland-local-plan-2021-2040,,2023-04,submit-plan-for-examination
-2024-11-25,,,fenland-local-plan-2021-2040-timetable-1-reg-18-public-consultation-start,,local-authority:FEN,fenland-local-plan-2021-2040,Draft Local Plan Consultation,2020-06,reg-18-public-consultation-start
-2024-11-25,,,fenland-local-plan-2021-2040-timetable-1-reg-18-public-consultation-end,,local-authority:FEN,fenland-local-plan-2021-2040,Draft Local Plan Consultation,2020-07,reg-18-public-consultation-end
-2024-11-25,,,fenland-local-plan-2021-2040-timetable-2-reg-19-public-consultation-start,,local-authority:FEN,fenland-local-plan-2021-2040,"2
+reference,event-date,local-plan,notes,description,local-plan-event,entry-date,start-date,end-date,organisation,name
+london-borough-of-islington-local-plan-2023-timetable-0-reg-18-public-consultation-end-0,2029-01-14,london-borough-of-islington-local-plan-2023,,,reg-18-public-consultation-end,2024-11-11,,2024-12-06,,
+london-borough-of-islington-local-plan-2023-timetable-0-reg-18-public-consultation-start-1,2018-11-20,london-borough-of-islington-local-plan-2023,,,reg-18-public-consultation-start,2024-11-11,,2024-12-06,,
+basingstoke-and-deane-borough-council-local-plan-2011-timetable-1-inspector-report-published-1,2016-04-06,basingstoke-and-deane-borough-council-local-plan-2011,,,inspector-report-published,2024-11-25,,2024-12-06,,
+bedford-borough-council-local-plan-2040-timetable-2-reg-19-public-consultation-end-1,2022-07-29,bedford-borough-council-local-plan-2040,,,reg-19-public-consultation-end,2024-11-25,,2024-12-06,,
+bedford-borough-council-local-plan-2040-timetable-2-reg-19-public-consultation-start-2,2022-06-15,bedford-borough-council-local-plan-2040,,,reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+bedford-borough-council-local-plan-2040-timetable-2-reg-19-publication-local-plan-published-3,2022-06-15,bedford-borough-council-local-plan-2040,,,reg-19-publication-local-plan-published,2024-11-25,,2024-12-06,,
+camden-local-plan-2026-timetable-2-estimated-plan-adoption-date-0,2026,camden-local-plan-2026,"""Summer 2026""",,estimated-plan-adoption-date,2024-11-11,,2024-12-06,,
+camden-local-plan-2026-timetable-2-estimated-submit-plan-for-examination-1,2025,camden-local-plan-2026,"""Spring 2025""",,estimated-submit-plan-for-examination,2024-11-11,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-1-estimated-reg-19-public-consultation-end-1,2024-01-29,ashfield-local-plan-2023-2040,,,estimated-reg-19-public-consultation-end,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-1-estimated-reg-19-public-consultation-start-2,2023-12-04,ashfield-local-plan-2023-2040,,,estimated-reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-1-estimated-reg-19-publication-local-plan-published-3,2023-11,ashfield-local-plan-2023-2040,,,estimated-reg-19-publication-local-plan-published,2024-11-25,,2024-12-06,,
+camden-local-plan-2026-timetable-3-reg-18-public-consultation-end-0,2021,camden-local-plan-2026,consulted on a Draft Site Allocations Local Plan,,reg-18-public-consultation-end,2024-11-11,,2024-12-06,,
+camden-local-plan-2026-timetable-3-reg-18-public-consultation-start-1,2020,camden-local-plan-2026,consulted on a Draft Site Allocations Local Plan,,reg-18-public-consultation-start,2024-11-11,,2024-12-06,,
+camden-local-plan-2026-timetable-4-reg-18-public-consultation-end-0,2022,camden-local-plan-2026,consulted on a Draft Site Allocations Local Plan,,reg-18-public-consultation-end,2024-11-11,,2024-12-06,,
+camden-local-plan-2026-timetable-4-reg-18-public-consultation-start-1,2022,camden-local-plan-2026,consulted on a Draft Site Allocations Local Plan,,reg-18-public-consultation-start,2024-11-11,,2024-12-06,,
+camden-local-plan-2026-timetable-5-reg-18-public-consultation-end-0,2024-03-13,camden-local-plan-2026,,,reg-18-public-consultation-end,2024-11-11,,2024-12-06,,
+camden-local-plan-2026-timetable-5-reg-18-public-consultation-start-1,2024-01-17,camden-local-plan-2026,,,reg-18-public-consultation-start,2024-11-11,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-0-estimated-reg-18-public-consultation-end-1,2019-07,cannock-chase-district-local-plan,,,estimated-reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-0-estimated-reg-18-public-consultation-start-2,2019-05,cannock-chase-district-local-plan,,,estimated-reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-0-estimated-reg-18-draft-local-plan-published-3,2019-05,cannock-chase-district-local-plan,,,estimated-reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-1-estimated-reg-19-publication-local-plan-published-3,2023,cannock-chase-district-local-plan,,,estimated-reg-19-publication-local-plan-published,2024-11-25,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-2-estimated-plan-adoption-date-1,2025,cannock-chase-district-local-plan,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-2-estimated-submit-plan-for-examination-2,2024,cannock-chase-district-local-plan,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+fenland-local-plan-2021-2040-timetable-3-submit-plan-for-examination-1,2023-04,fenland-local-plan-2021-2040,,,submit-plan-for-examination,2024-11-25,,2024-12-06,,
+bedford-borough-council-local-plan-2040-timetable-0-reg-18-public-consultation-end-1,2020-09-04,bedford-borough-council-local-plan-2040,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+bedford-borough-council-local-plan-2040-timetable-0-reg-18-public-consultation-start-2,2020-07-14,bedford-borough-council-local-plan-2040,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+bedford-borough-council-local-plan-2040-timetable-0-reg-18-draft-local-plan-published-3,2020-07-14,bedford-borough-council-local-plan-2040,,,reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+hart-district-council-local-plan-2014-timetable-1-submit-plan-for-examination-1,2018-06-18,hart-district-council-local-plan-2014,,,submit-plan-for-examination,2024-11-25,,2024-12-06,,
+hart-district-council-local-plan-2014-timetable-1-planning-inspectorate-examination-end-2,2018-12-18,hart-district-council-local-plan-2014,,,planning-inspectorate-examination-end,2024-11-25,,2024-12-06,,
+hart-district-council-local-plan-2014-timetable-1-planning-inspectorate-examination-start-3,2018-11-20,hart-district-council-local-plan-2014,,,planning-inspectorate-examination-start,2024-11-25,,2024-12-06,,
+hastings-local-plan-2019-2041-timetable-0-estimated-reg-18-draft-local-plan-published-3,2020-03-02,hastings-local-plan-2019-2041,,,estimated-reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+hastings-local-plan-2019-2041-timetable-1-estimated-reg-19-public-consultation-start-2,2025-04,hastings-local-plan-2019-2041,,,estimated-reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+bedford-borough-council-local-plan-2040-timetable-1-reg-18-public-consultation-end-1,2021-09-03,bedford-borough-council-local-plan-2040,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+bedford-borough-council-local-plan-2040-timetable-1-reg-18-public-consultation-start-2,2021-06-29,bedford-borough-council-local-plan-2040,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+bedford-borough-council-local-plan-2040-timetable-3-submit-plan-for-examination-1,2023-01-12,bedford-borough-council-local-plan-2040,,,submit-plan-for-examination,2024-11-25,,2024-12-06,,
+central-bedfordshire-local-plan-2035-timetable-0-estimated-reg-18-public-consultation-end-1,2026-04,central-bedfordshire-local-plan-2035,,,estimated-reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+central-bedfordshire-local-plan-2035-timetable-0-estimated-reg-18-public-consultation-start-2,2026-02,central-bedfordshire-local-plan-2035,,,estimated-reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+central-bedfordshire-local-plan-2035-timetable-0-estimated-reg-18-draft-local-plan-published-3,2026-02,central-bedfordshire-local-plan-2035,,,estimated-reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+central-bedfordshire-local-plan-2035-timetable-1-estimated-reg-19-public-consultation-start-2,2027-10,central-bedfordshire-local-plan-2035,,,estimated-reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+central-bedfordshire-local-plan-2035-timetable-1-estimated-reg-19-publication-local-plan-published-3,2027-09,central-bedfordshire-local-plan-2035,,,estimated-reg-19-publication-local-plan-published,2024-11-25,,2024-12-06,,
+central-bedfordshire-local-plan-2035-timetable-2-estimated-plan-adoption-date-1,2028-12,central-bedfordshire-local-plan-2035,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+central-bedfordshire-local-plan-2035-timetable-2-estimated-submit-plan-for-examination-2,2028-02,central-bedfordshire-local-plan-2035,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+bedford-borough-council-local-plan-2018-timetable-0-submit-plan-for-examination-1,2018-12-05,bedford-borough-council-local-plan-2018,,,submit-plan-for-examination,2024-11-25,,2024-12-06,,
+arun-district-council-local-plan-2011-timetable-0-submit-plan-for-examination-0,2015-01-30,arun-district-council-local-plan-2011,,,submit-plan-for-examination,2024-11-11,,2024-12-06,,
+arun-district-council-local-plan-2011-timetable-0-planning-inspectorate-examination-end-1,2017-09-28,arun-district-council-local-plan-2011,,,planning-inspectorate-examination-end,2024-11-11,,2024-12-06,,
+arun-district-council-local-plan-2011-timetable-0-planning-inspectorate-examination-start-2,2015-06-02,arun-district-council-local-plan-2011,,,planning-inspectorate-examination-start,2024-11-11,,2024-12-06,,
+arun-district-council-local-plan-2011-timetable-1-plan-adopted-0,2018-07-18,arun-district-council-local-plan-2011,,,plan-adopted,2024-11-11,,2024-12-06,,
+arun-district-council-local-plan-2011-timetable-1-inspector-report-published-1,2018-07,arun-district-council-local-plan-2011,,,inspector-report-published,2024-11-11,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-0-estimated-reg-18-public-consultation-end-1,2021-11-16,ashfield-local-plan-2023-2040,,,estimated-reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-0-estimated-reg-18-public-consultation-start-2,2021-10-04,ashfield-local-plan-2023-2040,,,estimated-reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-0-estimated-reg-18-draft-local-plan-published-3,2021-10,ashfield-local-plan-2023-2040,,,estimated-reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-2-estimated-plan-adoption-date-1,2025-04,ashfield-local-plan-2023-2040,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-2-estimated-submit-plan-for-examination-2,2024-05,ashfield-local-plan-2023-2040,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-3-reg-18-public-consultation-end-1,2021-11-16,ashfield-local-plan-2023-2040,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-3-reg-18-public-consultation-start-2,2021-10-04,ashfield-local-plan-2023-2040,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-3-reg-18-draft-local-plan-published-3,2021-10,ashfield-local-plan-2023-2040,,,reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-4-reg-19-public-consultation-end-1,2024-01-29,ashfield-local-plan-2023-2040,,,reg-19-public-consultation-end,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-4-reg-19-public-consultation-start-2,2023-12-04,ashfield-local-plan-2023-2040,,,reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+ashfield-local-plan-2023-2040-timetable-4-reg-19-publication-local-plan-published-3,2023-11,ashfield-local-plan-2023-2040,,,reg-19-publication-local-plan-published,2024-11-25,,2024-12-06,,
+ashford-borough-council-local-plan-2019-timetable-0-submit-plan-for-examination-0,2017-12-21,ashford-borough-council-local-plan-2019,,,submit-plan-for-examination,2024-11-11,,2024-12-06,,
+ashford-borough-council-local-plan-2019-timetable-0-planning-inspectorate-examination-end-1,2018-06-13,ashford-borough-council-local-plan-2019,,,planning-inspectorate-examination-end,2024-11-11,,2024-12-06,,
+ashford-borough-council-local-plan-2019-timetable-0-planning-inspectorate-examination-start-2,2018-04-11,ashford-borough-council-local-plan-2019,,,planning-inspectorate-examination-start,2024-11-11,,2024-12-06,,
+ashford-borough-council-local-plan-2019-timetable-1-plan-adopted-0,2019-02-21,ashford-borough-council-local-plan-2019,,,plan-adopted,2024-11-11,,2024-12-06,,
+ashford-borough-council-local-plan-2019-timetable-1-inspector-report-published-1,2019-01-02,ashford-borough-council-local-plan-2019,,,inspector-report-published,2024-11-11,,2024-12-06,,
+birmingham-plan-2042-timetable-0-reg-18-public-consultation-end-1,2024-08,birmingham-plan-2042,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+birmingham-plan-2042-timetable-0-reg-18-public-consultation-start-2,2024-07,birmingham-plan-2042,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+barnsley-metropolitan-borough-council-local-plan-2019-timetable-0-reg-19-public-consultation-start-2,2016-08,barnsley-metropolitan-borough-council-local-plan-2019,,,reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+barnsley-metropolitan-borough-council-local-plan-2019-timetable-0-reg-19-publication-local-plan-published-3,2016-08,barnsley-metropolitan-borough-council-local-plan-2019,,,reg-19-publication-local-plan-published,2024-11-25,,2024-12-06,,
+barnsley-metropolitan-borough-council-local-plan-2019-timetable-1-submit-plan-for-examination-1,2016-12-20,barnsley-metropolitan-borough-council-local-plan-2019,,,submit-plan-for-examination,2024-11-25,,2024-12-06,,
+barnsley-metropolitan-borough-council-local-plan-2019-timetable-2-inspector-report-published-1,2018-12-14,barnsley-metropolitan-borough-council-local-plan-2019,,,inspector-report-published,2024-11-25,,2024-12-06,,
+basildon-borough-council-new-local-plan-timetable-0-reg-18-public-consultation-end-1,2023-09-05,basildon-borough-council-new-local-plan,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+basildon-borough-council-new-local-plan-timetable-0-reg-18-public-consultation-start-2,2023-06-27,basildon-borough-council-new-local-plan,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+basildon-borough-council-new-local-plan-timetable-1-estimated-reg-18-public-consultation-start-2,2024-12,basildon-borough-council-new-local-plan,,,estimated-reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+basildon-borough-council-new-local-plan-timetable-2-estimated-reg-19-public-consultation-start-2,2025-03,basildon-borough-council-new-local-plan,,,estimated-reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+basildon-borough-council-new-local-plan-timetable-3-estimated-plan-adoption-date-1,2026-06,basildon-borough-council-new-local-plan,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+basildon-borough-council-new-local-plan-timetable-3-estimated-submit-plan-for-examination-2,2025-06,basildon-borough-council-new-local-plan,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+basingstoke-and-deane-borough-council-local-plan-2011-timetable-0-planning-inspectorate-examination-end-2,2016-04-06,basingstoke-and-deane-borough-council-local-plan-2011,,,planning-inspectorate-examination-end,2024-11-25,,2024-12-06,,
+basingstoke-deane-local-plan-2021-2040-timetable-0-reg-18-public-consultation-end-1,2020-11-09,basingstoke-deane-local-plan-2021-2040,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+basingstoke-deane-local-plan-2021-2040-timetable-0-reg-18-public-consultation-start-2,2020-09-28,basingstoke-deane-local-plan-2021-2040,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+basingstoke-deane-local-plan-2021-2040-timetable-0-reg-18-draft-local-plan-published-3,2020-09-28,basingstoke-deane-local-plan-2021-2040,,,reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+basingstoke-deane-local-plan-2021-2040-timetable-1-reg-18-public-consultation-end-1,2024-03-04,basingstoke-deane-local-plan-2021-2040,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+basingstoke-deane-local-plan-2021-2040-timetable-1-reg-18-public-consultation-start-2,2024-01-22,basingstoke-deane-local-plan-2021-2040,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+basingstoke-deane-local-plan-2021-2040-timetable-2-estimated-reg-19-publication-local-plan-published-3,2024,basingstoke-deane-local-plan-2021-2040,,,estimated-reg-19-publication-local-plan-published,2024-11-25,,2024-12-06,,
+basingstoke-deane-local-plan-2021-2040-timetable-3-estimated-plan-adoption-date-1,2025-12,basingstoke-deane-local-plan-2021-2040,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+basingstoke-deane-local-plan-2021-2040-timetable-3-estimated-submit-plan-for-examination-2,2025-03,basingstoke-deane-local-plan-2021-2040,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+birmingham-plan-2042-timetable-1-reg-19-public-consultation-start-2,2025-02,birmingham-plan-2042,,,reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+birmingham-plan-2042-timetable-2-submit-plan-for-examination-1,2025-06,birmingham-plan-2042,,,submit-plan-for-examination,2024-11-25,,2024-12-06,,
+birmingham-plan-2042-timetable-2-planning-inspectorate-examination-start-3,2025-09,birmingham-plan-2042,,,planning-inspectorate-examination-start,2024-11-25,,2024-12-06,,
+birmingham-plan-2042-timetable-3-inspector-report-published-1,2026-09,birmingham-plan-2042,,,inspector-report-published,2024-11-25,,2024-12-06,,
+birmingham-plan-2042-timetable-3-planning-inspectorate-found-sound-2,2026-09,birmingham-plan-2042,,,planning-inspectorate-found-sound,2024-11-25,,2024-12-06,,
+camden-local-plan-2026-timetable-0-timetable-published-0,2023-12,camden-local-plan-2026,,,timetable-published,2024-11-11,,2024-12-06,,
+camden-local-plan-2026-timetable-1-estimated-reg-19-public-consultation-end-0,2025,camden-local-plan-2026,Consultation on Pre Submission Drafts - early 2025,,estimated-reg-19-public-consultation-end,2024-11-11,,2024-12-06,,
+camden-local-plan-2026-timetable-1-estimated-reg-19-public-consultation-start-1,2024,camden-local-plan-2026,Consultation on Pre Submission Drafts - winter 2024,,estimated-reg-19-public-consultation-start,2024-11-11,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-3-reg-19-public-consultation-end-1,2024-03-18,cannock-chase-district-local-plan,,,reg-19-public-consultation-end,2024-11-25,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-3-reg-19-public-consultation-start-2,2024-02-05,cannock-chase-district-local-plan,,,reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-3-reg-19-publication-local-plan-published-3,2023-12,cannock-chase-district-local-plan,,,reg-19-publication-local-plan-published,2024-11-25,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-4-reg-18-public-consultation-end-1,2019-07-09,cannock-chase-district-local-plan,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-4-reg-18-public-consultation-start-2,2019-05-13,cannock-chase-district-local-plan,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+cannock-chase-district-local-plan-timetable-4-reg-18-draft-local-plan-published-3,2019-05,cannock-chase-district-local-plan,,,reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+east-cambridgeshire-local-plan-single-issue-review-timetable-0-estimated-plan-adoption-date-1,2023-10-19,east-cambridgeshire-local-plan-single-issue-review,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+east-cambridgeshire-local-plan-single-issue-review-timetable-0-estimated-submit-plan-for-examination-2,2013-08-29,east-cambridgeshire-local-plan-single-issue-review,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+east-cambridgeshire-local-plan-single-issue-review-timetable-1-inspector-report-published-1,2023-10-05,east-cambridgeshire-local-plan-single-issue-review,,,inspector-report-published,2024-11-25,,2024-12-06,,
+east-devon-local-plan-2020-2040-timetable-0-estimated-plan-adoption-date-1,2026,east-devon-local-plan-2020-2040,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+east-devon-local-plan-2020-2040-timetable-0-estimated-submit-plan-for-examination-2,2025,east-devon-local-plan-2020-2040,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+east-hampshire-local-plan-timetable-0-estimated-reg-18-public-consultation-end-1,2024-06,east-hampshire-local-plan,,,estimated-reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+east-hampshire-local-plan-timetable-0-estimated-reg-18-public-consultation-start-2,2024-01,east-hampshire-local-plan,,,estimated-reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+east-hampshire-local-plan-timetable-1-estimated-reg-19-public-consultation-end-1,2024-11,east-hampshire-local-plan,,,estimated-reg-19-public-consultation-end,2024-11-25,,2024-12-06,,
+east-hampshire-local-plan-timetable-1-estimated-reg-19-public-consultation-start-2,2024-07,east-hampshire-local-plan,,,estimated-reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+east-hampshire-local-plan-timetable-2-estimated-plan-adoption-date-1,2026-09,east-hampshire-local-plan,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+east-hampshire-local-plan-timetable-2-estimated-submit-plan-for-examination-2,2025-12,east-hampshire-local-plan,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+east-lindsey-district-council-local-plan-2018-timetable-0-plan-adopted-0,2018-07-18,east-lindsey-district-council-local-plan-2018,,,plan-adopted,2024-11-11,,2024-12-06,,
+east-lindsey-district-council-local-plan-2018-timetable-0-submit-plan-for-examination-2,2017-04-19,east-lindsey-district-council-local-plan-2018,,,submit-plan-for-examination,2024-11-11,,2024-12-06,,
+fareham-local-plan-2037-timetable-0-submit-plan-for-examination-1,2021-09-30,fareham-local-plan-2037,,,submit-plan-for-examination,2024-11-25,,2024-12-06,,
+fareham-local-plan-2037-timetable-0-planning-inspectorate-examination-start-3,2021-09-30,fareham-local-plan-2037,,,planning-inspectorate-examination-start,2024-11-25,,2024-12-06,,
+fareham-local-plan-2037-timetable-1-reg-19-public-consultation-end-1,2021-07-30,fareham-local-plan-2037,,,reg-19-public-consultation-end,2024-11-25,,2024-12-06,,
+fareham-local-plan-2037-timetable-1-reg-19-public-consultation-start-2,2021-06-18,fareham-local-plan-2037,,,reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+fareham-local-plan-2037-timetable-2-reg-19-public-consultation-end-1,2020-12-18,fareham-local-plan-2037,,,reg-19-public-consultation-end,2024-11-25,,2024-12-06,,
+fareham-local-plan-2037-timetable-2-reg-19-public-consultation-start-2,2020-11-06,fareham-local-plan-2037,,,reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+fareham-local-plan-2037-timetable-3-reg-18-public-consultation-end-1,2019,fareham-local-plan-2037,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+fareham-local-plan-2037-timetable-3-reg-18-public-consultation-start-2,2019,fareham-local-plan-2037,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+fenland-local-plan-2021-2040-timetable-0-reg-18-public-consultation-end-1,2019-10,fenland-local-plan-2021-2040,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+fenland-local-plan-2021-2040-timetable-0-reg-18-public-consultation-start-2,2019-10,fenland-local-plan-2021-2040,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+fenland-local-plan-2021-2040-timetable-0-reg-18-draft-local-plan-published-3,2019-10,fenland-local-plan-2021-2040,,,reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+fenland-local-plan-2021-2040-timetable-1-reg-18-public-consultation-end-1,2020-07,fenland-local-plan-2021-2040,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+fenland-local-plan-2021-2040-timetable-1-reg-18-public-consultation-start-2,2020-06,fenland-local-plan-2021-2040,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+fenland-local-plan-2021-2040-timetable-2-reg-19-public-consultation-end-1,2023-01,fenland-local-plan-2021-2040,,,reg-19-public-consultation-end,2024-11-25,,2024-12-06,,
+fenland-local-plan-2021-2040-timetable-2-reg-19-public-consultation-start-2,2023-01,fenland-local-plan-2021-2040,,,reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+great-yarmouth-local-plan-2021-2041-timetable-0-estimated-reg-18-public-consultation-end-1,2024-05-08,great-yarmouth-local-plan-2021-2041,,,estimated-reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+great-yarmouth-local-plan-2021-2041-timetable-0-estimated-reg-18-public-consultation-start-2,2024-03-13,great-yarmouth-local-plan-2021-2041,,,estimated-reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+great-yarmouth-local-plan-2021-2041-timetable-1-estimated-plan-adoption-date-1,2026,great-yarmouth-local-plan-2021-2041,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+great-yarmouth-local-plan-2021-2041-timetable-1-estimated-submit-plan-for-examination-2,2025,great-yarmouth-local-plan-2021-2041,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+greater-cambridge-local-plan-2021-2041-timetable-0-estimated-reg-18-draft-local-plan-published-3,2025,greater-cambridge-local-plan-2021-2041,,,estimated-reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+greater-cambridge-local-plan-2021-2041-timetable-1-estimated-reg-19-publication-local-plan-published-3,2026,greater-cambridge-local-plan-2021-2041,,,estimated-reg-19-publication-local-plan-published,2024-11-25,,2024-12-06,,
+greater-cambridge-local-plan-2021-2041-timetable-2-estimated-submit-plan-for-examination-2,2026-12,greater-cambridge-local-plan-2021-2041,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+harborough-new-local-plan-2020-2041-timetable-0-estimated-reg-18-public-consultation-end-1,2025-03,harborough-new-local-plan-2020-2041,,,estimated-reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+harborough-new-local-plan-2020-2041-timetable-0-estimated-reg-18-public-consultation-start-2,2025-01,harborough-new-local-plan-2020-2041,,,estimated-reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+hart-district-council-local-plan-2014-timetable-0-inspector-report-published-1,2020-02-10,hart-district-council-local-plan-2014,,,inspector-report-published,2024-11-25,,2024-12-06,,
+london-borough-of-camden-local-plan-2017-timetable-0-submit-plan-for-examination-0,2016-06-24,london-borough-of-camden-local-plan-2017,,,submit-plan-for-examination,2024-11-11,,2024-12-06,,
+london-borough-of-camden-local-plan-2017-timetable-0-planning-inspectorate-examination-end-1,2017-05,london-borough-of-camden-local-plan-2017,,,planning-inspectorate-examination-end,2024-11-11,,2024-12-06,,
+london-borough-of-camden-local-plan-2017-timetable-0-planning-inspectorate-examination-start-2,2016-06,london-borough-of-camden-local-plan-2017,,,planning-inspectorate-examination-start,2024-11-11,,2024-12-06,,
+london-borough-of-camden-local-plan-2017-timetable-1-plan-adopted-0,2017-07-03,london-borough-of-camden-local-plan-2017,,,plan-adopted,2024-11-11,,2024-12-06,,
+london-borough-of-camden-local-plan-2017-timetable-1-inspector-report-published-1,2017-05,london-borough-of-camden-local-plan-2017,,,inspector-report-published,2024-11-11,,2024-12-06,,
+london-borough-of-camden-local-plan-2017-timetable-1-planning-inspectorate-found-sound-2,2017-05-10,london-borough-of-camden-local-plan-2017,,,planning-inspectorate-found-sound,2024-11-11,,2024-12-06,,
+london-borough-of-ealing-local-plan-2011-timetable-0-estimated-plan-adoption-date-0,2024-12,london-borough-of-ealing-local-plan-2011,End of 2024/early 2025,,estimated-plan-adoption-date,2024-11-11,,2024-12-06,,
+london-borough-of-ealing-local-plan-2011-timetable-0-estimated-submit-plan-for-examination-1,2024-05,london-borough-of-ealing-local-plan-2011,May 2024,,estimated-submit-plan-for-examination,2024-11-11,,2024-12-06,,
+london-borough-of-ealing-local-plan-2011-timetable-1-reg-18-public-consultation-end-0,2023-02-08,london-borough-of-ealing-local-plan-2011,,,reg-18-public-consultation-end,2024-11-11,,2024-12-06,,
+london-borough-of-ealing-local-plan-2011-timetable-1-reg-18-public-consultation-start-1,2022-11-30,london-borough-of-ealing-local-plan-2011,,,reg-18-public-consultation-start,2024-11-11,,2024-12-06,,
+london-borough-of-ealing-local-plan-2011-timetable-1-reg-18-draft-local-plan-published-2,2022-11-30,london-borough-of-ealing-local-plan-2011,,,reg-18-draft-local-plan-published,2024-11-11,,2024-12-06,,
+london-borough-of-ealing-local-plan-2011-timetable-2-reg-19-public-consultation-end-0,2024-04-10,london-borough-of-ealing-local-plan-2011,,,reg-19-public-consultation-end,2024-11-11,,2024-12-06,,
+london-borough-of-ealing-local-plan-2011-timetable-2-reg-19-public-consultation-start-1,2024-02-28,london-borough-of-ealing-local-plan-2011,,,reg-19-public-consultation-start,2024-11-11,,2024-12-06,,
+london-borough-of-ealing-local-plan-2011-timetable-2-reg-19-publication-local-plan-published-2,2024-02-28,london-borough-of-ealing-local-plan-2011,,,reg-19-publication-local-plan-published,2024-11-11,,2024-12-06,,
+london-borough-of-islington-local-plan-2023-timetable-1-reg-19-public-consultation-end-0,2019-10-18,london-borough-of-islington-local-plan-2023,,,reg-19-public-consultation-end,2024-11-11,,2024-12-06,,
+london-borough-of-islington-local-plan-2023-timetable-1-reg-19-public-consultation-start-1,2019-09-05,london-borough-of-islington-local-plan-2023,,,reg-19-public-consultation-start,2024-11-11,,2024-12-06,,
+london-borough-of-islington-local-plan-2023-timetable-2-submit-plan-for-examination-0,2020-02,london-borough-of-islington-local-plan-2023,,,submit-plan-for-examination,2024-11-11,,2024-12-06,,
+london-borough-of-islington-local-plan-2023-timetable-2-planning-inspectorate-examination-end-1,2021-10,london-borough-of-islington-local-plan-2023,,,planning-inspectorate-examination-end,2024-11-11,,2024-12-06,,
+london-borough-of-islington-local-plan-2023-timetable-2-planning-inspectorate-examination-start-2,2021-09,london-borough-of-islington-local-plan-2023,,,planning-inspectorate-examination-start,2024-11-11,,2024-12-06,,
+london-borough-of-islington-local-plan-2023-timetable-3-plan-adopted-0,2023-09-28,london-borough-of-islington-local-plan-2023,,,plan-adopted,2024-11-11,,2024-12-06,,
+london-borough-of-lewisham-local-plan-2020-timetable-0-reg-18-public-consultation-end-0,2015-11,london-borough-of-lewisham-local-plan-2020,,,reg-18-public-consultation-end,2024-11-11,,2024-12-06,,
+london-borough-of-lewisham-local-plan-2020-timetable-0-reg-18-public-consultation-start-1,2015-10,london-borough-of-lewisham-local-plan-2020,followed by ongoing public and stakeholder engagement to October 2020,,reg-18-public-consultation-start,2024-11-11,,2024-12-06,,
+london-borough-of-lewisham-local-plan-2020-timetable-0-reg-18-draft-local-plan-published-2,2021-01-15,london-borough-of-lewisham-local-plan-2020,,,reg-18-draft-local-plan-published,2024-11-11,,2024-12-06,,
+london-borough-of-lewisham-local-plan-2020-timetable-1-reg-18-public-consultation-end-0,2021-04-11,london-borough-of-lewisham-local-plan-2020,,,reg-18-public-consultation-end,2024-11-11,,2024-12-06,,
+london-borough-of-lewisham-local-plan-2020-timetable-1-reg-18-public-consultation-start-1,2021-01-15,london-borough-of-lewisham-local-plan-2020,,,reg-18-public-consultation-start,2024-11-11,,2024-12-06,,
+london-borough-of-lewisham-local-plan-2020-timetable-2-reg-19-public-consultation-end-0,2023-04-25,london-borough-of-lewisham-local-plan-2020,,,reg-19-public-consultation-end,2024-11-11,,2024-12-06,,
+london-borough-of-lewisham-local-plan-2020-timetable-2-reg-19-public-consultation-start-1,2023-03-01,london-borough-of-lewisham-local-plan-2020,,,reg-19-public-consultation-start,2024-11-11,,2024-12-06,,
+london-borough-of-lewisham-local-plan-2020-timetable-3-submit-plan-for-examination-0,2023-11-03,london-borough-of-lewisham-local-plan-2020,,,submit-plan-for-examination,2024-11-11,,2024-12-06,,
+new-ashford-local-plan-to-2042-timetable-0-estimated-reg-18-draft-local-plan-published-2,2025-04,new-ashford-local-plan-to-2042,,,estimated-reg-18-draft-local-plan-published,2024-11-11,,2024-12-06,,
+new-ashford-local-plan-to-2042-timetable-1-estimated-reg-19-publication-local-plan-published-2,2026-02,new-ashford-local-plan-to-2042,,,estimated-reg-19-publication-local-plan-published,2024-11-11,,2024-12-06,,
+new-ashford-local-plan-to-2042-timetable-2-estimated-plan-adoption-date-0,2027-05-01,new-ashford-local-plan-to-2042,April/May 2027,,estimated-plan-adoption-date,2024-11-11,,2024-12-06,,
+new-ashford-local-plan-to-2042-timetable-2-estimated-submit-plan-for-examination-1,2026-09,new-ashford-local-plan-to-2042,,,estimated-submit-plan-for-examination,2024-11-11,,2024-12-06,,
+new-canterbury-district-local-plan-2020-2040-timetable-0-estimated-plan-adoption-date-1,2027-03,new-canterbury-district-local-plan-2020-2040,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+new-canterbury-district-local-plan-2020-2040-timetable-0-estimated-submit-plan-for-examination-2,2026-02,new-canterbury-district-local-plan-2020-2040,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+new-canterbury-district-local-plan-2020-2040-timetable-1-reg-18-public-consultation-end-1,2024-06-03,new-canterbury-district-local-plan-2020-2040,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+new-canterbury-district-local-plan-2020-2040-timetable-1-reg-18-public-consultation-start-2,2024-03,new-canterbury-district-local-plan-2020-2040,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+new-canterbury-district-local-plan-2020-2040-timetable-1-reg-18-draft-local-plan-published-3,2024-03,new-canterbury-district-local-plan-2020-2040,,,reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+new-canterbury-district-local-plan-2020-2040-timetable-2-reg-18-public-consultation-end-1,2023-01,new-canterbury-district-local-plan-2020-2040,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+new-canterbury-district-local-plan-2020-2040-timetable-2-reg-18-public-consultation-start-2,2022-10,new-canterbury-district-local-plan-2020-2040,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+new-local-plan-0-0-timetable-0-estimated-reg-18-draft-local-plan-published-2,2023-11-03,new-local-plan-0-0,Q2 2025/26,,estimated-reg-18-draft-local-plan-published,2024-11-11,,2024-12-06,,
+new-local-plan-0-0-timetable-1-estimated-reg-19-publication-local-plan-published-2,2023-11-03,new-local-plan-0-0,Q1 2026/27,,estimated-reg-19-publication-local-plan-published,2024-11-11,,2024-12-06,,
+new-local-plan-0-0-timetable-2-estimated-submit-plan-for-examination-1,2023-11-03,new-local-plan-0-0,Q3 2026/27,,estimated-submit-plan-for-examination,2024-11-11,,2024-12-06,,
+the-castle-point-plan-timetable-0-reg-18-public-consultation-end-1,2024-09-16,the-castle-point-plan,,,reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+the-castle-point-plan-timetable-0-reg-18-public-consultation-start-2,2024-07-22,the-castle-point-plan,,,reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+the-castle-point-plan-timetable-0-reg-18-draft-local-plan-published-3,2024-07,the-castle-point-plan,,,reg-18-draft-local-plan-published,2024-11-25,,2024-12-06,,
+the-castle-point-plan-timetable-1-estimated-reg-18-public-consultation-end-1,2024-08,the-castle-point-plan,,,estimated-reg-18-public-consultation-end,2024-11-25,,2024-12-06,,
+the-castle-point-plan-timetable-1-estimated-reg-18-public-consultation-start-2,2024-06,the-castle-point-plan,,,estimated-reg-18-public-consultation-start,2024-11-25,,2024-12-06,,
+the-castle-point-plan-timetable-2-estimated-reg-19-public-consultation-end-1,2025-03,the-castle-point-plan,,,estimated-reg-19-public-consultation-end,2024-11-25,,2024-12-06,,
+the-castle-point-plan-timetable-2-estimated-reg-19-public-consultation-start-2,2025-01,the-castle-point-plan,,,estimated-reg-19-public-consultation-start,2024-11-25,,2024-12-06,,
+the-castle-point-plan-timetable-2-estimated-reg-19-publication-local-plan-published-3,2025-01,the-castle-point-plan,,,estimated-reg-19-publication-local-plan-published,2024-11-25,,2024-12-06,,
+the-castle-point-plan-timetable-3-estimated-plan-adoption-date-1,2026-03,the-castle-point-plan,,,estimated-plan-adoption-date,2024-11-25,,2024-12-06,,
+the-castle-point-plan-timetable-3-estimated-submit-plan-for-examination-2,2025-04,the-castle-point-plan,,,estimated-submit-plan-for-examination,2024-11-25,,2024-12-06,,
+thurrock-local-plan-2040-timetable-0-timetable-published-0,2023-09,thurrock-local-plan-2040,September 2023,,timetable-published,2024-11-11,,2024-12-06,,
+thurrock-local-plan-2040-timetable-1-estimated-reg-18-public-consultation-end-0,2023-12,thurrock-local-plan-2040,Winter 2023/24,,estimated-reg-18-public-consultation-end,2024-11-11,,2024-12-06,,
+thurrock-local-plan-2040-timetable-1-estimated-reg-18-public-consultation-start-1,2023-12,thurrock-local-plan-2040,Winter 2023/24,,estimated-reg-18-public-consultation-start,2024-11-11,,2024-12-06,,
+thurrock-local-plan-2040-timetable-1-estimated-reg-18-draft-local-plan-published-2,2023-12,thurrock-local-plan-2040,Winter 2023/24,,estimated-reg-18-draft-local-plan-published,2024-11-11,,2024-12-06,,
+thurrock-local-plan-2040-timetable-2-estimated-reg-19-public-consultation-end-0,2024-09,thurrock-local-plan-2040,Autumn/Winter 2024,,estimated-reg-19-public-consultation-end,2024-11-11,,2024-12-06,,
+thurrock-local-plan-2040-timetable-2-estimated-reg-19-public-consultation-start-1,2024-09,thurrock-local-plan-2040,Autumn/Winter 2024,,estimated-reg-19-public-consultation-start,2024-11-11,,2024-12-06,,
+thurrock-local-plan-2040-timetable-2-estimated-reg-19-publication-local-plan-published-2,2024-09,thurrock-local-plan-2040,Autumn/Winter 2024,,estimated-reg-19-publication-local-plan-published,2024-11-11,,2024-12-06,,
+thurrock-local-plan-2040-timetable-3-estimated-plan-adoption-date-0,2026-07,thurrock-local-plan-2040,Summer 2026,,estimated-plan-adoption-date,2024-11-11,,2024-12-06,,
+thurrock-local-plan-2040-timetable-3-estimated-submit-plan-for-examination-1,2025-03,thurrock-local-plan-2040,Spring 2025,,estimated-submit-plan-for-examination,2024-11-11,,2024-12-06,,
+babergh-district-council-local-plan-2023-timetable-0-submit-plan-for-examination-1,2021-03-31,babergh-district-council-local-plan-2023,,,submit-plan-for-examination,2024-11-25,,2024-12-06,,
+babergh-district-council-local-plan-2023-timetable-0-planning-inspectorate-examination-end-2,2023-09-19,babergh-district-council-local-plan-2023,,,planning-inspectorate-examination-end,2024-11-25,,2024-12-06,,
+babergh-district-council-local-plan-2023-timetable-1-inspector-report-published-1,2023-09-19,babergh-district-council-local-plan-2023,,,inspector-report-published,2024-11-25,,2024-12-06,,
+gateshead-metropolitan-borough-council-local-plan-2010-timetable-0-inspector-report-published-1,2015-02-24,gateshead-metropolitan-borough-council-local-plan-2010,,,inspector-report-published,2024-11-25,,2024-12-06,,
+gateshead-metropolitan-borough-council-local-plan-2010-timetable-0-planning-inspectorate-found-sound-2,2015-02-24,gateshead-metropolitan-borough-council-local-plan-2010,,,planning-inspectorate-found-sound,2024-11-25,,2024-12-06,,
+greater-manchester-spatial-framework-superseded-by-pep-plan-adopted-0,2024-03-21,greater-manchester-spatial-framework-superseded-by-pep,,,plan-adopted,2024-12-10,,,local-authority:BUR,
+burnley-s-local-plan-submit-plan-for-examination-4,2017-07-20,burnley-s-local-plan,,,submit-plan-for-examination,2024-12-10,,,local-authority:BUN,
+burnley-s-local-plan-reg-19-public-consultation-start-5,2017-04,burnley-s-local-plan,,,reg-19-public-consultation-start,2024-12-10,,,local-authority:BUN,
+burnley-s-local-plan-reg-19-public-consultation-end-6,2017-05,burnley-s-local-plan,,,reg-19-public-consultation-end,2024-12-10,,,local-authority:BUN,
+greater-nottingham-strategic-plan-estimated-plan-adoption-date-0,2026-03,greater-nottingham-strategic-plan,,,estimated-plan-adoption-date,2024-12-10,,,local-authority:BRT,
+broads-local-plan-review-estimated-submit-plan-for-examination-1,2025-05,broads-local-plan-review,,,estimated-submit-plan-for-examination,2024-12-10,,,national-park-authority:Q4972284,
+bristol-local-plan-2022-2040-estimated-plan-adoption-date-0,2026-03,bristol-local-plan-2022-2040,,,estimated-plan-adoption-date,2024-12-10,,,local-authority:BST,
+london-borough-of-islington-local-plan-2023-timetable-0-reg-18-public-consultation-end,2019-01-14,london-borough-of-islington-local-plan-2023,,,reg-18-public-consultation-end,2024-11-11,,,local-authority:ISL,
+east-staffordshire-borough-council-local-plan-2012-plan-adopted-0,2015-10-15,east-staffordshire-borough-council-local-plan-2012,,,plan-adopted,2024-12-06,,,local-authority:EST,
+broxbourne-borough-council-local-plan-2018-plan-adopted-0,2020-06-23,broxbourne-borough-council-local-plan-2018,,,plan-adopted,2024-12-06,,,local-authority:BRX,
+greater-manchester-spatial-framework-superseded-by-pep-inspector-report-published-1,2024-02-14,greater-manchester-spatial-framework-superseded-by-pep,,,inspector-report-published,2024-12-10,,,local-authority:BUR,
+burnley-s-local-plan-inspector-report-published-1,2018-07-09,burnley-s-local-plan,,,inspector-report-published,2024-12-10,,,local-authority:BUN,
+burnley-s-local-plan-reg-18-public-consultation-end-8,2016-07,burnley-s-local-plan,,,reg-18-public-consultation-end,2024-12-10,,,local-authority:BUN,
+greater-nottingham-strategic-plan-estimated-submit-plan-for-examination-1,2024-12,greater-nottingham-strategic-plan,,,estimated-submit-plan-for-examination,2024-12-10,,,local-authority:BRT,
+broads-local-plan-review-estimated-plan-adoption-date-0,2026-12,broads-local-plan-review,,,estimated-plan-adoption-date,2024-12-10,,,national-park-authority:Q4972284,
+bristol-local-plan-2022-2040-submit-plan-for-examination-1,2024-04-25,bristol-local-plan-2022-2040,,,submit-plan-for-examination,2024-12-10,,,local-authority:BST,
+burnley-s-local-plan-planning-inspectorate-examination-start-2,2017-07,burnley-s-local-plan,,,planning-inspectorate-examination-start,2024-12-10,,,local-authority:BUN,
+burnley-s-local-plan-planning-inspectorate-examination-end-3,2018-07,burnley-s-local-plan,,,planning-inspectorate-examination-end,2024-12-10,,,local-authority:BUN,
+bristol-local-plan-2022-2040-reg-19-publication-local-plan-published-2,2023-11-21,bristol-local-plan-2022-2040,,,reg-19-publication-local-plan-published,2024-12-10,,,local-authority:BST,
+mansfield-district-council-local-plan-2013-plan-adopted-0,2020-09-08,mansfield-district-council-local-plan-2013,,,plan-adopted,2024-12-06,,,local-authority:MAS,
+east-herts-district-plan-2018-plan-adopted-0,2018-10-23,east-herts-district-plan-2018,,,plan-adopted,2024-12-06,,,local-authority:EHE,
+central-bedfordshire-council-local-plan-2015-plan-adopted-0,2021-07-22,central-bedfordshire-council-local-plan-2015,,,plan-adopted,2024-12-06,,,local-authority:CBF,
+bedford-borough-council-local-plan-2018-plan-adopted-2,2020-01-15,bedford-borough-council-local-plan-2018,,,plan-adopted,2024-12-06,,,local-authority:BDF,
+burnley-s-local-plan-reg-18-public-consultation-start-7,2016-07,burnley-s-local-plan,,,reg-18-public-consultation-start,2024-12-10,,,local-authority:BUN,
+london-borough-of-redbridge-local-plan-2015-plan-adopted-0,2018-03-15,london-borough-of-redbridge-local-plan-2015,,,plan-adopted,2024-12-06,,,local-authority:RDB,
+broxtowe-borough-council-local-plan-part-1-2014-plan-adopted-0,2014-09-17,broxtowe-borough-council-local-plan-part-1-2014,,,plan-adopted,2024-12-06,,,local-authority:BRT,
+east-suffolk-council-local-plan-2019-plan-adopted-0,2019-03-20,east-suffolk-council-local-plan-2019,,,plan-adopted,2024-12-06,,,local-authority:ESK,
+broxtowe-borough-council-local-plan-part-2-2019-plan-adopted-0,2019-08-16,broxtowe-borough-council-local-plan-part-2-2019,,,plan-adopted,2024-12-06,,,local-authority:BRT,
+harlow-district-council-local-plan-2011-plan-adopted-0,2020-12-10,harlow-district-council-local-plan-2011,,,plan-adopted,2024-12-06,,,local-authority:HAR,
+london-borough-of-islington-local-plan-2023-plan-adopted-12,2023-09-28,london-borough-of-islington-local-plan-2023,,,plan-adopted,2024-12-06,,,local-authority:ISL,
+london-borough-of-camden-local-plan-2017-plan-adopted-8,2017-07-03,london-borough-of-camden-local-plan-2017,,,plan-adopted,2024-12-06,,,local-authority:CMD,
+kirklees-council-local-plan-2013-plan-adopted-0,2019-02-27,kirklees-council-local-plan-2013,,,plan-adopted,2024-12-06,,,local-authority:KIR,
+welwyn-hatfield-local-plan-plan-adopted-0,2023-10-12,welwyn-hatfield-local-plan,,,plan-adopted,2024-12-06,,,local-authority:WEW,
+vale-of-white-horse-district-council-local-plan-2016-plan-adopted-0,2016-12-01,vale-of-white-horse-district-council-local-plan-2016,,,plan-adopted,2024-12-06,,,local-authority:VAL,
+thurrock-council-local-plan-2015-plan-adopted-0,2015-01-28,thurrock-council-local-plan-2015,,,plan-adopted,2024-12-06,,,local-authority:THR,
+staffordshire-moorlands-district-council-local-plan-2014-plan-adopted-0,2020-09-09,staffordshire-moorlands-district-council-local-plan-2014,,,plan-adopted,2024-12-06,,,local-authority:STF,
+darlington-borough-council-local-plan-2016-plan-adopted-0,2022-02-17,darlington-borough-council-local-plan-2016,,,plan-adopted,2024-12-06,,,local-authority:DAL,
+south-cambridgeshire-district-council-local-plan-2018-plan-adopted-0,2018-09-27,south-cambridgeshire-district-council-local-plan-2018,,,plan-adopted,2024-12-06,,,local-authority:SCA,
+east-lindsey-district-council-local-plan-2018-plan-adopted-3,2018-07-18,east-lindsey-district-council-local-plan-2018,,,plan-adopted,2024-12-06,,,local-authority:ELI,
+adur-local-plan-2017-adopted-part-1-plan-adopted-0,2017-12-14,adur-local-plan-2017-adopted-part-1,,,plan-adopted,2024-12-06,,,local-authority:ADU,
+eastleigh-borough-local-plan-2016-2036-plan-adopted-0,2022-04-25,eastleigh-borough-local-plan-2016-2036,,,plan-adopted,2024-12-06,,,local-authority:EAT,
+hart-district-council-local-plan-2014-plan-adopted-6,2020-04-30,hart-district-council-local-plan-2014,,,plan-adopted,2024-12-06,,,local-authority:HAT,
+huntingdonshire-s-local-plan-to-2036-plan-adopted-0,2019-05-15,huntingdonshire-s-local-plan-to-2036,,,plan-adopted,2024-12-06,,,local-authority:HUN,
+lincolnshire-county-council-local-plan-2023-plan-adopted-0,2023-04-13,lincolnshire-county-council-local-plan-2023,,,plan-adopted,2024-12-06,,,local-authority:LIN,
+doncaster-metropolitan-borough-council-local-plan-2015-plan-adopted-0,2021-09-23,doncaster-metropolitan-borough-council-local-plan-2015,,,plan-adopted,2024-12-06,,,local-authority:DNC,
+hartlepool-local-plan-plan-adopted-0,2018-05-22,hartlepool-local-plan,,,plan-adopted,2024-12-06,,,local-authority:HPL,
+bromsgrove-district-plan-plan-adopted-0,2017-01-25,bromsgrove-district-plan,,,plan-adopted,2024-12-06,,,local-authority:BRM,
+bristol-development-framework-core-strategy-plan-adopted-0,2011-06-21,bristol-development-framework-core-strategy,,,plan-adopted,2024-12-06,,,local-authority:BST,
+burnley-s-local-plan-plan-adopted-0,2018-07-31,burnley-s-local-plan,,,plan-adopted,2024-12-06,,,local-authority:BUN,
+wakefield-local-development-plan-2036-plan-adopted-0,2024-01-24,wakefield-local-development-plan-2036,,,plan-adopted,2024-12-06,,,local-authority:WKF,
+herefordshire-council-local-plan-2021-plan-adopted-0,2015-10-16,herefordshire-council-local-plan-2021,,,plan-adopted,2024-12-06,,,local-authority:HEF,
+epping-forest-district-local-plan-plan-adopted-0,2023-03-06,epping-forest-district-local-plan,,,plan-adopted,2024-12-06,,,local-authority:EPP,
+east-cambridgeshire-local-plan-single-issue-review-plan-adopted-5,2023-10-19,east-cambridgeshire-local-plan-single-issue-review,,,plan-adopted,2024-12-06,,,local-authority:ECA,
+basildon-borough-council-local-plan-2011-plan-adopted-0,1998,basildon-borough-council-local-plan-2011,,,plan-adopted,2024-12-06,,,local-authority:BAI,
+cannock-chase-district-council-local-plan-2006-plan-adopted-0,2014-06-11,cannock-chase-district-council-local-plan-2006,,,plan-adopted,2024-12-06,,,local-authority:CAN,
+camden-local-plan-2026-timetable-2-estimated-plan-adoption-date,2026,camden-local-plan-2026,,,estimated-plan-adoption-date,2024-11-11,,,local-authority:CMD,
+london-borough-of-camden-local-plan-2017-timetable-0-planning-inspectorate-examination-end,2017-05,london-borough-of-camden-local-plan-2017,,,planning-inspectorate-examination-end,2024-11-11,,,local-authority:CMD,
+london-borough-of-camden-local-plan-2017-timetable-1-inspector-report-published,2017-05,london-borough-of-camden-local-plan-2017,,,inspector-report-published,2024-11-11,,,local-authority:CMD,
+london-borough-of-camden-local-plan-2017-timetable-0-planning-inspectorate-examination-start,2016-06,london-borough-of-camden-local-plan-2017,,,planning-inspectorate-examination-start,2024-11-11,,,local-authority:CMD,
+camden-local-plan-2026-timetable-3-reg-18-public-consultation-start,2020,camden-local-plan-2026,,,reg-18-public-consultation-start,2024-11-11,,,local-authority:CMD,
+arun-district-council-local-plan-2011-timetable-0-submit-plan-for-examination,2015-01-30,arun-district-council-local-plan-2011,,,submit-plan-for-examination,2024-11-11,,,local-authority:ARU,
+arun-district-council-local-plan-2011-timetable-0-planning-inspectorate-examination-start,2015-06-02,arun-district-council-local-plan-2011,,,planning-inspectorate-examination-start,2024-11-11,,,local-authority:ARU,
+arun-district-council-local-plan-2011-timetable-0-planning-inspectorate-examination-end,2017-09-28,arun-district-council-local-plan-2011,,,planning-inspectorate-examination-end,2024-11-11,,,local-authority:ARU,
+arun-district-council-local-plan-2011-timetable-1-inspector-report-published,2018-07,arun-district-council-local-plan-2011,,,inspector-report-published,2024-11-11,,,local-authority:ARU,
+ashford-borough-council-local-plan-2019-timetable-0-submit-plan-for-examination,2017-12-21,ashford-borough-council-local-plan-2019,,,submit-plan-for-examination,2024-11-11,,,local-authority:ASF,
+ashford-borough-council-local-plan-2019-timetable-0-planning-inspectorate-examination-start,2018-04-11,ashford-borough-council-local-plan-2019,,,planning-inspectorate-examination-start,2024-11-11,,,local-authority:ASF,
+ashford-borough-council-local-plan-2019-timetable-0-planning-inspectorate-examination-end,2018-06-13,ashford-borough-council-local-plan-2019,,,planning-inspectorate-examination-end,2024-11-11,,,local-authority:ASF,
+ashford-borough-council-local-plan-2019-timetable-1-plan-adopted,2019-02-21,ashford-borough-council-local-plan-2019,,,plan-adopted,2024-11-11,,,local-authority:ASF,
+ashford-borough-council-local-plan-2019-timetable-1-inspector-report-published,2019-01-02,ashford-borough-council-local-plan-2019,,,inspector-report-published,2024-11-11,,,local-authority:ASF,
+new-ashford-local-plan-to-2042-timetable-0-estimated-reg-18-draft-local-plan-published,2025-04,new-ashford-local-plan-to-2042,,,estimated-reg-18-draft-local-plan-published,2024-11-11,,,local-authority:ASF,
+new-ashford-local-plan-to-2042-timetable-1-estimated-reg-19-publication-local-plan-published,2026-02,new-ashford-local-plan-to-2042,,,estimated-reg-19-publication-local-plan-published,2024-11-11,,,local-authority:ASF,
+new-ashford-local-plan-to-2042-timetable-2-estimated-submit-plan-for-examination,2026-09,new-ashford-local-plan-to-2042,,,estimated-submit-plan-for-examination,2024-11-11,,,local-authority:ASF,
+new-ashford-local-plan-to-2042-timetable-2-estimated-plan-adoption-date,2027-05-01,new-ashford-local-plan-to-2042,,,estimated-plan-adoption-date,2024-11-11,,,local-authority:ASF,
+london-borough-of-camden-local-plan-2017-timetable-0-submit-plan-for-examination,2016-06-24,london-borough-of-camden-local-plan-2017,,,submit-plan-for-examination,2024-11-11,,,local-authority:CMD,
+london-borough-of-camden-local-plan-2017-timetable-1-planning-inspectorate-found-sound,2017-05-10,london-borough-of-camden-local-plan-2017,,,planning-inspectorate-found-sound,2024-11-11,,,local-authority:CMD,
+camden-local-plan-2026-timetable-0-timetable-published,2023-12,camden-local-plan-2026,,,timetable-published,2024-11-11,,,local-authority:CMD,
+camden-local-plan-2026-timetable-1-estimated-reg-19-public-consultation-start,2024,camden-local-plan-2026,,,estimated-reg-19-public-consultation-start,2024-11-11,,,local-authority:CMD,
+camden-local-plan-2026-timetable-1-estimated-reg-19-public-consultation-end,2025,camden-local-plan-2026,,,estimated-reg-19-public-consultation-end,2024-11-11,,,local-authority:CMD,
+camden-local-plan-2026-timetable-2-estimated-submit-plan-for-examination,2025,camden-local-plan-2026,,,estimated-submit-plan-for-examination,2024-11-11,,,local-authority:CMD,
+camden-local-plan-2026-timetable-4-reg-18-public-consultation-end,2022,camden-local-plan-2026,,,reg-18-public-consultation-end,2024-11-11,,,local-authority:CMD,
+camden-local-plan-2026-timetable-5-reg-18-public-consultation-start,2024-01-17,camden-local-plan-2026,,,reg-18-public-consultation-start,2024-11-11,,,local-authority:CMD,
+camden-local-plan-2026-timetable-5-reg-18-public-consultation-end,2024-03-13,camden-local-plan-2026,,,reg-18-public-consultation-end,2024-11-11,,,local-authority:CMD,
+london-borough-of-ealing-local-plan-2011-timetable-0-estimated-submit-plan-for-examination,2024-05,london-borough-of-ealing-local-plan-2011,,,estimated-submit-plan-for-examination,2024-11-11,,,local-authority:EAL,
+london-borough-of-ealing-local-plan-2011-timetable-0-estimated-plan-adoption-date,2024-12,london-borough-of-ealing-local-plan-2011,,,estimated-plan-adoption-date,2024-11-11,,,local-authority:EAL,
+london-borough-of-ealing-local-plan-2011-timetable-1-reg-18-draft-local-plan-published,2022-11-30,london-borough-of-ealing-local-plan-2011,,,reg-18-draft-local-plan-published,2024-11-11,,,local-authority:EAL,
+london-borough-of-ealing-local-plan-2011-timetable-1-reg-18-public-consultation-start,2022-11-30,london-borough-of-ealing-local-plan-2011,,,reg-18-public-consultation-start,2024-11-11,,,local-authority:EAL,
+london-borough-of-ealing-local-plan-2011-timetable-1-reg-18-public-consultation-end,2023-02-08,london-borough-of-ealing-local-plan-2011,,,reg-18-public-consultation-end,2024-11-11,,,local-authority:EAL,
+london-borough-of-ealing-local-plan-2011-timetable-2-reg-19-publication-local-plan-published,2024-02-28,london-borough-of-ealing-local-plan-2011,,,reg-19-publication-local-plan-published,2024-11-11,,,local-authority:EAL,
+london-borough-of-ealing-local-plan-2011-timetable-2-reg-19-public-consultation-start,2024-02-28,london-borough-of-ealing-local-plan-2011,,,reg-19-public-consultation-start,2024-11-11,,,local-authority:EAL,
+london-borough-of-ealing-local-plan-2011-timetable-2-reg-19-public-consultation-end,2024-04-10,london-borough-of-ealing-local-plan-2011,,,reg-19-public-consultation-end,2024-11-11,,,local-authority:EAL,
+east-lindsey-district-council-local-plan-2018-timetable-0-submit-plan-for-examination,2017-04-19,east-lindsey-district-council-local-plan-2018,,,submit-plan-for-examination,2024-11-11,,,local-authority:ELI,
+london-borough-of-islington-local-plan-2023-timetable-0-reg-18-public-consultation-start,2018-11-20,london-borough-of-islington-local-plan-2023,,,reg-18-public-consultation-start,2024-11-11,,,local-authority:ISL,
+london-borough-of-islington-local-plan-2023-timetable-1-reg-19-public-consultation-start,2019-09-05,london-borough-of-islington-local-plan-2023,,,reg-19-public-consultation-start,2024-11-11,,,local-authority:ISL,
+london-borough-of-islington-local-plan-2023-timetable-1-reg-19-public-consultation-end,2019-10-18,london-borough-of-islington-local-plan-2023,,,reg-19-public-consultation-end,2024-11-11,,,local-authority:ISL,
+london-borough-of-islington-local-plan-2023-timetable-2-submit-plan-for-examination,2020-02,london-borough-of-islington-local-plan-2023,,,submit-plan-for-examination,2024-11-11,,,local-authority:ISL,
+london-borough-of-islington-local-plan-2023-timetable-2-planning-inspectorate-examination-start,2021-09,london-borough-of-islington-local-plan-2023,,,planning-inspectorate-examination-start,2024-11-11,,,local-authority:ISL,
+london-borough-of-islington-local-plan-2023-timetable-2-planning-inspectorate-examination-end,2021-10,london-borough-of-islington-local-plan-2023,,,planning-inspectorate-examination-end,2024-11-11,,,local-authority:ISL,
+london-borough-of-lewisham-local-plan-2020-timetable-0-reg-18-draft-local-plan-published,2021-01-15,london-borough-of-lewisham-local-plan-2020,,,reg-18-draft-local-plan-published,2024-11-11,,,local-authority:LEW,
+london-borough-of-lewisham-local-plan-2020-timetable-0-reg-18-public-consultation-start,2015-10,london-borough-of-lewisham-local-plan-2020,,,reg-18-public-consultation-start,2024-11-11,,,local-authority:LEW,
+london-borough-of-lewisham-local-plan-2020-timetable-0-reg-18-public-consultation-end,2015-11,london-borough-of-lewisham-local-plan-2020,,,reg-18-public-consultation-end,2024-11-11,,,local-authority:LEW,
+london-borough-of-lewisham-local-plan-2020-timetable-1-reg-18-public-consultation-start,2021-01-15,london-borough-of-lewisham-local-plan-2020,,,reg-18-public-consultation-start,2024-11-11,,,local-authority:LEW,
+london-borough-of-lewisham-local-plan-2020-timetable-1-reg-18-public-consultation-end,2021-04-11,london-borough-of-lewisham-local-plan-2020,,,reg-18-public-consultation-end,2024-11-11,,,local-authority:LEW,
+london-borough-of-lewisham-local-plan-2020-timetable-2-reg-19-public-consultation-start,2023-03-01,london-borough-of-lewisham-local-plan-2020,,,reg-19-public-consultation-start,2024-11-11,,,local-authority:LEW,
+london-borough-of-lewisham-local-plan-2020-timetable-2-reg-19-public-consultation-end,2023-04-25,london-borough-of-lewisham-local-plan-2020,,,reg-19-public-consultation-end,2024-11-11,,,local-authority:LEW,
+london-borough-of-lewisham-local-plan-2020-timetable-3-submit-plan-for-examination,2023-11-03,london-borough-of-lewisham-local-plan-2020,,,submit-plan-for-examination,2024-11-11,,,local-authority:LEW,
+new-local-plan-0-0-timetable-0-estimated-reg-18-draft-local-plan-published,2023-11-03,new-local-plan-0-0,,,estimated-reg-18-draft-local-plan-published,2024-11-11,,,local-authority:TAN,
+new-local-plan-0-0-timetable-1-estimated-reg-19-publication-local-plan-published,2023-11-03,new-local-plan-0-0,,,estimated-reg-19-publication-local-plan-published,2024-11-11,,,local-authority:TAN,
+new-local-plan-0-0-timetable-2-estimated-submit-plan-for-examination,2023-11-03,new-local-plan-0-0,,,estimated-submit-plan-for-examination,2024-11-11,,,local-authority:TAN,
+thurrock-local-plan-2040-timetable-0-timetable-published,2023-09,thurrock-local-plan-2040,,,timetable-published,2024-11-11,,,local-authority:THR,
+thurrock-local-plan-2040-timetable-1-estimated-reg-18-draft-local-plan-published,2023-12,thurrock-local-plan-2040,,,estimated-reg-18-draft-local-plan-published,2024-11-11,,,local-authority:THR,
+thurrock-local-plan-2040-timetable-1-estimated-reg-18-public-consultation-end,2023-12,thurrock-local-plan-2040,,,estimated-reg-18-public-consultation-end,2024-11-11,,,local-authority:THR,
+thurrock-local-plan-2040-timetable-1-estimated-reg-18-public-consultation-start,2023-12,thurrock-local-plan-2040,,,estimated-reg-18-public-consultation-start,2024-11-11,,,local-authority:THR,
+thurrock-local-plan-2040-timetable-2-estimated-reg-19-public-consultation-start,2024-09,thurrock-local-plan-2040,,,estimated-reg-19-public-consultation-start,2024-11-11,,,local-authority:THR,
+thurrock-local-plan-2040-timetable-2-estimated-reg-19-public-consultation-end,2024-09,thurrock-local-plan-2040,,,estimated-reg-19-public-consultation-end,2024-11-11,,,local-authority:THR,
+thurrock-local-plan-2040-timetable-2-estimated-reg-19-publication-local-plan-published,2024-09,thurrock-local-plan-2040,,,estimated-reg-19-publication-local-plan-published,2024-11-11,,,local-authority:THR,
+thurrock-local-plan-2040-timetable-3-estimated-submit-plan-for-examination,2025-03,thurrock-local-plan-2040,,,estimated-submit-plan-for-examination,2024-11-11,,,local-authority:THR,
+thurrock-local-plan-2040-timetable-3-estimated-plan-adoption-date,2026-07,thurrock-local-plan-2040,,,estimated-plan-adoption-date,2024-11-11,,,local-authority:THR,
+basingstoke-and-deane-borough-council-local-plan-2011-timetable-1-inspector-report-published,2016-04-06,basingstoke-and-deane-borough-council-local-plan-2011,,,inspector-report-published,2024-11-25,,,local-authority:BAN,
+new-canterbury-district-local-plan-2020-2040-timetable-2-reg-18-public-consultation-start,2022-10,new-canterbury-district-local-plan-2020-2040,Draft Canterbury District Local Plan,,reg-18-public-consultation-start,2024-11-25,,,local-authority:CAT,
+new-canterbury-district-local-plan-2020-2040-timetable-2-reg-18-public-consultation-end,2023-01,new-canterbury-district-local-plan-2020-2040,Draft Canterbury District Local Plan,,reg-18-public-consultation-end,2024-11-25,,,local-authority:CAT,
+ashfield-local-plan-2023-2040-timetable-1-estimated-reg-19-public-consultation-start,2023-12-04,ashfield-local-plan-2023-2040,,,estimated-reg-19-public-consultation-start,2024-11-25,,,local-authority:ASH,
+ashfield-local-plan-2023-2040-timetable-1-estimated-reg-19-public-consultation-end,2024-01-29,ashfield-local-plan-2023-2040,,,estimated-reg-19-public-consultation-end,2024-11-25,,,local-authority:ASH,
+ashfield-local-plan-2023-2040-timetable-1-estimated-reg-19-publication-local-plan-published,2023-11,ashfield-local-plan-2023-2040,,,estimated-reg-19-publication-local-plan-published,2024-11-25,,,local-authority:ASH,
+harborough-new-local-plan-2020-2041-timetable-0-estimated-reg-18-public-consultation-end,2025-03,harborough-new-local-plan-2020-2041,,,estimated-reg-18-public-consultation-end,2024-11-25,,,local-authority:HAO,
+harborough-new-local-plan-2020-2041-timetable-0-estimated-reg-18-public-consultation-start,2025-01,harborough-new-local-plan-2020-2041,,,estimated-reg-18-public-consultation-start,2024-11-25,,,local-authority:HAO,
+hart-district-council-local-plan-2014-timetable-0-inspector-report-published,2020-02-10,hart-district-council-local-plan-2014,,,inspector-report-published,2024-11-25,,,local-authority:HAT,
+bedford-borough-council-local-plan-2040-timetable-2-reg-19-publication-local-plan-published,2022-06-15,bedford-borough-council-local-plan-2040,,,reg-19-publication-local-plan-published,2024-11-25,,,local-authority:BDF,
+bedford-borough-council-local-plan-2040-timetable-2-reg-19-public-consultation-start,2022-06-15,bedford-borough-council-local-plan-2040,,,reg-19-public-consultation-start,2024-11-25,,,local-authority:BDF,
+bedford-borough-council-local-plan-2040-timetable-2-reg-19-public-consultation-end,2022-07-29,bedford-borough-council-local-plan-2040,,,reg-19-public-consultation-end,2024-11-25,,,local-authority:BDF,
+fareham-local-plan-2037-timetable-1-reg-19-public-consultation-start,2021-06-18,fareham-local-plan-2037,,,reg-19-public-consultation-start,2024-11-25,,,local-authority:FAR,
+fareham-local-plan-2037-timetable-1-reg-19-public-consultation-end,2021-07-30,fareham-local-plan-2037,,,reg-19-public-consultation-end,2024-11-25,,,local-authority:FAR,
+fareham-local-plan-2037-timetable-0-submit-plan-for-examination,2021-09-30,fareham-local-plan-2037,,,submit-plan-for-examination,2024-11-25,,,local-authority:FAR,
+fareham-local-plan-2037-timetable-0-planning-inspectorate-examination-start,2021-09-30,fareham-local-plan-2037,,,planning-inspectorate-examination-start,2024-11-25,,,local-authority:FAR,
+fareham-local-plan-2037-timetable-2-reg-19-public-consultation-start,2020-11-06,fareham-local-plan-2037,,,reg-19-public-consultation-start,2024-11-25,,,local-authority:FAR,
+fareham-local-plan-2037-timetable-2-reg-19-public-consultation-end,2020-12-18,fareham-local-plan-2037,,,reg-19-public-consultation-end,2024-11-25,,,local-authority:FAR,
+greater-cambridge-local-plan-2021-2041-timetable-1-estimated-reg-19-publication-local-plan-published,2026,greater-cambridge-local-plan-2021-2041,Summer/Autumn 2026,,estimated-reg-19-publication-local-plan-published,2024-11-25,,,local-authority:CAB,
+greater-cambridge-local-plan-2021-2041-timetable-0-estimated-reg-18-draft-local-plan-published,2025,greater-cambridge-local-plan-2021-2041,Autumn/Winter 2025,,estimated-reg-18-draft-local-plan-published,2024-11-25,,,local-authority:CAB,
+greater-cambridge-local-plan-2021-2041-timetable-2-estimated-submit-plan-for-examination,2026-12,greater-cambridge-local-plan-2021-2041,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:CAB,
+fareham-local-plan-2037-timetable-3-reg-18-public-consultation-start,2019,fareham-local-plan-2037,6 weeks summer 2019 - Issues and Options,,reg-18-public-consultation-start,2024-11-25,,,local-authority:FAR,
+fareham-local-plan-2037-timetable-3-reg-18-public-consultation-end,2019,fareham-local-plan-2037,6 weeks summer 2019 - Issues and Options,,reg-18-public-consultation-end,2024-11-25,,,local-authority:FAR,
+fenland-local-plan-2021-2040-timetable-0-reg-18-draft-local-plan-published,2019-10,fenland-local-plan-2021-2040,Issues and Option Consultation,,reg-18-draft-local-plan-published,2024-11-25,,,local-authority:FEN,
+fenland-local-plan-2021-2040-timetable-0-reg-18-public-consultation-start,2019-10,fenland-local-plan-2021-2040,Issues and Option Consultation,,reg-18-public-consultation-start,2024-11-25,,,local-authority:FEN,
+fenland-local-plan-2021-2040-timetable-0-reg-18-public-consultation-end,2019-10,fenland-local-plan-2021-2040,Issues and Option Consultation,,reg-18-public-consultation-end,2024-11-25,,,local-authority:FEN,
+fenland-local-plan-2021-2040-timetable-3-submit-plan-for-examination,2023-04,fenland-local-plan-2021-2040,,,submit-plan-for-examination,2024-11-25,,,local-authority:FEN,
+fenland-local-plan-2021-2040-timetable-1-reg-18-public-consultation-start,2020-06,fenland-local-plan-2021-2040,Draft Local Plan Consultation,,reg-18-public-consultation-start,2024-11-25,,,local-authority:FEN,
+fenland-local-plan-2021-2040-timetable-1-reg-18-public-consultation-end,2020-07,fenland-local-plan-2021-2040,Draft Local Plan Consultation,,reg-18-public-consultation-end,2024-11-25,,,local-authority:FEN,
+fenland-local-plan-2021-2040-timetable-2-reg-19-public-consultation-start,2023-01,fenland-local-plan-2021-2040,"2
 Pre-submission
-Publication ",2023-01,reg-19-public-consultation-start
-2024-11-25,,,fenland-local-plan-2021-2040-timetable-2-reg-19-public-consultation-end,,local-authority:FEN,fenland-local-plan-2021-2040,"2
+Publication ",,reg-19-public-consultation-start,2024-11-25,,,local-authority:FEN,
+fenland-local-plan-2021-2040-timetable-2-reg-19-public-consultation-end,2023-01,fenland-local-plan-2021-2040,"2
 Pre-submission
-Publication ",2023-01,reg-19-public-consultation-end
-2024-11-25,,,barnsley-metropolitan-borough-council-local-plan-2019-timetable-0-reg-19-publication-local-plan-published,,local-authority:BNS,barnsley-metropolitan-borough-council-local-plan-2019,,2016-08,reg-19-publication-local-plan-published
-2024-11-25,,,barnsley-metropolitan-borough-council-local-plan-2019-timetable-0-reg-19-public-consultation-start,,local-authority:BNS,barnsley-metropolitan-borough-council-local-plan-2019,,2016-08,reg-19-public-consultation-start
-2024-11-25,,,barnsley-metropolitan-borough-council-local-plan-2019-timetable-1-submit-plan-for-examination,,local-authority:BNS,barnsley-metropolitan-borough-council-local-plan-2019,,2016-12-20,submit-plan-for-examination
-2024-11-25,,,barnsley-metropolitan-borough-council-local-plan-2019-timetable-2-inspector-report-published,,local-authority:BNS,barnsley-metropolitan-borough-council-local-plan-2019,,2018-12-14,inspector-report-published
-2024-11-25,,,east-cambridgeshire-local-plan-single-issue-review-timetable-0-estimated-submit-plan-for-examination,,local-authority:ECA,east-cambridgeshire-local-plan-single-issue-review,,2013-08-29,estimated-submit-plan-for-examination
-2024-11-25,,,east-cambridgeshire-local-plan-single-issue-review-timetable-0-estimated-plan-adoption-date,,local-authority:ECA,east-cambridgeshire-local-plan-single-issue-review,,2023-10-19,estimated-plan-adoption-date
-2024-11-25,,,east-cambridgeshire-local-plan-single-issue-review-timetable-1-inspector-report-published,,local-authority:ECA,east-cambridgeshire-local-plan-single-issue-review,,2023-10-05,inspector-report-published
-2024-11-25,,,cannock-chase-district-local-plan-timetable-0-estimated-reg-18-draft-local-plan-published,,local-authority:CAN,cannock-chase-district-local-plan,,2019-05,estimated-reg-18-draft-local-plan-published
-2024-11-25,,,cannock-chase-district-local-plan-timetable-0-estimated-reg-18-public-consultation-end,,local-authority:CAN,cannock-chase-district-local-plan,,2019-07,estimated-reg-18-public-consultation-end
-2024-11-25,,,cannock-chase-district-local-plan-timetable-0-estimated-reg-18-public-consultation-start,,local-authority:CAN,cannock-chase-district-local-plan,,2019-05,estimated-reg-18-public-consultation-start
-2024-11-25,,,cannock-chase-district-local-plan-timetable-1-estimated-reg-19-publication-local-plan-published,,local-authority:CAN,cannock-chase-district-local-plan,Winter 2023/24,2023,estimated-reg-19-publication-local-plan-published
-2024-11-25,,,cannock-chase-district-local-plan-timetable-2-estimated-submit-plan-for-examination,,local-authority:CAN,cannock-chase-district-local-plan,,2024,estimated-submit-plan-for-examination
-2024-11-25,,,cannock-chase-district-local-plan-timetable-2-estimated-plan-adoption-date,,local-authority:CAN,cannock-chase-district-local-plan,,2025,estimated-plan-adoption-date
-2024-11-25,,,cannock-chase-district-local-plan-timetable-3-reg-19-publication-local-plan-published,,local-authority:CAN,cannock-chase-district-local-plan,,2023-12,reg-19-publication-local-plan-published
-2024-11-25,,,cannock-chase-district-local-plan-timetable-3-reg-19-public-consultation-start,,local-authority:CAN,cannock-chase-district-local-plan,,2024-02-05,reg-19-public-consultation-start
-2024-11-25,,,cannock-chase-district-local-plan-timetable-3-reg-19-public-consultation-end,,local-authority:CAN,cannock-chase-district-local-plan,,2024-03-18,reg-19-public-consultation-end
-2024-11-25,,,gateshead-metropolitan-borough-council-local-plan-2010-timetable-0-inspector-report-published,,local-authority:GAT;local-authority:NET,gateshead-metropolitan-borough-council-local-plan-2010,,2015-02-24,inspector-report-published
-2024-11-25,,,gateshead-metropolitan-borough-council-local-plan-2010-timetable-0-planning-inspectorate-found-sound,,local-authority:GAT;local-authority:NET,gateshead-metropolitan-borough-council-local-plan-2010,,2015-02-24,planning-inspectorate-found-sound
-2024-11-25,,,cannock-chase-district-local-plan-timetable-4-reg-18-draft-local-plan-published,,local-authority:CAN,cannock-chase-district-local-plan,Issues and Options Consultation,2019-05,reg-18-draft-local-plan-published
-2024-11-25,,,cannock-chase-district-local-plan-timetable-4-reg-18-public-consultation-start,,local-authority:CAN,cannock-chase-district-local-plan,Issues and Options Consultation,2019-05-13,reg-18-public-consultation-start
-2024-11-25,,,cannock-chase-district-local-plan-timetable-4-reg-18-public-consultation-end,,local-authority:CAN,cannock-chase-district-local-plan,Issues and Options Consultation,2019-07-09,reg-18-public-consultation-end
-2024-11-25,,,basildon-borough-council-new-local-plan-timetable-0-reg-18-public-consultation-start,,local-authority:BAI,basildon-borough-council-new-local-plan,,2023-06-27,reg-18-public-consultation-start
-2024-11-25,,,basildon-borough-council-new-local-plan-timetable-0-reg-18-public-consultation-end,,local-authority:BAI,basildon-borough-council-new-local-plan,,2023-09-05,reg-18-public-consultation-end
-2024-11-25,,,basildon-borough-council-new-local-plan-timetable-1-estimated-reg-18-public-consultation-start,,local-authority:BAI,basildon-borough-council-new-local-plan,,2024-12,estimated-reg-18-public-consultation-start
-2024-11-25,,,basildon-borough-council-new-local-plan-timetable-2-estimated-reg-19-public-consultation-start,,local-authority:BAI,basildon-borough-council-new-local-plan,,2025-03,estimated-reg-19-public-consultation-start
-2024-11-25,,,basildon-borough-council-new-local-plan-timetable-3-estimated-submit-plan-for-examination,,local-authority:BAI,basildon-borough-council-new-local-plan,,2025-06,estimated-submit-plan-for-examination
-2024-11-25,,,basildon-borough-council-new-local-plan-timetable-3-estimated-plan-adoption-date,,local-authority:BAI,basildon-borough-council-new-local-plan,,2026-06,estimated-plan-adoption-date
-2024-11-25,,,new-canterbury-district-local-plan-2020-2040-timetable-0-estimated-submit-plan-for-examination,,local-authority:CAT,new-canterbury-district-local-plan-2020-2040,,2026-02,estimated-submit-plan-for-examination
-2024-11-25,,,new-canterbury-district-local-plan-2020-2040-timetable-0-estimated-plan-adoption-date,,local-authority:CAT,new-canterbury-district-local-plan-2020-2040,,2027-03,estimated-plan-adoption-date
-2024-11-25,,,basingstoke-and-deane-borough-council-local-plan-2011-timetable-0-planning-inspectorate-examination-end,,local-authority:BAN,basingstoke-and-deane-borough-council-local-plan-2011,,2016-04-06,planning-inspectorate-examination-end
-2024-11-25,,,basingstoke-deane-local-plan-2021-2040-timetable-0-reg-18-draft-local-plan-published,,local-authority:BAN,basingstoke-deane-local-plan-2021-2040,Issues and Options,2020-09-28,reg-18-draft-local-plan-published
-2024-11-25,,,basingstoke-deane-local-plan-2021-2040-timetable-0-reg-18-public-consultation-start,,local-authority:BAN,basingstoke-deane-local-plan-2021-2040,Issues and Options,2020-09-28,reg-18-public-consultation-start
-2024-11-25,,,basingstoke-deane-local-plan-2021-2040-timetable-0-reg-18-public-consultation-end,,local-authority:BAN,basingstoke-deane-local-plan-2021-2040,Issues and Options,2020-11-09,reg-18-public-consultation-end
-2024-11-25,,,new-canterbury-district-local-plan-2020-2040-timetable-1-reg-18-draft-local-plan-published,,local-authority:CAT,new-canterbury-district-local-plan-2020-2040,Draft Canterbury Local Plan Consultation,2024-03,reg-18-draft-local-plan-published
-2024-11-25,,,new-canterbury-district-local-plan-2020-2040-timetable-1-reg-18-public-consultation-start,,local-authority:CAT,new-canterbury-district-local-plan-2020-2040,Draft Canterbury Local Plan Consultation,2024-03,reg-18-public-consultation-start
-2024-11-25,,,new-canterbury-district-local-plan-2020-2040-timetable-1-reg-18-public-consultation-end,,local-authority:CAT,new-canterbury-district-local-plan-2020-2040,Draft Canterbury Local Plan Consultation,2024-06-03,reg-18-public-consultation-end
-2024-11-25,,,basingstoke-deane-local-plan-2021-2040-timetable-1-reg-18-public-consultation-start,,local-authority:BAN,basingstoke-deane-local-plan-2021-2040,,2024-01-22,reg-18-public-consultation-start
-2024-11-25,,,basingstoke-deane-local-plan-2021-2040-timetable-1-reg-18-public-consultation-end,,local-authority:BAN,basingstoke-deane-local-plan-2021-2040,,2024-03-04,reg-18-public-consultation-end
-2024-11-25,,,basingstoke-deane-local-plan-2021-2040-timetable-2-estimated-reg-19-publication-local-plan-published,,local-authority:BAN,basingstoke-deane-local-plan-2021-2040,Winter 2024/2025,2024,estimated-reg-19-publication-local-plan-published
-2024-11-25,,,east-devon-local-plan-2020-2040-timetable-0-estimated-submit-plan-for-examination,,local-authority:EDE,east-devon-local-plan-2020-2040,,2025,estimated-submit-plan-for-examination
-2024-11-25,,,east-devon-local-plan-2020-2040-timetable-0-estimated-plan-adoption-date,,local-authority:EDE,east-devon-local-plan-2020-2040,,2026,estimated-plan-adoption-date
-2024-11-25,,,basingstoke-deane-local-plan-2021-2040-timetable-3-estimated-submit-plan-for-examination,,local-authority:BAN,basingstoke-deane-local-plan-2021-2040,,2025-03,estimated-submit-plan-for-examination
-2024-11-25,,,basingstoke-deane-local-plan-2021-2040-timetable-3-estimated-plan-adoption-date,,local-authority:BAN,basingstoke-deane-local-plan-2021-2040,,2025-12,estimated-plan-adoption-date
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-0-estimated-reg-18-draft-local-plan-published,,local-authority:ASH,ashfield-local-plan-2023-2040,,2021-10,estimated-reg-18-draft-local-plan-published
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-0-estimated-reg-18-public-consultation-end,,local-authority:ASH,ashfield-local-plan-2023-2040,,2021-11-16,estimated-reg-18-public-consultation-end
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-0-estimated-reg-18-public-consultation-start,,local-authority:ASH,ashfield-local-plan-2023-2040,,2021-10-04,estimated-reg-18-public-consultation-start
-2024-11-25,,,east-hampshire-local-plan-timetable-0-estimated-reg-18-public-consultation-end,,local-authority:EHA,east-hampshire-local-plan,,2024-06,estimated-reg-18-public-consultation-end
-2024-11-25,,,east-hampshire-local-plan-timetable-0-estimated-reg-18-public-consultation-start,,local-authority:EHA,east-hampshire-local-plan,,2024-01,estimated-reg-18-public-consultation-start
-2024-11-25,,,east-hampshire-local-plan-timetable-1-estimated-reg-19-public-consultation-start,,local-authority:EHA,east-hampshire-local-plan,,2024-07,estimated-reg-19-public-consultation-start
-2024-11-25,,,east-hampshire-local-plan-timetable-1-estimated-reg-19-public-consultation-end,,local-authority:EHA,east-hampshire-local-plan,,2024-11,estimated-reg-19-public-consultation-end
-2024-11-25,,,east-hampshire-local-plan-timetable-2-estimated-submit-plan-for-examination,,local-authority:EHA,east-hampshire-local-plan,,2025-12,estimated-submit-plan-for-examination
-2024-11-25,,,east-hampshire-local-plan-timetable-2-estimated-plan-adoption-date,,local-authority:EHA,east-hampshire-local-plan,,2026-09,estimated-plan-adoption-date
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-2-estimated-submit-plan-for-examination,,local-authority:ASH,ashfield-local-plan-2023-2040,,2024-05,estimated-submit-plan-for-examination
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-2-estimated-plan-adoption-date,,local-authority:ASH,ashfield-local-plan-2023-2040,,2025-04,estimated-plan-adoption-date
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-3-reg-18-draft-local-plan-published,,local-authority:ASH,ashfield-local-plan-2023-2040,,2021-10,reg-18-draft-local-plan-published
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-3-reg-18-public-consultation-start,,local-authority:ASH,ashfield-local-plan-2023-2040,,2021-10-04,reg-18-public-consultation-start
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-3-reg-18-public-consultation-end,,local-authority:ASH,ashfield-local-plan-2023-2040,,2021-11-16,reg-18-public-consultation-end
-2024-11-25,,,great-yarmouth-local-plan-2021-2041-timetable-0-estimated-reg-18-public-consultation-end,,local-authority:GRY,great-yarmouth-local-plan-2021-2041,Issues and options,2024-05-08,estimated-reg-18-public-consultation-end
-2024-11-25,,,great-yarmouth-local-plan-2021-2041-timetable-0-estimated-reg-18-public-consultation-start,,local-authority:GRY,great-yarmouth-local-plan-2021-2041,Issues and options,2024-03-13,estimated-reg-18-public-consultation-start
-2024-11-25,,,the-castle-point-plan-timetable-0-reg-18-draft-local-plan-published,,local-authority:CAS,the-castle-point-plan,Issues & Options,2024-07,reg-18-draft-local-plan-published
-2024-11-25,,,the-castle-point-plan-timetable-0-reg-18-public-consultation-start,,local-authority:CAS,the-castle-point-plan,Issues & Options,2024-07-22,reg-18-public-consultation-start
-2024-11-25,,,the-castle-point-plan-timetable-0-reg-18-public-consultation-end,,local-authority:CAS,the-castle-point-plan,Issues & Options,2024-09-16,reg-18-public-consultation-end
-2024-11-25,,,great-yarmouth-local-plan-2021-2041-timetable-1-estimated-submit-plan-for-examination,,local-authority:GRY,great-yarmouth-local-plan-2021-2041,,2025,estimated-submit-plan-for-examination
-2024-11-25,,,great-yarmouth-local-plan-2021-2041-timetable-1-estimated-plan-adoption-date,,local-authority:GRY,great-yarmouth-local-plan-2021-2041,,2026,estimated-plan-adoption-date
-2024-11-25,,,the-castle-point-plan-timetable-1-estimated-reg-18-public-consultation-end,,local-authority:CAS,the-castle-point-plan,Issues & Options,2024-08,estimated-reg-18-public-consultation-end
-2024-11-25,,,the-castle-point-plan-timetable-1-estimated-reg-18-public-consultation-start,,local-authority:CAS,the-castle-point-plan,Issues & Options,2024-06,estimated-reg-18-public-consultation-start
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-4-reg-19-publication-local-plan-published,,local-authority:ASH,ashfield-local-plan-2023-2040,,2023-11,reg-19-publication-local-plan-published
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-4-reg-19-public-consultation-start,,local-authority:ASH,ashfield-local-plan-2023-2040,,2023-12-04,reg-19-public-consultation-start
-2024-11-25,,,ashfield-local-plan-2023-2040-timetable-4-reg-19-public-consultation-end,,local-authority:ASH,ashfield-local-plan-2023-2040,,2024-01-29,reg-19-public-consultation-end
-2024-11-25,,,the-castle-point-plan-timetable-2-estimated-reg-19-public-consultation-start,,local-authority:CAS,the-castle-point-plan,,2025-01,estimated-reg-19-public-consultation-start
-2024-11-25,,,the-castle-point-plan-timetable-2-estimated-reg-19-public-consultation-end,,local-authority:CAS,the-castle-point-plan,,2025-03,estimated-reg-19-public-consultation-end
-2024-11-25,,,the-castle-point-plan-timetable-2-estimated-reg-19-publication-local-plan-published,,local-authority:CAS,the-castle-point-plan,,2025-01,estimated-reg-19-publication-local-plan-published
-2024-11-25,,,the-castle-point-plan-timetable-3-estimated-submit-plan-for-examination,,local-authority:CAS,the-castle-point-plan,,2025-04,estimated-submit-plan-for-examination
-2024-11-25,,,the-castle-point-plan-timetable-3-estimated-plan-adoption-date,,local-authority:CAS,the-castle-point-plan,,2026-03,estimated-plan-adoption-date
-2024-11-25,,,hart-district-council-local-plan-2014-timetable-1-submit-plan-for-examination,,local-authority:HAT,hart-district-council-local-plan-2014,,2018-06-18,submit-plan-for-examination
-2024-11-25,,,hart-district-council-local-plan-2014-timetable-1-planning-inspectorate-examination-start,,local-authority:HAT,hart-district-council-local-plan-2014,,2018-11-20,planning-inspectorate-examination-start
-2024-11-25,,,hart-district-council-local-plan-2014-timetable-1-planning-inspectorate-examination-end,,local-authority:HAT,hart-district-council-local-plan-2014,,2018-12-18,planning-inspectorate-examination-end
-2024-11-25,,,bedford-borough-council-local-plan-2040-timetable-0-reg-18-draft-local-plan-published,,local-authority:BDF,bedford-borough-council-local-plan-2040,Issues and Options,2020-07-14,reg-18-draft-local-plan-published
-2024-11-25,,,bedford-borough-council-local-plan-2040-timetable-0-reg-18-public-consultation-start,,local-authority:BDF,bedford-borough-council-local-plan-2040,Issues and Options,2020-07-14,reg-18-public-consultation-start
-2024-11-25,,,bedford-borough-council-local-plan-2040-timetable-0-reg-18-public-consultation-end,,local-authority:BDF,bedford-borough-council-local-plan-2040,Issues and Options,2020-09-04,reg-18-public-consultation-end
-2024-11-25,,,hastings-local-plan-2019-2041-timetable-0-estimated-reg-18-draft-local-plan-published,,local-authority:HAS,hastings-local-plan-2019-2041,,2020-03-02,estimated-reg-18-draft-local-plan-published
-2024-11-25,,,hastings-local-plan-2019-2041-timetable-1-estimated-reg-19-public-consultation-start,,local-authority:HAS,hastings-local-plan-2019-2041,,2025-04,estimated-reg-19-public-consultation-start
-2024-11-25,,,central-bedfordshire-local-plan-2035-timetable-0-estimated-reg-18-draft-local-plan-published,,local-authority:CBF,central-bedfordshire-local-plan-2035,Draft Local Plan Formal Consultation,2026-02,estimated-reg-18-draft-local-plan-published
-2024-11-25,,,central-bedfordshire-local-plan-2035-timetable-0-estimated-reg-18-public-consultation-end,,local-authority:CBF,central-bedfordshire-local-plan-2035,Draft Local Plan Formal Consultation,2026-04,estimated-reg-18-public-consultation-end
-2024-11-25,,,central-bedfordshire-local-plan-2035-timetable-0-estimated-reg-18-public-consultation-start,,local-authority:CBF,central-bedfordshire-local-plan-2035,Draft Local Plan Formal Consultation,2026-02,estimated-reg-18-public-consultation-start
-2024-11-25,,,central-bedfordshire-local-plan-2035-timetable-1-estimated-reg-19-public-consultation-start,,local-authority:CBF,central-bedfordshire-local-plan-2035,Publication of the proposed submission (Pre-Submission) plan for representations,2027-10,estimated-reg-19-public-consultation-start
-2024-11-25,,,central-bedfordshire-local-plan-2035-timetable-1-estimated-reg-19-publication-local-plan-published,,local-authority:CBF,central-bedfordshire-local-plan-2035,Publication of the proposed submission (Pre-Submission) plan for representations,2027-09,estimated-reg-19-publication-local-plan-published
-2024-11-25,,,central-bedfordshire-local-plan-2035-timetable-2-estimated-submit-plan-for-examination,,local-authority:CBF,central-bedfordshire-local-plan-2035,,2028-02,estimated-submit-plan-for-examination
-2024-11-25,,,central-bedfordshire-local-plan-2035-timetable-2-estimated-plan-adoption-date,,local-authority:CBF,central-bedfordshire-local-plan-2035,,2028-12,estimated-plan-adoption-date
-2024-11-25,,,bedford-borough-council-local-plan-2040-timetable-1-reg-18-public-consultation-start,,local-authority:BDF,bedford-borough-council-local-plan-2040,,2021-06-29,reg-18-public-consultation-start
-2024-11-25,,,bedford-borough-council-local-plan-2040-timetable-1-reg-18-public-consultation-end,,local-authority:BDF,bedford-borough-council-local-plan-2040,,2021-09-03,reg-18-public-consultation-end
-2024-11-25,,,bedford-borough-council-local-plan-2040-timetable-3-submit-plan-for-examination,,local-authority:BDF,bedford-borough-council-local-plan-2040,,2023-01-12,submit-plan-for-examination
-2024-11-25,,,bedford-borough-council-local-plan-2018-timetable-0-submit-plan-for-examination,,local-authority:BDF,bedford-borough-council-local-plan-2018,,2018-12-05,submit-plan-for-examination
-2024-11-25,,,birmingham-plan-2042-timetable-0-reg-18-public-consultation-start,,local-authority:BIR,birmingham-plan-2042,Preferred options,2024-07,reg-18-public-consultation-start
-2024-11-25,,,birmingham-plan-2042-timetable-0-reg-18-public-consultation-end,,local-authority:BIR,birmingham-plan-2042,Preferred options,2024-08,reg-18-public-consultation-end
-2024-11-25,,,birmingham-plan-2042-timetable-1-reg-19-public-consultation-start,,local-authority:BIR,birmingham-plan-2042,,2025-02,reg-19-public-consultation-start
-2024-11-25,,,birmingham-plan-2042-timetable-2-submit-plan-for-examination,,local-authority:BIR,birmingham-plan-2042,,2025-06,submit-plan-for-examination
-2024-11-25,,,birmingham-plan-2042-timetable-2-planning-inspectorate-examination-start,,local-authority:BIR,birmingham-plan-2042,,2025-09,planning-inspectorate-examination-start
-2024-11-25,,,birmingham-plan-2042-timetable-3-inspector-report-published,,local-authority:BIR,birmingham-plan-2042,,2026-09,inspector-report-published
-2024-11-25,,,birmingham-plan-2042-timetable-3-planning-inspectorate-found-sound,,local-authority:BIR,birmingham-plan-2042,,2026-09,planning-inspectorate-found-sound
-2024-12-06,,,woking-borough-council-local-plan-2012-plan-adopted-0,,local-authority:WOI,woking-borough-council-local-plan-2012,,2012-10-25,plan-adopted
-2024-12-06,,,woking-borough-council-local-plan-2012-timetable-published-0,,local-authority:WOI,woking-borough-council-local-plan-2012,,2018-10-18,timetable-published
-2024-12-06,,,new-dover-district-plan-plan-adopted-0,,local-authority:DOV,new-dover-district-plan,,2024-10-16,plan-adopted
-2024-12-06,,,local-plan-for-the-broads-plan-adopted-0,,national-park-authority:Q4972284,local-plan-for-the-broads,,2019-05-17,plan-adopted
-2024-12-06,,,london-borough-of-bromley-local-plan-2019-plan-adopted-0,,local-authority:BRY,london-borough-of-bromley-local-plan-2019,,2019-01-16,plan-adopted
-2024-12-06,,,oldham-metropolitan-borough-council-local-plan-2011-plan-adopted-0,,local-authority:OLD,oldham-metropolitan-borough-council-local-plan-2011,,2011-11-09,plan-adopted
-2024-12-06,,,development-strategy-2026-plan-adopted-0,,local-authority:EAL,development-strategy-2026,,2012-04-03,plan-adopted
-2024-12-06,,,ashford-borough-council-local-plan-2019-plan-adopted-7,,local-authority:ASF,ashford-borough-council-local-plan-2019,,2019-02-01,plan-adopted
-2024-12-06,,,hertsmere-borough-council-local-plan-2012-plan-adopted-0,,local-authority:HER,hertsmere-borough-council-local-plan-2012,,2013-01-16,plan-adopted
-2024-12-06,,,the-barking-and-dagenham-local-plan-2037-plan-adopted-0,,local-authority:BDG,the-barking-and-dagenham-local-plan-2037,,2024-09-18,plan-adopted
-2024-12-06,,,arun-district-council-local-plan-2011-plan-adopted-7,,local-authority:ARU,arun-district-council-local-plan-2011,,2018-07-18,plan-adopted
-2024-12-06,,,fareham-local-plan-2037-plan-adopted-12,,local-authority:FAR,fareham-local-plan-2037,,2023-04-05,plan-adopted
-2024-12-06,,,babergh-district-council-local-plan-2023-plan-adopted-5,,local-authority:BAB;local-authority:MSU,babergh-district-council-local-plan-2023,,2023-11-20,plan-adopted
-2024-12-06,,,eastbourne-core-strategy-plan-adopted-0,,local-authority:EAS,eastbourne-core-strategy,,2013-02-20,plan-adopted
-2024-12-06,,,barnsley-metropolitan-borough-council-local-plan-2019-plan-adopted-7,,local-authority:BNS,barnsley-metropolitan-borough-council-local-plan-2019,,2019-01-03,plan-adopted
-2024-12-06,,,cambridge-city-council-local-plan-2018-plan-adopted-0,,local-authority:CAB,cambridge-city-council-local-plan-2018,,2018-10-18,plan-adopted
-2024-12-06,,,east-cambridgeshire-local-plan-single-issue-review-plan-adopted-5,,local-authority:ECA,east-cambridgeshire-local-plan-single-issue-review,,2023-10-19,plan-adopted
-2024-12-06,,,basildon-borough-council-local-plan-2011-plan-adopted-0,,local-authority:BAI,basildon-borough-council-local-plan-2011,,1998,plan-adopted
-2024-12-06,,,cannock-chase-district-council-local-plan-2006-plan-adopted-0,,local-authority:CAN,cannock-chase-district-council-local-plan-2006,,2014-06-11,plan-adopted
-2024-12-06,,,adur-district-council-local-plan-2017-plan-adopted-0,,local-authority:ADU,adur-district-council-local-plan-2017,,2017-12-14,plan-adopted
-2024-12-06,,,calderdale-metropolitan-borough-council-local-plan-2018-plan-adopted-0,,local-authority:CLD,calderdale-metropolitan-borough-council-local-plan-2018,,2023-03-22,plan-adopted
-2024-12-06,,,warrington-local-plan-2021-22-2038-39-plan-adopted-0,,local-authority:WRT,warrington-local-plan-2021-22-2038-39,,2023-12-04,plan-adopted
-2024-12-06,,,dartford-borough-council-local-plan-2024-plan-adopted-0,,local-authority:DAR,dartford-borough-council-local-plan-2024,,2024-04-22,plan-adopted
-2024-12-06,,,sunderland-city-council-local-plan-2024-plan-adopted-0,,local-authority:SND,sunderland-city-council-local-plan-2024,,2020-01-30,plan-adopted
-2024-12-06,,,the-birmingham-plan-bdp-update-plan-adopted-0,,local-authority:BIR,the-birmingham-plan-bdp-update,,2017-01-10,plan-adopted
-2024-12-06,,,local-plan-review-2018-2036-plan-adopted-0,,national-park-authority:Q5225646,local-plan-review-2018-2036,,2021-12-03,plan-adopted
-2024-12-06,,,maidstone-borough-council-local-plan-2021-plan-adopted-0,,local-authority:MAI,maidstone-borough-council-local-plan-2021,,2024-03-20,plan-adopted
-2024-12-06,,,east-cambridgeshire-district-council-local-plan-2013-plan-adopted-0,,local-authority:ECA,east-cambridgeshire-district-council-local-plan-2013,,2015-04-21,plan-adopted
-2024-12-06,,,london-borough-of-haringey-local-plan-2013-plan-adopted-0,,local-authority:HRY,london-borough-of-haringey-local-plan-2013,,2017-07-24,plan-adopted
-2024-12-06,,,canterbury-district-local-plan-plan-adopted-0,,local-authority:CAT,canterbury-district-local-plan,,2017-07-13,plan-adopted
-2024-12-06,,,derby-city-local-plan-part-1-core-strategy-plan-adopted-0,,local-authority:DER,derby-city-local-plan-part-1-core-strategy,,2017-01-25,plan-adopted
-2024-12-06,,,halton-borough-council-local-plan-2022-plan-adopted-0,,local-authority:HAL,halton-borough-council-local-plan-2022,,2022-03-02,plan-adopted
-2024-12-06,,,halton-borough-council-local-plan-2022-timetable-published-0,,local-authority:HAL,halton-borough-council-local-plan-2022,,2020-03-05,timetable-published
-2024-12-06,,,basingstoke-and-deane-borough-council-local-plan-2011-plan-adopted-4,,local-authority:BAN,basingstoke-and-deane-borough-council-local-plan-2011,,2016-05-26,plan-adopted
-2024-12-06,,,high-peak-borough-council-local-plan-2011-plan-adopted-0,,local-authority:HIG,high-peak-borough-council-local-plan-2011,,2016-04-14,plan-adopted
-2024-12-06,,,gateshead-metropolitan-borough-council-local-plan-2010-plan-adopted-3,,local-authority:GAT;local-authority:NET,gateshead-metropolitan-borough-council-local-plan-2010,,2015-03-26,plan-adopted
-2024-12-06,,,london-borough-of-sutton-local-plan-2018-plan-adopted-0,,local-authority:STN,london-borough-of-sutton-local-plan-2018,,2018-02-26,plan-adopted
-2024-12-06,,,east-devon-local-plan-2013-31-plan-adopted-0,,local-authority:EDE,east-devon-local-plan-2013-31,,2016-01-28,plan-adopted
-2024-12-06,,,derbyshire-dales-local-plan-plan-adopted-0,,local-authority:DEB,derbyshire-dales-local-plan,,2017-12-07,plan-adopted
-2024-12-06,,,east-devon-local-plan-2020-2040-timetable-published-3,,local-authority:EDE,east-devon-local-plan-2020-2040,,2023-12-06,timetable-published
-2024-12-06,,,east-devon-district-council-local-plan-2013-plan-adopted-0,,local-authority:EDE,east-devon-district-council-local-plan-2013,,2016-01-28,plan-adopted
-2024-12-06,,,gloucester-city-council-local-plan-2011-plan-adopted-0,,local-authority:GLO,gloucester-city-council-local-plan-2011,,2023,plan-adopted
-2024-12-06,,,castle-point-borough-council-local-plan-1998-plan-adopted-0,,local-authority:CAS,castle-point-borough-council-local-plan-1998,,1998-11-17,plan-adopted
-2024-12-06,,,bassetlaw-district-council-local-plan-2020-plan-adopted-0,,local-authority:BAE,bassetlaw-district-council-local-plan-2020,,2024-05-29,plan-adopted
-2024-12-06,,,local-plan-2020-plan-adopted-0,,local-authority:MRT,local-plan-2020,,2024-11-20,plan-adopted
-2024-12-06,,,core-strategy-2006-2031-plan-adopted-0,,local-authority:DAC,core-strategy-2006-2031,,2013-09-25,plan-adopted
-2024-12-06,,,gloucester-cheltenham-and-tewkesbury-joint-core-strategy-duplicate-plan-adopted-0,,local-authority:TEW;local-authority:CHT;local-authority:GLO,gloucester-cheltenham-and-tewkesbury-joint-core-strategy-duplicate,,2017-11-23,plan-adopted
+Publication ",,reg-19-public-consultation-end,2024-11-25,,,local-authority:FEN,
+barnsley-metropolitan-borough-council-local-plan-2019-timetable-0-reg-19-publication-local-plan-published,2016-08,barnsley-metropolitan-borough-council-local-plan-2019,,,reg-19-publication-local-plan-published,2024-11-25,,,local-authority:BNS,
+barnsley-metropolitan-borough-council-local-plan-2019-timetable-0-reg-19-public-consultation-start,2016-08,barnsley-metropolitan-borough-council-local-plan-2019,,,reg-19-public-consultation-start,2024-11-25,,,local-authority:BNS,
+barnsley-metropolitan-borough-council-local-plan-2019-timetable-1-submit-plan-for-examination,2016-12-20,barnsley-metropolitan-borough-council-local-plan-2019,,,submit-plan-for-examination,2024-11-25,,,local-authority:BNS,
+barnsley-metropolitan-borough-council-local-plan-2019-timetable-2-inspector-report-published,2018-12-14,barnsley-metropolitan-borough-council-local-plan-2019,,,inspector-report-published,2024-11-25,,,local-authority:BNS,
+east-cambridgeshire-local-plan-single-issue-review-timetable-0-estimated-submit-plan-for-examination,2013-08-29,east-cambridgeshire-local-plan-single-issue-review,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:ECA,
+east-cambridgeshire-local-plan-single-issue-review-timetable-0-estimated-plan-adoption-date,2023-10-19,east-cambridgeshire-local-plan-single-issue-review,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:ECA,
+east-cambridgeshire-local-plan-single-issue-review-timetable-1-inspector-report-published,2023-10-05,east-cambridgeshire-local-plan-single-issue-review,,,inspector-report-published,2024-11-25,,,local-authority:ECA,
+cannock-chase-district-local-plan-timetable-0-estimated-reg-18-draft-local-plan-published,2019-05,cannock-chase-district-local-plan,,,estimated-reg-18-draft-local-plan-published,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-0-estimated-reg-18-public-consultation-end,2019-07,cannock-chase-district-local-plan,,,estimated-reg-18-public-consultation-end,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-0-estimated-reg-18-public-consultation-start,2019-05,cannock-chase-district-local-plan,,,estimated-reg-18-public-consultation-start,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-1-estimated-reg-19-publication-local-plan-published,2023,cannock-chase-district-local-plan,Winter 2023/24,,estimated-reg-19-publication-local-plan-published,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-2-estimated-submit-plan-for-examination,2024,cannock-chase-district-local-plan,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-2-estimated-plan-adoption-date,2025,cannock-chase-district-local-plan,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-3-reg-19-publication-local-plan-published,2023-12,cannock-chase-district-local-plan,,,reg-19-publication-local-plan-published,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-3-reg-19-public-consultation-start,2024-02-05,cannock-chase-district-local-plan,,,reg-19-public-consultation-start,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-3-reg-19-public-consultation-end,2024-03-18,cannock-chase-district-local-plan,,,reg-19-public-consultation-end,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-4-reg-18-draft-local-plan-published,2019-05,cannock-chase-district-local-plan,Issues and Options Consultation,,reg-18-draft-local-plan-published,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-4-reg-18-public-consultation-start,2019-05-13,cannock-chase-district-local-plan,Issues and Options Consultation,,reg-18-public-consultation-start,2024-11-25,,,local-authority:CAN,
+cannock-chase-district-local-plan-timetable-4-reg-18-public-consultation-end,2019-07-09,cannock-chase-district-local-plan,Issues and Options Consultation,,reg-18-public-consultation-end,2024-11-25,,,local-authority:CAN,
+basildon-borough-council-new-local-plan-timetable-0-reg-18-public-consultation-start,2023-06-27,basildon-borough-council-new-local-plan,,,reg-18-public-consultation-start,2024-11-25,,,local-authority:BAI,
+basildon-borough-council-new-local-plan-timetable-0-reg-18-public-consultation-end,2023-09-05,basildon-borough-council-new-local-plan,,,reg-18-public-consultation-end,2024-11-25,,,local-authority:BAI,
+basildon-borough-council-new-local-plan-timetable-1-estimated-reg-18-public-consultation-start,2024-12,basildon-borough-council-new-local-plan,,,estimated-reg-18-public-consultation-start,2024-11-25,,,local-authority:BAI,
+basildon-borough-council-new-local-plan-timetable-2-estimated-reg-19-public-consultation-start,2025-03,basildon-borough-council-new-local-plan,,,estimated-reg-19-public-consultation-start,2024-11-25,,,local-authority:BAI,
+basildon-borough-council-new-local-plan-timetable-3-estimated-submit-plan-for-examination,2025-06,basildon-borough-council-new-local-plan,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:BAI,
+basildon-borough-council-new-local-plan-timetable-3-estimated-plan-adoption-date,2026-06,basildon-borough-council-new-local-plan,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:BAI,
+new-canterbury-district-local-plan-2020-2040-timetable-0-estimated-submit-plan-for-examination,2026-02,new-canterbury-district-local-plan-2020-2040,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:CAT,
+new-canterbury-district-local-plan-2020-2040-timetable-0-estimated-plan-adoption-date,2027-03,new-canterbury-district-local-plan-2020-2040,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:CAT,
+basingstoke-and-deane-borough-council-local-plan-2011-timetable-0-planning-inspectorate-examination-end,2016-04-06,basingstoke-and-deane-borough-council-local-plan-2011,,,planning-inspectorate-examination-end,2024-11-25,,,local-authority:BAN,
+basingstoke-deane-local-plan-2021-2040-timetable-0-reg-18-draft-local-plan-published,2020-09-28,basingstoke-deane-local-plan-2021-2040,Issues and Options,,reg-18-draft-local-plan-published,2024-11-25,,,local-authority:BAN,
+basingstoke-deane-local-plan-2021-2040-timetable-0-reg-18-public-consultation-start,2020-09-28,basingstoke-deane-local-plan-2021-2040,Issues and Options,,reg-18-public-consultation-start,2024-11-25,,,local-authority:BAN,
+basingstoke-deane-local-plan-2021-2040-timetable-0-reg-18-public-consultation-end,2020-11-09,basingstoke-deane-local-plan-2021-2040,Issues and Options,,reg-18-public-consultation-end,2024-11-25,,,local-authority:BAN,
+new-canterbury-district-local-plan-2020-2040-timetable-1-reg-18-draft-local-plan-published,2024-03,new-canterbury-district-local-plan-2020-2040,Draft Canterbury Local Plan Consultation,,reg-18-draft-local-plan-published,2024-11-25,,,local-authority:CAT,
+new-canterbury-district-local-plan-2020-2040-timetable-1-reg-18-public-consultation-start,2024-03,new-canterbury-district-local-plan-2020-2040,Draft Canterbury Local Plan Consultation,,reg-18-public-consultation-start,2024-11-25,,,local-authority:CAT,
+new-canterbury-district-local-plan-2020-2040-timetable-1-reg-18-public-consultation-end,2024-06-03,new-canterbury-district-local-plan-2020-2040,Draft Canterbury Local Plan Consultation,,reg-18-public-consultation-end,2024-11-25,,,local-authority:CAT,
+basingstoke-deane-local-plan-2021-2040-timetable-1-reg-18-public-consultation-start,2024-01-22,basingstoke-deane-local-plan-2021-2040,,,reg-18-public-consultation-start,2024-11-25,,,local-authority:BAN,
+basingstoke-deane-local-plan-2021-2040-timetable-1-reg-18-public-consultation-end,2024-03-04,basingstoke-deane-local-plan-2021-2040,,,reg-18-public-consultation-end,2024-11-25,,,local-authority:BAN,
+basingstoke-deane-local-plan-2021-2040-timetable-2-estimated-reg-19-publication-local-plan-published,2024,basingstoke-deane-local-plan-2021-2040,Winter 2024/2025,,estimated-reg-19-publication-local-plan-published,2024-11-25,,,local-authority:BAN,
+east-devon-local-plan-2020-2040-timetable-0-estimated-submit-plan-for-examination,2025,east-devon-local-plan-2020-2040,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:EDE,
+east-devon-local-plan-2020-2040-timetable-0-estimated-plan-adoption-date,2026,east-devon-local-plan-2020-2040,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:EDE,
+basingstoke-deane-local-plan-2021-2040-timetable-3-estimated-submit-plan-for-examination,2025-03,basingstoke-deane-local-plan-2021-2040,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:BAN,
+basingstoke-deane-local-plan-2021-2040-timetable-3-estimated-plan-adoption-date,2025-12,basingstoke-deane-local-plan-2021-2040,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:BAN,
+ashfield-local-plan-2023-2040-timetable-0-estimated-reg-18-draft-local-plan-published,2021-10,ashfield-local-plan-2023-2040,,,estimated-reg-18-draft-local-plan-published,2024-11-25,,,local-authority:ASH,
+ashfield-local-plan-2023-2040-timetable-0-estimated-reg-18-public-consultation-end,2021-11-16,ashfield-local-plan-2023-2040,,,estimated-reg-18-public-consultation-end,2024-11-25,,,local-authority:ASH,
+ashfield-local-plan-2023-2040-timetable-0-estimated-reg-18-public-consultation-start,2021-10-04,ashfield-local-plan-2023-2040,,,estimated-reg-18-public-consultation-start,2024-11-25,,,local-authority:ASH,
+east-hampshire-local-plan-timetable-0-estimated-reg-18-public-consultation-end,2024-06,east-hampshire-local-plan,,,estimated-reg-18-public-consultation-end,2024-11-25,,,local-authority:EHA,
+east-hampshire-local-plan-timetable-0-estimated-reg-18-public-consultation-start,2024-01,east-hampshire-local-plan,,,estimated-reg-18-public-consultation-start,2024-11-25,,,local-authority:EHA,
+east-hampshire-local-plan-timetable-1-estimated-reg-19-public-consultation-start,2024-07,east-hampshire-local-plan,,,estimated-reg-19-public-consultation-start,2024-11-25,,,local-authority:EHA,
+east-hampshire-local-plan-timetable-1-estimated-reg-19-public-consultation-end,2024-11,east-hampshire-local-plan,,,estimated-reg-19-public-consultation-end,2024-11-25,,,local-authority:EHA,
+east-hampshire-local-plan-timetable-2-estimated-submit-plan-for-examination,2025-12,east-hampshire-local-plan,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:EHA,
+east-hampshire-local-plan-timetable-2-estimated-plan-adoption-date,2026-09,east-hampshire-local-plan,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:EHA,
+ashfield-local-plan-2023-2040-timetable-2-estimated-submit-plan-for-examination,2024-05,ashfield-local-plan-2023-2040,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:ASH,
+ashfield-local-plan-2023-2040-timetable-2-estimated-plan-adoption-date,2025-04,ashfield-local-plan-2023-2040,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:ASH,
+ashfield-local-plan-2023-2040-timetable-3-reg-18-draft-local-plan-published,2021-10,ashfield-local-plan-2023-2040,,,reg-18-draft-local-plan-published,2024-11-25,,,local-authority:ASH,
+ashfield-local-plan-2023-2040-timetable-3-reg-18-public-consultation-start,2021-10-04,ashfield-local-plan-2023-2040,,,reg-18-public-consultation-start,2024-11-25,,,local-authority:ASH,
+ashfield-local-plan-2023-2040-timetable-3-reg-18-public-consultation-end,2021-11-16,ashfield-local-plan-2023-2040,,,reg-18-public-consultation-end,2024-11-25,,,local-authority:ASH,
+great-yarmouth-local-plan-2021-2041-timetable-0-estimated-reg-18-public-consultation-end,2024-05-08,great-yarmouth-local-plan-2021-2041,Issues and options,,estimated-reg-18-public-consultation-end,2024-11-25,,,local-authority:GRY,
+great-yarmouth-local-plan-2021-2041-timetable-0-estimated-reg-18-public-consultation-start,2024-03-13,great-yarmouth-local-plan-2021-2041,Issues and options,,estimated-reg-18-public-consultation-start,2024-11-25,,,local-authority:GRY,
+the-castle-point-plan-timetable-0-reg-18-draft-local-plan-published,2024-07,the-castle-point-plan,Issues & Options,,reg-18-draft-local-plan-published,2024-11-25,,,local-authority:CAS,
+the-castle-point-plan-timetable-0-reg-18-public-consultation-start,2024-07-22,the-castle-point-plan,Issues & Options,,reg-18-public-consultation-start,2024-11-25,,,local-authority:CAS,
+the-castle-point-plan-timetable-0-reg-18-public-consultation-end,2024-09-16,the-castle-point-plan,Issues & Options,,reg-18-public-consultation-end,2024-11-25,,,local-authority:CAS,
+great-yarmouth-local-plan-2021-2041-timetable-1-estimated-submit-plan-for-examination,2025,great-yarmouth-local-plan-2021-2041,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:GRY,
+great-yarmouth-local-plan-2021-2041-timetable-1-estimated-plan-adoption-date,2026,great-yarmouth-local-plan-2021-2041,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:GRY,
+the-castle-point-plan-timetable-1-estimated-reg-18-public-consultation-end,2024-08,the-castle-point-plan,Issues & Options,,estimated-reg-18-public-consultation-end,2024-11-25,,,local-authority:CAS,
+the-castle-point-plan-timetable-1-estimated-reg-18-public-consultation-start,2024-06,the-castle-point-plan,Issues & Options,,estimated-reg-18-public-consultation-start,2024-11-25,,,local-authority:CAS,
+ashfield-local-plan-2023-2040-timetable-4-reg-19-publication-local-plan-published,2023-11,ashfield-local-plan-2023-2040,,,reg-19-publication-local-plan-published,2024-11-25,,,local-authority:ASH,
+ashfield-local-plan-2023-2040-timetable-4-reg-19-public-consultation-start,2023-12-04,ashfield-local-plan-2023-2040,,,reg-19-public-consultation-start,2024-11-25,,,local-authority:ASH,
+ashfield-local-plan-2023-2040-timetable-4-reg-19-public-consultation-end,2024-01-29,ashfield-local-plan-2023-2040,,,reg-19-public-consultation-end,2024-11-25,,,local-authority:ASH,
+the-castle-point-plan-timetable-2-estimated-reg-19-public-consultation-start,2025-01,the-castle-point-plan,,,estimated-reg-19-public-consultation-start,2024-11-25,,,local-authority:CAS,
+the-castle-point-plan-timetable-2-estimated-reg-19-public-consultation-end,2025-03,the-castle-point-plan,,,estimated-reg-19-public-consultation-end,2024-11-25,,,local-authority:CAS,
+the-castle-point-plan-timetable-2-estimated-reg-19-publication-local-plan-published,2025-01,the-castle-point-plan,,,estimated-reg-19-publication-local-plan-published,2024-11-25,,,local-authority:CAS,
+the-castle-point-plan-timetable-3-estimated-submit-plan-for-examination,2025-04,the-castle-point-plan,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:CAS,
+the-castle-point-plan-timetable-3-estimated-plan-adoption-date,2026-03,the-castle-point-plan,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:CAS,
+hart-district-council-local-plan-2014-timetable-1-submit-plan-for-examination,2018-06-18,hart-district-council-local-plan-2014,,,submit-plan-for-examination,2024-11-25,,,local-authority:HAT,
+hart-district-council-local-plan-2014-timetable-1-planning-inspectorate-examination-start,2018-11-20,hart-district-council-local-plan-2014,,,planning-inspectorate-examination-start,2024-11-25,,,local-authority:HAT,
+hart-district-council-local-plan-2014-timetable-1-planning-inspectorate-examination-end,2018-12-18,hart-district-council-local-plan-2014,,,planning-inspectorate-examination-end,2024-11-25,,,local-authority:HAT,
+bedford-borough-council-local-plan-2040-timetable-0-reg-18-draft-local-plan-published,2020-07-14,bedford-borough-council-local-plan-2040,Issues and Options,,reg-18-draft-local-plan-published,2024-11-25,,,local-authority:BDF,
+bedford-borough-council-local-plan-2040-timetable-0-reg-18-public-consultation-start,2020-07-14,bedford-borough-council-local-plan-2040,Issues and Options,,reg-18-public-consultation-start,2024-11-25,,,local-authority:BDF,
+bedford-borough-council-local-plan-2040-timetable-0-reg-18-public-consultation-end,2020-09-04,bedford-borough-council-local-plan-2040,Issues and Options,,reg-18-public-consultation-end,2024-11-25,,,local-authority:BDF,
+hastings-local-plan-2019-2041-timetable-0-estimated-reg-18-draft-local-plan-published,2020-03-02,hastings-local-plan-2019-2041,,,estimated-reg-18-draft-local-plan-published,2024-11-25,,,local-authority:HAS,
+hastings-local-plan-2019-2041-timetable-1-estimated-reg-19-public-consultation-start,2025-04,hastings-local-plan-2019-2041,,,estimated-reg-19-public-consultation-start,2024-11-25,,,local-authority:HAS,
+central-bedfordshire-local-plan-2035-timetable-0-estimated-reg-18-draft-local-plan-published,2026-02,central-bedfordshire-local-plan-2035,Draft Local Plan Formal Consultation,,estimated-reg-18-draft-local-plan-published,2024-11-25,,,local-authority:CBF,
+central-bedfordshire-local-plan-2035-timetable-0-estimated-reg-18-public-consultation-end,2026-04,central-bedfordshire-local-plan-2035,Draft Local Plan Formal Consultation,,estimated-reg-18-public-consultation-end,2024-11-25,,,local-authority:CBF,
+central-bedfordshire-local-plan-2035-timetable-0-estimated-reg-18-public-consultation-start,2026-02,central-bedfordshire-local-plan-2035,Draft Local Plan Formal Consultation,,estimated-reg-18-public-consultation-start,2024-11-25,,,local-authority:CBF,
+central-bedfordshire-local-plan-2035-timetable-1-estimated-reg-19-public-consultation-start,2027-10,central-bedfordshire-local-plan-2035,Publication of the proposed submission (Pre-Submission) plan for representations,,estimated-reg-19-public-consultation-start,2024-11-25,,,local-authority:CBF,
+central-bedfordshire-local-plan-2035-timetable-1-estimated-reg-19-publication-local-plan-published,2027-09,central-bedfordshire-local-plan-2035,Publication of the proposed submission (Pre-Submission) plan for representations,,estimated-reg-19-publication-local-plan-published,2024-11-25,,,local-authority:CBF,
+central-bedfordshire-local-plan-2035-timetable-2-estimated-submit-plan-for-examination,2028-02,central-bedfordshire-local-plan-2035,,,estimated-submit-plan-for-examination,2024-11-25,,,local-authority:CBF,
+central-bedfordshire-local-plan-2035-timetable-2-estimated-plan-adoption-date,2028-12,central-bedfordshire-local-plan-2035,,,estimated-plan-adoption-date,2024-11-25,,,local-authority:CBF,
+bedford-borough-council-local-plan-2040-timetable-1-reg-18-public-consultation-start,2021-06-29,bedford-borough-council-local-plan-2040,,,reg-18-public-consultation-start,2024-11-25,,,local-authority:BDF,
+bedford-borough-council-local-plan-2040-timetable-1-reg-18-public-consultation-end,2021-09-03,bedford-borough-council-local-plan-2040,,,reg-18-public-consultation-end,2024-11-25,,,local-authority:BDF,
+bedford-borough-council-local-plan-2040-timetable-3-submit-plan-for-examination,2023-01-12,bedford-borough-council-local-plan-2040,,,submit-plan-for-examination,2024-11-25,,,local-authority:BDF,
+bedford-borough-council-local-plan-2018-timetable-0-submit-plan-for-examination,2018-12-05,bedford-borough-council-local-plan-2018,,,submit-plan-for-examination,2024-11-25,,,local-authority:BDF,
+birmingham-plan-2042-timetable-0-reg-18-public-consultation-start,2024-07,birmingham-plan-2042,Preferred options,,reg-18-public-consultation-start,2024-11-25,,,local-authority:BIR,
+birmingham-plan-2042-timetable-0-reg-18-public-consultation-end,2024-08,birmingham-plan-2042,Preferred options,,reg-18-public-consultation-end,2024-11-25,,,local-authority:BIR,
+birmingham-plan-2042-timetable-1-reg-19-public-consultation-start,2025-02,birmingham-plan-2042,,,reg-19-public-consultation-start,2024-11-25,,,local-authority:BIR,
+birmingham-plan-2042-timetable-2-submit-plan-for-examination,2025-06,birmingham-plan-2042,,,submit-plan-for-examination,2024-11-25,,,local-authority:BIR,
+birmingham-plan-2042-timetable-2-planning-inspectorate-examination-start,2025-09,birmingham-plan-2042,,,planning-inspectorate-examination-start,2024-11-25,,,local-authority:BIR,
+birmingham-plan-2042-timetable-3-inspector-report-published,2026-09,birmingham-plan-2042,,,inspector-report-published,2024-11-25,,,local-authority:BIR,
+birmingham-plan-2042-timetable-3-planning-inspectorate-found-sound,2026-09,birmingham-plan-2042,,,planning-inspectorate-found-sound,2024-11-25,,,local-authority:BIR,
+dud-2009-plan-adopted-0,2011-02-03,dud-2009,,,plan-adopted,2024-12-06,,,,
+london-borough-of-havering-local-plan-2016-plan-adopted-0,2021-11-17,london-borough-of-havering-local-plan-2016,,,plan-adopted,2024-12-06,,,local-authority:HAV,
+east-hampshire-local-plan-timetable-published-9,2023-07,east-hampshire-local-plan,,,timetable-published,2024-12-06,,,local-authority:EHA,
+harlow-local-plan-plan-adopted-0,2020-12-10,harlow-local-plan,,,plan-adopted,2024-12-06,,,local-authority:HAR,
+woking-borough-council-local-plan-2012-plan-adopted-0,2012-10-25,woking-borough-council-local-plan-2012,,,plan-adopted,2024-12-06,,,local-authority:WOI,
+woking-borough-council-local-plan-2012-timetable-published-0,2018-10-18,woking-borough-council-local-plan-2012,,,timetable-published,2024-12-06,,,local-authority:WOI,
+new-dover-district-plan-plan-adopted-0,2024-10-16,new-dover-district-plan,,,plan-adopted,2024-12-06,,,local-authority:DOV,
+local-plan-for-the-broads-plan-adopted-0,2019-05-17,local-plan-for-the-broads,,,plan-adopted,2024-12-06,,,national-park-authority:Q4972284,
+london-borough-of-bromley-local-plan-2019-plan-adopted-0,2019-01-16,london-borough-of-bromley-local-plan-2019,,,plan-adopted,2024-12-06,,,local-authority:BRY,
+oldham-metropolitan-borough-council-local-plan-2011-plan-adopted-0,2011-11-09,oldham-metropolitan-borough-council-local-plan-2011,,,plan-adopted,2024-12-06,,,local-authority:OLD,
+development-strategy-2026-plan-adopted-0,2012-04-03,development-strategy-2026,,,plan-adopted,2024-12-06,,,local-authority:EAL,
+ashford-borough-council-local-plan-2019-plan-adopted-7,2019-02-01,ashford-borough-council-local-plan-2019,,,plan-adopted,2024-12-06,,,local-authority:ASF,
+hertsmere-borough-council-local-plan-2012-plan-adopted-0,2013-01-16,hertsmere-borough-council-local-plan-2012,,,plan-adopted,2024-12-06,,,local-authority:HER,
+the-barking-and-dagenham-local-plan-2037-plan-adopted-0,2024-09-18,the-barking-and-dagenham-local-plan-2037,,,plan-adopted,2024-12-06,,,local-authority:BDG,
+birmingham-plan-2042-plan-adopted-11,2017-01-10,birmingham-plan-2042,,,plan-adopted,2024-12-06,,,local-authority:BIR,
+camden-local-plan-2026-timetable-3-reg-18-public-consultation-end,2021,camden-local-plan-2026,,,reg-18-public-consultation-end,2024-11-11,,,local-authority:CMD,
+camden-local-plan-2026-timetable-4-reg-18-public-consultation-start,2022,camden-local-plan-2026,,,reg-18-public-consultation-start,2024-11-11,,,local-authority:CMD,
+babergh-district-council-local-plan-2023-timetable-0-submit-plan-for-examination,2021-03-31,babergh-district-council-local-plan-2023,,,submit-plan-for-examination,2024-11-25,,,,
+babergh-district-council-local-plan-2023-timetable-0-planning-inspectorate-examination-end,2023-09-19,babergh-district-council-local-plan-2023,,,planning-inspectorate-examination-end,2024-11-25,,,,
+babergh-district-council-local-plan-2023-timetable-1-inspector-report-published,2023-09-19,babergh-district-council-local-plan-2023,,,inspector-report-published,2024-11-25,,,,
+gateshead-metropolitan-borough-council-local-plan-2010-timetable-0-inspector-report-published,2015-02-24,gateshead-metropolitan-borough-council-local-plan-2010,,,inspector-report-published,2024-11-25,,,,
+gateshead-metropolitan-borough-council-local-plan-2010-timetable-0-planning-inspectorate-found-sound,2015-02-24,gateshead-metropolitan-borough-council-local-plan-2010,,,planning-inspectorate-found-sound,2024-11-25,,,,
+babergh-district-council-local-plan-2023-plan-adopted-5,2023-11-20,babergh-district-council-local-plan-2023,,,plan-adopted,2024-12-06,,,,
+gateshead-metropolitan-borough-council-local-plan-2010-plan-adopted-3,2015-03-26,gateshead-metropolitan-borough-council-local-plan-2010,,,plan-adopted,2024-12-06,,,,
+gloucester-cheltenham-and-tewkesbury-joint-core-strategy-duplicate-plan-adopted-0,2017-11-23,gloucester-cheltenham-and-tewkesbury-joint-core-strategy-duplicate,,,plan-adopted,2024-12-06,,,,
+arun-district-council-local-plan-2011-plan-adopted-7,2018-07-18,arun-district-council-local-plan-2011,,,plan-adopted,2024-12-06,,,local-authority:ARU,
+fareham-local-plan-2037-plan-adopted-12,2023-04-05,fareham-local-plan-2037,,,plan-adopted,2024-12-06,,,local-authority:FAR,
+eastbourne-core-strategy-plan-adopted-0,2013-02-20,eastbourne-core-strategy,,,plan-adopted,2024-12-06,,,local-authority:EAS,
+barnsley-metropolitan-borough-council-local-plan-2019-plan-adopted-7,2019-01-03,barnsley-metropolitan-borough-council-local-plan-2019,,,plan-adopted,2024-12-06,,,local-authority:BNS,
+cambridge-city-council-local-plan-2018-plan-adopted-0,2018-10-18,cambridge-city-council-local-plan-2018,,,plan-adopted,2024-12-06,,,local-authority:CAB,
+adur-district-council-local-plan-2017-plan-adopted-0,2017-12-14,adur-district-council-local-plan-2017,,,plan-adopted,2024-12-06,,,local-authority:ADU,
+calderdale-metropolitan-borough-council-local-plan-2018-plan-adopted-0,2023-03-22,calderdale-metropolitan-borough-council-local-plan-2018,,,plan-adopted,2024-12-06,,,local-authority:CLD,
+warrington-local-plan-2021-22-2038-39-plan-adopted-0,2023-12-04,warrington-local-plan-2021-22-2038-39,,,plan-adopted,2024-12-06,,,local-authority:WRT,
+dartford-borough-council-local-plan-2024-plan-adopted-0,2024-04-22,dartford-borough-council-local-plan-2024,,,plan-adopted,2024-12-06,,,local-authority:DAR,
+sunderland-city-council-local-plan-2024-plan-adopted-0,2020-01-30,sunderland-city-council-local-plan-2024,,,plan-adopted,2024-12-06,,,local-authority:SND,
+the-birmingham-plan-bdp-update-plan-adopted-0,2017-01-10,the-birmingham-plan-bdp-update,,,plan-adopted,2024-12-06,,,local-authority:BIR,
+local-plan-review-2018-2036-plan-adopted-0,2021-12-03,local-plan-review-2018-2036,,,plan-adopted,2024-12-06,,,national-park-authority:Q5225646,
+maidstone-borough-council-local-plan-2021-plan-adopted-0,2024-03-20,maidstone-borough-council-local-plan-2021,,,plan-adopted,2024-12-06,,,local-authority:MAI,
+east-cambridgeshire-district-council-local-plan-2013-plan-adopted-0,2015-04-21,east-cambridgeshire-district-council-local-plan-2013,,,plan-adopted,2024-12-06,,,local-authority:ECA,
+london-borough-of-haringey-local-plan-2013-plan-adopted-0,2017-07-24,london-borough-of-haringey-local-plan-2013,,,plan-adopted,2024-12-06,,,local-authority:HRY,
+canterbury-district-local-plan-plan-adopted-0,2017-07-13,canterbury-district-local-plan,,,plan-adopted,2024-12-06,,,local-authority:CAT,
+derby-city-local-plan-part-1-core-strategy-plan-adopted-0,2017-01-25,derby-city-local-plan-part-1-core-strategy,,,plan-adopted,2024-12-06,,,local-authority:DER,
+halton-borough-council-local-plan-2022-plan-adopted-0,2022-03-02,halton-borough-council-local-plan-2022,,,plan-adopted,2024-12-06,,,local-authority:HAL,
+halton-borough-council-local-plan-2022-timetable-published-0,2020-03-05,halton-borough-council-local-plan-2022,,,timetable-published,2024-12-06,,,local-authority:HAL,
+basingstoke-and-deane-borough-council-local-plan-2011-plan-adopted-4,2016-05-26,basingstoke-and-deane-borough-council-local-plan-2011,,,plan-adopted,2024-12-06,,,local-authority:BAN,
+high-peak-borough-council-local-plan-2011-plan-adopted-0,2016-04-14,high-peak-borough-council-local-plan-2011,,,plan-adopted,2024-12-06,,,local-authority:HIG,
+london-borough-of-sutton-local-plan-2018-plan-adopted-0,2018-02-26,london-borough-of-sutton-local-plan-2018,,,plan-adopted,2024-12-06,,,local-authority:STN,
+east-devon-local-plan-2013-31-plan-adopted-0,2016-01-28,east-devon-local-plan-2013-31,,,plan-adopted,2024-12-06,,,local-authority:EDE,
+derbyshire-dales-local-plan-plan-adopted-0,2017-12-07,derbyshire-dales-local-plan,,,plan-adopted,2024-12-06,,,local-authority:DEB,
+east-devon-local-plan-2020-2040-timetable-published-3,2023-12-06,east-devon-local-plan-2020-2040,,,timetable-published,2024-12-06,,,local-authority:EDE,
+east-devon-district-council-local-plan-2013-plan-adopted-0,2016-01-28,east-devon-district-council-local-plan-2013,,,plan-adopted,2024-12-06,,,local-authority:EDE,
+gloucester-city-council-local-plan-2011-plan-adopted-0,2023,gloucester-city-council-local-plan-2011,,,plan-adopted,2024-12-06,,,local-authority:GLO,
+castle-point-borough-council-local-plan-1998-plan-adopted-0,1998-11-17,castle-point-borough-council-local-plan-1998,,,plan-adopted,2024-12-06,,,local-authority:CAS,
+bassetlaw-district-council-local-plan-2020-plan-adopted-0,2024-05-29,bassetlaw-district-council-local-plan-2020,,,plan-adopted,2024-12-06,,,local-authority:BAE,
+local-plan-2020-plan-adopted-0,2024-11-20,local-plan-2020,,,plan-adopted,2024-12-06,,,local-authority:MRT,
+core-strategy-2006-2031-plan-adopted-0,2013-09-25,core-strategy-2006-2031,,,plan-adopted,2024-12-06,,,local-authority:DAC,
