@@ -4,7 +4,12 @@ from flask import Blueprint, abort, redirect, render_template, url_for
 
 from application.blueprints.timetable.forms import EventForm
 from application.extensions import db
-from application.models import LocalPlan, LocalPlanEventType, LocalPlanTimetable
+from application.models import (
+    LocalPlan,
+    LocalPlanEventType,
+    LocalPlanTimetable,
+    Organisation,
+)
 from application.utils import login_required
 
 timetable = Blueprint(
@@ -31,6 +36,14 @@ def add(local_plan_reference):
     action_text = "Add"
 
     form = EventForm()
+    if plan.organisations:
+        form.organisation.choices = [
+            (organisation.organisation, organisation.name)
+            for organisation in Organisation.query.order_by(Organisation.name).all()
+        ]
+    if plan.organisations and not form.is_submitted():
+        if len(plan.organisations) == 1:
+            form.organisation.data = plan.organisations[0].organisation
 
     breadcrumbs = {
         "items": [
@@ -71,6 +84,8 @@ def add(local_plan_reference):
             notes=form.notes.data,
         )
         plan.timetable.append(local_plan_timetable)
+        if form.organisation.data:
+            local_plan_timetable.organisation = form.organisation.data
         db.session.add(plan)
         db.session.add(local_plan_timetable)
         db.session.commit()
