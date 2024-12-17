@@ -172,7 +172,7 @@ class LocalPlan(BaseModel):
     )
 
     def is_joint_plan(self):
-        return self.organisations.count() > 1
+        return len(self.organisations) > 1
 
     # boundary status set on local plan as boundary is one to many from local_plan_boundary
     # to local_plan, therefore boundary is specific to a single local plan and therefore
