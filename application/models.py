@@ -171,6 +171,9 @@ class LocalPlan(BaseModel):
         back_populates="local_plans",
     )
 
+    def is_joint_plan(self):
+        return self.organisations.count() > 1
+
     # boundary status set on local plan as boundary is one to many from local_plan_boundary
     # to local_plan, therefore boundary is specific to a single local plan and therefore
     # approval needs to be set at the plan level

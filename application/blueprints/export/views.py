@@ -60,6 +60,11 @@ def export_local_plan_timetables():
     )
     for timetable in current_timetables:
         model = LocalPlanTimetableModel.model_validate(timetable)
+        if model.organisation is None or model.organisation.strip() == "":
+            if not timetable.local_plan.is_joint_plan():
+                model.organisation = timetable.local_plan.organisations[0].reference
+            else:
+                model.organisation = "government-organisation:D1342"
         data.append(model.model_dump(by_alias=True))
 
     output = _to_csv(data, LocalPlanTimetableModel)
