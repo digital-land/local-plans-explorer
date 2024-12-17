@@ -36,7 +36,7 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = True
     WTF_CSRF_ENABLED = False
-    AUTHENTICATION_ON = True
+    AUTHENTICATION_ON = _to_boolean(os.getenv("AUTHENTICATION_ON", False))
     SQLALCHEMY_RECORD_QUERIES = True
 
 
