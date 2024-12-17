@@ -25,7 +25,11 @@ timetable = Blueprint(
 )
 @login_required
 def add(local_plan_reference):
-    plan = LocalPlan.query.get(local_plan_reference)
+    plan = (
+        LocalPlan.query.options(db.joinedload(LocalPlan.organisations))
+        .filter(LocalPlan.reference == local_plan_reference)
+        .first()
+    )
     if plan is None:
         return abort(404)
 
@@ -37,10 +41,17 @@ def add(local_plan_reference):
 
     form = EventForm()
     if plan.organisations:
+        organisations = (
+            Organisation.query.with_entities(
+                Organisation.organisation, Organisation.name
+            )
+            .order_by(Organisation.name)
+            .all()
+        )
         form.organisation.choices = [
-            (organisation.organisation, organisation.name)
-            for organisation in Organisation.query.order_by(Organisation.name).all()
+            (org.organisation, org.name) for org in organisations
         ]
+
     if plan.organisations and not form.is_submitted():
         if len(plan.organisations) == 1:
             form.organisation.data = plan.organisations[0].organisation

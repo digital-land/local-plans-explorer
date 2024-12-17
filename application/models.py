@@ -125,7 +125,7 @@ class LocalPlan(BaseModel):
     )
 
     timetable: Mapped[List["LocalPlanTimetable"]] = relationship(
-        back_populates="local_plan", lazy="joined"
+        back_populates="local_plan", lazy="select"
     )
 
     def ordered_events(self, reverse=True):
@@ -167,7 +167,7 @@ class LocalPlan(BaseModel):
     organisations = db.relationship(
         "Organisation",
         secondary=local_plan_organisation,
-        lazy="joined",
+        lazy="select",
         back_populates="local_plans",
     )
 
