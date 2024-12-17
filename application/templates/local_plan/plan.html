@@ -103,7 +103,9 @@
           <th scope="col" class="govuk-table__header" data-sort="none">Event date</th>
           <th scope="col" class="govuk-table__header">Organisation</th>
           <th scope="col" class="govuk-table__header">Notes</th>
-          <th scope="col" class="govuk-table__header app-cell--meta app-cell--actions"></th>
+          {%- if not config.AUTHENTICATION_ON or session["user"] %}
+            <th scope="col" class="govuk-table__header app-cell--meta app-cell--actions"></th>
+          {% endif %}
         </tr>
       </thead>
       <tbody class="govuk-table__body">
@@ -113,21 +115,25 @@
           <td class="govuk-table__cell">{{ event.event_date }}</td>
           <td class="govuk-table__cell">{% if event.organisation %}{{ event.organisation_obj.name }}{% endif %}</td>
           <td class="govuk-table__cell">{% if event.notes %}{{ event.notes }}{% endif %}</td>
-          <td class="govuk-table__cell app-cell--meta app-cell--actions">
-            <ul class="govuk-list govuk-!-margin-bottom-0 govuk-!-font-size-16">
-              <li><a href="{{ url_for('timetable.edit', local_plan_reference=plan.reference, timetable_reference=event.reference) }}">Edit</a></li>
-              <li><a href="{{ url_for('timetable.remove', local_plan_reference=plan.reference, timetable_reference=event.reference) }}" class="govuk-link govuk-link--destructive js-remove-event"
-                  data-event-reference="{{ event.reference }}"
-                  data-timetable-reference="{{ event.reference }}"
-                  data-plan-reference="{{ plan.reference }}">Remove</a></li>
-            </ul>
-          </td>
+          {%- if not config.AUTHENTICATION_ON or session["user"] %}
+            <td class="govuk-table__cell app-cell--meta app-cell--actions">
+              <ul class="govuk-list govuk-!-margin-bottom-0 govuk-!-font-size-16">
+                <li><a href="{{ url_for('timetable.edit', local_plan_reference=plan.reference, timetable_reference=event.reference) }}">Edit</a></li>
+                <li><a href="{{ url_for('timetable.remove', local_plan_reference=plan.reference, timetable_reference=event.reference) }}" class="govuk-link govuk-link--destructive js-remove-event"
+                    data-event-reference="{{ event.reference }}"
+                    data-timetable-reference="{{ event.reference }}"
+                    data-plan-reference="{{ plan.reference }}">Remove</a></li>
+              </ul>
+            </td>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>
     </table>
   {% endif %}
-  <a href="{{ url_for('timetable.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> Add event</a>
+  {%- if not config.AUTHENTICATION_ON or session["user"] %}
+    <a href="{{ url_for('timetable.add', local_plan_reference=plan.reference) }}" class="govuk-button govuk-button--secondary"><span class="govuk-!-margin-right-1">✚ </span> Add event</a>
+  {% endif %}
 
   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
 
