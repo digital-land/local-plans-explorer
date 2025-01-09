@@ -45,13 +45,13 @@ def combine_geographies(geographies):
 
 
 def adopted_plan_count():
-    return LocalPlan.query.filter(LocalPlan.adopted_date.isnot(None)).count()
+    return LocalPlan.query.filter(LocalPlan.adopted_date != "").count()
 
 
 def get_adopted_local_plans():
     return (
         LocalPlan.query.filter(LocalPlan.development_plan_type == "local-plan")
-        .filter(LocalPlan.adopted_date.isnot(None))
+        .filter(LocalPlan.adopted_date != "")
         .all()
     )
 
