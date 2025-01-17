@@ -20,10 +20,10 @@ jobs:
 
       - name: Download csv files
         run: |
-          curl -o  data/export/local-plan.csv https://local-plans-explorer.digital-land.info/export/local-plan.csv
-          curl -o  data/export/local-plan-document.csv https://local-plans-explorer.digital-land.info/export/local-plan-document.csv
-          curl -o  data/export/local-plan-timetable.csv https://local-plans-explorer.digital-land.info/export/local-plan-timetable.csv
-          curl -o  data/export/local-plan-boundary.csv https://local-plans-explorer.digital-land.info/export/local-plan-boundary.csv
+          curl -o  data/export/local-plan.csv https://local-plans-explorer.development.planning.data.gov.uk/export/local-plan.csv
+          curl -o  data/export/local-plan-document.csv https://local-plans-explorer.development.planning.data.gov.uk/export/local-plan-document.csv
+          curl -o  data/export/local-plan-timetable.csv https://local-plans-explorer.development.planning.data.gov.uk/export/local-plan-timetable.csv
+          curl -o  data/export/local-plan-boundary.csv https://local-plans-explorer.development.planning.data.gov.uk/export/local-plan-boundary.csv
 
       - name: Set up git
         run: |
