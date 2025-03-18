@@ -30,8 +30,9 @@
               Stats
             </a>
           </li>
+          {% if config['AUTHENTICATION_ON'] %}
           <li class="govuk-header__navigation-item">
-            {% if config['AUTHENTICATION_ON'] and session["user"] %}
+            {% if session["user"] %}
             <a class="govuk-header__link" href="{{ url_for('auth.logout') }}">
               Sign out
             </a>
@@ -41,6 +42,7 @@
             </a>
             {% endif %}
           </li>
+          {% endif %}
         </ul>
       </nav>
     </div>
