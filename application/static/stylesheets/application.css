@@ -55,7 +55,7 @@
 
 
 :root {
-  --govuk-frontend-version: "4.8.0";
+  --govuk-frontend-version: "4.9.0";
 }
 
 
@@ -3054,7 +3054,6 @@
   font-family: "GDS Transport", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-font-feature-settings: "tnum" 1;
   font-feature-settings: "tnum" 1;
   font-weight: 400;
   margin-top: 0;
@@ -3067,7 +3066,6 @@
 }
 @supports (font-variant-numeric: tabular-nums) {
   .govuk-character-count__message {
-    -webkit-font-feature-settings: normal;
     font-feature-settings: normal;
     font-variant-numeric: tabular-nums;
   }
@@ -3176,7 +3174,6 @@
   font-family: "GDS Transport", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-font-feature-settings: "tnum" 1;
   font-feature-settings: "tnum" 1;
   font-weight: 400;
   letter-spacing: 0.05em;
@@ -3188,7 +3185,6 @@
 }
 @supports (font-variant-numeric: tabular-nums) {
   .govuk-input--extra-letter-spacing {
-    -webkit-font-feature-settings: normal;
     font-feature-settings: normal;
     font-variant-numeric: tabular-nums;
   }
@@ -3956,17 +3952,14 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  -webkit-column-gap: 30px;
   column-gap: 30px;
 }
 
 @media (min-width: 48.0625em) {
   .govuk-footer__list--columns-2 {
-    -webkit-column-count: 2;
     column-count: 2;
   }
   .govuk-footer__list--columns-3 {
-    -webkit-column-count: 3;
     column-count: 3;
   }
 }
@@ -6234,7 +6227,6 @@
   font-family: "GDS Transport", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-font-feature-settings: "tnum" 1;
   font-feature-settings: "tnum" 1;
   font-weight: 400;
 }
@@ -6245,7 +6237,6 @@
 }
 @supports (font-variant-numeric: tabular-nums) {
   .govuk-table__cell--numeric {
-    -webkit-font-feature-settings: normal;
     font-feature-settings: normal;
     font-variant-numeric: tabular-nums;
   }
