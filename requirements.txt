@@ -1,2 +1,0 @@
-# Just installs the production requirements.
--r requirements/requirements.txt
