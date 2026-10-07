@@ -8,6 +8,14 @@ services:
         - action: sync
           path: .
           target: /code
+          ignore:
+            - src/
+        - action: rebuild
+          path: src/
+        - action: rebuild
+          path: package.json
+        - action: rebuild
+          path: requirements/
     depends_on:
       - db
     environment:

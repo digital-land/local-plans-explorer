@@ -6,6 +6,7 @@ init::
 	python -m piptools sync requirements/dev-requirements.txt requirements/requirements.txt
 	python -m pre_commit install
 	npm install
+	npm run build
 
 reqs::
 	python -m piptools compile requirements/dev-requirements.in
@@ -19,17 +20,18 @@ upgrade::
 
 
 build-css:
-	npm run nps build.stylesheets
+	npm run build:stylesheets
 
 build-js:
-	npm run nps build.javascripts
+	npm run build:javascripts
 
 build-assets: build-css build-js
 
 copyjs:
 	npm run copyjs
 
-assets: build-assets copyjs
+assets:
+	npm run build
 
 assets-clobber:
 	rm -rf application/static/

@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
-FROM python:3.10-slim
+FROM python:3.13-slim-trixie
 WORKDIR /code
 
-ENV FLASK_APP: application.wsgi:app
-ENV FLASK_CONFIG: application.config.DevelopmentConfig
+ENV FLASK_APP=application.wsgi:app
+ENV FLASK_CONFIG=application.config.DevelopmentConfig
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc g++ git libproj-dev proj-bin gdal-bin \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . .
