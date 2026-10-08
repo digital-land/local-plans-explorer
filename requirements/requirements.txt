@@ -12,7 +12,7 @@ alembic-postgresql-enum==1.3.0
     # via -r requirements/requirements.in
 annotated-types==0.7.0
     # via pydantic
-authlib==1.3.2
+authlib==1.6.12
     # via -r requirements/requirements.in
 beautifulsoup4==4.12.3
     # via -r requirements/requirements.in
@@ -26,7 +26,7 @@ certifi==2024.8.30
     #   pyproj
     #   requests
     #   sentry-sdk
-cffi==1.17.1
+cffi==2.1.1
     # via
     #   cryptography
     #   pynacl
@@ -42,7 +42,7 @@ deprecated==1.2.14
     # via pygithub
 digital-land-frontend @ git+https://github.com/digital-land/digital-land-frontend.git
     # via -r requirements/requirements.in
-flask==3.1.0
+flask==3.1.3
     # via
     #   -r requirements/requirements.in
     #   flask-migrate
@@ -64,13 +64,13 @@ flask-wtf==1.2.2
     # via -r requirements/requirements.in
 geojson==3.1.0
     # via -r requirements/requirements.in
-geopandas==1.0.1
+geopandas==1.1.2
     # via -r requirements/requirements.in
 govuk-frontend-jinja==3.4.0
     # via digital-land-frontend
 gunicorn==23.0.0
     # via -r requirements/requirements.in
-idna==3.10
+idna==3.15
     # via requests
 is-safe-url==1.0
     # via -r requirements/requirements.in
@@ -78,14 +78,15 @@ itsdangerous==2.2.0
     # via
     #   flask
     #   flask-wtf
-jinja2==3.1.4
+jinja2==3.1.6
     # via
     #   flask
     #   govuk-frontend-jinja
-mako==1.3.6
+mako==1.4.2
     # via alembic
 markupsafe==3.0.2
     # via
+    #   flask
     #   jinja2
     #   mako
     #   sentry-sdk
@@ -114,9 +115,9 @@ pydantic-core==2.23.4
     # via pydantic
 pygithub==2.5.0
     # via -r requirements/requirements.in
-pyjwt==2.9.0
+pyjwt==2.15.0
     # via pygithub
-pynacl==1.5.0
+pynacl==1.6.2
     # via pygithub
 pyogrio==0.10.0
     # via geopandas
@@ -124,7 +125,7 @@ pyproj==3.7.0
     # via geopandas
 python-dateutil==2.9.0.post0
     # via pandas
-python-dotenv==1.0.1
+python-dotenv==1.2.2
     # via -r requirements/requirements.in
 python-slugify==8.0.4
     # via -r requirements/requirements.in
@@ -132,7 +133,7 @@ pytz==2024.2
     # via pandas
 rapidfuzz==3.10.1
     # via thefuzz
-requests==2.32.3
+requests==2.33.0
     # via
     #   -r requirements/requirements.in
     #   pygithub
@@ -144,7 +145,7 @@ shapely==2.0.6
     #   geopandas
 six==1.16.0
     # via python-dateutil
-soupsieve==2.6
+soupsieve==2.9
     # via beautifulsoup4
 sqlalchemy==2.0.36
     # via
@@ -164,14 +165,14 @@ typing-extensions==4.12.2
     #   sqlalchemy
 tzdata==2024.2
     # via pandas
-urllib3==2.2.3
+urllib3==2.8.0
     # via
     #   pygithub
     #   requests
     #   sentry-sdk
 validators==0.34.0
     # via digital-land-frontend
-werkzeug==3.1.3
+werkzeug==3.1.9
     # via flask
 wrapt==1.16.0
     # via deprecated
