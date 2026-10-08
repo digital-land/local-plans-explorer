@@ -1,21 +1,21 @@
 init::
 	python -m pip install --upgrade pip
 	python -m pip install pip-tools
-	python -m piptools compile --strip-extras requirements/dev-requirements.in
-	python -m piptools compile --strip-extras requirements/requirements.in
+	python -m piptools compile --strip-extras --output-file=requirements/dev-requirements.txt requirements/dev-requirements.in
+	python -m piptools compile --strip-extras --output-file=requirements/requirements.txt requirements/requirements.in
 	python -m piptools sync requirements/dev-requirements.txt requirements/requirements.txt
 	python -m pre_commit install
 	npm install
 	npm run build
 
 reqs::
-	python -m piptools compile --strip-extras requirements/dev-requirements.in
-	python -m piptools compile --strip-extras requirements/requirements.in
+	python -m piptools compile --strip-extras --output-file=requirements/dev-requirements.txt requirements/dev-requirements.in
+	python -m piptools compile --strip-extras --output-file=requirements/requirements.txt requirements/requirements.in
 	python -m piptools sync requirements/requirements.txt requirements/dev-requirements.txt
 
 upgrade::
-	python -m piptools compile --strip-extras --upgrade requirements/dev-requirements.in
-	python -m piptools compile --strip-extras --upgrade requirements/requirements.in
+	python -m piptools compile --strip-extras --upgrade --output-file=requirements/dev-requirements.txt requirements/dev-requirements.in
+	python -m piptools compile --strip-extras --upgrade --output-file=requirements/requirements.txt requirements/requirements.in
 	python -m piptools sync requirements/requirements.txt requirements/dev-requirements.txt
 
 
