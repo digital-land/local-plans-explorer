@@ -3,11 +3,16 @@
 
 #### Prerequisites
 
-1. python 3
+1. Python 3.13 (see [.python-version](.python-version))
+2. Node 24 LTS (see [.nvmrc](.nvmrc))
 
 Create a virtualenv and activate it, and then:
 
     make init
+
+This installs Python and npm dependencies and builds the frontend assets into `application/static`. These are not committed; rebuild them after changing anything in `src/` with:
+
+    npm run build
 
 Run the app
 

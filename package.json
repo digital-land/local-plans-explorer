@@ -3,20 +3,23 @@
   "version": "1.0.0",
   "description": "Application for exploring and modifying local plans specification data",
   "engines": {
-    "node": "18.x"
+    "node": ">=24"
   },
   "scripts": {
     "flask": "flask run",
+    "build": "run-s copyjs copy:javascripts_shared copy:images_govuk build:stylesheets build:javascripts",
+    "build:stylesheets": "npm run nps build.stylesheets",
+    "build:javascripts": "npm run nps build.javascripts",
     "watch": "npm-run-all --parallel watch:*",
     "watch:assets": "npm run nps watch.assets",
     "watch:images": "npx chokidar './assets/images/**/*.{png,ico,svg,jpg,jpeg,webp}' -c 'npm run copy:images'",
-    "nps": "nps -c ./node_modules/digital-land-frontend/package-scripts.js",
+    "nps": "nps -c ./node_modules/@planning-data/digital-land-frontend/package-scripts.js",
+    "copy:javascripts_shared": "npm run nps copy.javascripts",
     "copy:images_shared": "npm run nps copy.images",
-    "copy:images_govuk": "npm run nps copy.govukAssets",
+    "copy:images_govuk": "copyfiles -u 3 \"node_modules/govuk-frontend/dist/govuk/assets/**\" application/static",
     "copy:images_local": "npx copyfiles src/images/**/*.{png,ico,svg,jpg,jpeg,webp} application/static -u 2",
     "copy:images": "run-s copy:images_*",
-    "copyjs": "rsync -ar src/javascripts/ application/static/javascripts",
-    "postinstall": "npm run copyjs && npm run nps copy.javascripts && npm run nps build.stylesheets && npm run nps build.javascripts",
+    "copyjs": "copyfiles -u 2 \"src/javascripts/**/*\" application/static/javascripts",
     "start": "run-p watch flask"
   },
   "repository": {
@@ -30,8 +33,7 @@
   },
   "homepage": "https://github.com/digital-land/local-plans-explorer#readme",
   "dependencies": {
-    "digital-land-frontend": "https://gitpkg.now.sh/digital-land/digital-land-frontend/package?main",
-    "govuk-frontend": "^4.0.1"
+    "@planning-data/digital-land-frontend": "0.7.0"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5",
