@@ -278,15 +278,13 @@ def load_doc_types():
             reference = doc_type["reference"]
             entry_date = doc_type["entry-date"]
             end_date = doc_type.get("end-date") if doc_type.get("end-date") else None
-            sql = text(
-                """
+            sql = text("""
                     INSERT INTO local_plan_document_type (name, reference, entry_date, end_date)
                     VALUES (:name, :reference, :entry_date, :end_date)
                     ON CONFLICT (reference)
                     DO UPDATE
                     SET end_date = EXCLUDED.end_date;
-                """
-            )
+                """)
             db.session.execute(
                 sql,
                 {
@@ -318,15 +316,13 @@ def load_event_types():
                 event_type.get("end-date") if event_type.get("end-date") else None
             )
 
-            sql = text(
-                """
+            sql = text("""
                     INSERT INTO local_plan_event_type (name, reference, entry_date, end_date)
                     VALUES (:name, :reference, :entry_date, :end_date)
                     ON CONFLICT (reference)
                     DO UPDATE
                     SET end_date = EXCLUDED.end_date;
-                """
-            )
+                """)
             db.session.execute(
                 sql,
                 {
@@ -557,31 +553,23 @@ def fix_duplicate_document_references():
     from application.blueprints.document.views import make_document_reference
 
     # First make the constraint deferrable
-    db.session.execute(
-        text(
-            """
+    db.session.execute(text("""
             ALTER TABLE document_organisation
             DROP CONSTRAINT document_organisation_local_plan_document_reference_local__fkey,
             ADD CONSTRAINT document_organisation_local_plan_document_reference_local__fkey
             FOREIGN KEY (local_plan_document_reference, local_plan_document_local_plan)
             REFERENCES local_plan_document(reference, local_plan)
             DEFERRABLE INITIALLY DEFERRED;
-            """
-        )
-    )
+            """))
     db.session.commit()
 
     # First find all duplicate references
-    duplicate_refs = db.session.execute(
-        text(
-            """
+    duplicate_refs = db.session.execute(text("""
             SELECT reference
             FROM local_plan_document
             GROUP BY reference
             HAVING COUNT(local_plan) > 1
-            """
-        )
-    ).fetchall()
+            """)).fetchall()
 
     print(f"Found {len(duplicate_refs)} references that have duplicates")
 
@@ -589,14 +577,12 @@ def fix_duplicate_document_references():
         reference = ref[0]
         # Get all documents with this reference
         docs = db.session.execute(
-            text(
-                """
+            text("""
                 SELECT reference, local_plan, name
                 FROM local_plan_document
                 WHERE reference = :reference
                 ORDER BY local_plan
-                """
-            ),
+                """),
             {"reference": reference},
         ).fetchall()
 
@@ -610,8 +596,7 @@ def fix_duplicate_document_references():
 
                 # Do updates in a single transaction
                 db.session.execute(
-                    text(
-                        """
+                    text("""
                         BEGIN;
                         UPDATE local_plan_document
                         SET reference = :new_ref
@@ -624,8 +609,7 @@ def fix_duplicate_document_references():
                         AND local_plan_document_local_plan = :local_plan;
 
                         COMMIT;
-                        """
-                    ),
+                        """),
                     {
                         "new_ref": new_ref,
                         "old_ref": old_ref,
@@ -641,18 +625,14 @@ def fix_duplicate_document_references():
                 continue
 
     # Restore the constraint to its original state
-    db.session.execute(
-        text(
-            """
+    db.session.execute(text("""
             ALTER TABLE document_organisation
             DROP CONSTRAINT document_organisation_local_plan_document_reference_local__fkey,
             ADD CONSTRAINT document_organisation_local_plan_document_reference_local__fkey
             FOREIGN KEY (local_plan_document_reference, local_plan_document_local_plan)
             REFERENCES local_plan_document(reference, local_plan)
             NOT DEFERRABLE;
-            """
-        )
-    )
+            """))
     db.session.commit()
 
     print("\nAll duplicate references have been fixed")
