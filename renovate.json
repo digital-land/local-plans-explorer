@@ -1,6 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "local>digital-land/renovate-config"
-  ]
+  "extends": ["local>digital-land/renovate-config"],
+  "pip-compile": {
+    "managerFilePatterns": ["/^requirements/[\\w-]*requirements\\.txt$/"]
+  },
+  "pip_requirements": { "enabled": false }
 }
