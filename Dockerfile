@@ -40,7 +40,11 @@ RUN apt-get update && \
 COPY requirements ./requirements
 RUN pip install --no-cache-dir -r requirements/requirements.txt
 
-COPY . .
+# Only copy what the app needs at runtime. Frontend sources and npm files stay
+# in the frontend stage, and data/ is mounted by compose for local seeding.
+COPY application ./application
+COPY migrations ./migrations
+COPY docker-entrypoint.sh .flaskenv ./
 COPY --from=frontend /build/application/static ./application/static
 EXPOSE 5050
 

@@ -3,6 +3,8 @@ services:
     build: .
     ports:
       - "5050:5050"
+    volumes:
+      - ./data:/code/data
     develop:
       watch:
         - action: sync
