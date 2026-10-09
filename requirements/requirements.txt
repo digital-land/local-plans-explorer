@@ -34,7 +34,7 @@ charset-normalizer==3.4.0
     # via requests
 click==8.1.7
     # via flask
-cryptography==49.0.0
+cryptography==50.0.0
     # via
     #   authlib
     #   pyjwt
