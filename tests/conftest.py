@@ -1,4 +1,5 @@
 import pytest
+from flask.testing import FlaskClient
 from slugify import slugify
 
 from application.extensions import db
@@ -30,6 +31,51 @@ def app():
 @pytest.fixture(scope="session")
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture
+def auth_enabled_app():
+    """App with GitHub login switched on, using dummy OAuth credentials.
+
+    Doesn't create the database, so tests using it should only exercise code
+    that runs before a view queries the database, or mock what the view needs.
+    """
+    # imported here as application.config reads env vars set by load_dotenv
+    # when application.factory is imported
+    from application.config import TestConfig
+
+    class AuthEnabledTestConfig(TestConfig):
+        AUTHENTICATION_ON = True
+        GITHUB_CLIENT_ID = "test-client-id"
+        GITHUB_CLIENT_SECRET = "test-client-secret"
+        SAFE_URLS = {"localhost"}
+
+    return create_app(AuthEnabledTestConfig)
+
+
+class _HttpsFlaskClient(FlaskClient):
+    def open(self, *args, **kwargs):
+        kwargs.setdefault("base_url", "https://localhost")
+        return super().open(*args, **kwargs)
+
+
+@pytest.fixture
+def https_test_client():
+    """Factory for test clients that make HTTPS requests, as in production.
+
+    Over plain HTTP, SSLify redirects every request before it reaches a view.
+    """
+
+    def make_client(app):
+        app.test_client_class = _HttpsFlaskClient
+        return app.test_client()
+
+    return make_client
+
+
+@pytest.fixture
+def auth_enabled_client(auth_enabled_app, https_test_client):
+    return https_test_client(auth_enabled_app)
 
 
 @pytest.fixture(scope="session")

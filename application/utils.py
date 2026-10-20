@@ -1,6 +1,7 @@
 from functools import wraps
 
 import geopandas as gpd
+from flask import current_app, redirect, request, session, url_for
 from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 
@@ -10,8 +11,6 @@ from application.models import LocalPlan, Organisation, Status
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        from flask import current_app, redirect, request, session, url_for
-
         if current_app.config.get("AUTHENTICATION_ON", True):
             if session.get("user") is None:
                 return redirect(url_for("auth.login", next=request.url))
