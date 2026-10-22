@@ -3,12 +3,29 @@
 
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask.cli import load_dotenv
+from flask_sslify import SSLify
 
 from application.models import *  # noqa
 
 load_dotenv()
+
+# The load balancer health check requests this path over plain http
+HEALTH_CHECK_PATH = "/"
+
+
+class SSLifyExceptHealthCheck(SSLify):
+    """Redirect http to https, except the load balancer health check.
+
+    TLS ends at the load balancer, which sets X-Forwarded-Proto for visitors,
+    but its health check reaches the app directly over http and needs a 200.
+    SSLify's own skips match path prefixes, so can't single out "/".
+    """
+
+    @property
+    def skip(self):
+        return request.path == HEALTH_CHECK_PATH or super().skip
 
 
 def create_app(config_filename):
@@ -58,14 +75,12 @@ def register_blueprints(app):
 
 
 def register_extensions(app):
-    from flask_sslify import SSLify
-
     from application.extensions import db, migrate, oauth
 
     db.init_app(app)
     migrate.init_app(app, db)
     oauth.init_app(app)
-    sslify = SSLify(app)  # noqa
+    SSLifyExceptHealthCheck(app)
 
     # create the CSP for the app - until then leave commented out
     # talisman.init_app(app, content_security_policy=None)
