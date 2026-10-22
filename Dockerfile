@@ -15,12 +15,14 @@ RUN npm run build
 FROM python:3.13-slim-trixie
 WORKDIR /code
 
-ENV FLASK_CONFIG=application.config.DevelopmentConfig
+# Production by default. compose.yml overrides the config and command for
+# local debugging.
+ENV FLASK_CONFIG=application.config.Config
 ENV FLASK_APP=application.wsgi:app
 
+# Only used by the debug server (flask run)
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_RUN_PORT=5050
-ENV FLASK_DEBUG=1
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -44,8 +46,9 @@ RUN pip install --no-cache-dir -r requirements/requirements.txt
 # in the frontend stage, and data/ is mounted by compose for local seeding.
 COPY application ./application
 COPY migrations ./migrations
-COPY docker-entrypoint.sh .flaskenv ./
+COPY docker-entrypoint.sh ./
 COPY --from=frontend /build/application/static ./application/static
 EXPOSE 5050
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5050", "--workers", "2", "--threads", "4", "--access-logfile", "-", "application.wsgi:app"]

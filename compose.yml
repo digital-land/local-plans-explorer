@@ -1,6 +1,8 @@
 services:
   web:
     build: .
+    # local only: the image's default command is gunicorn without the debugger
+    command: ["flask", "run", "--debug"]
     ports:
       - "5050:5050"
     volumes:
@@ -23,6 +25,7 @@ services:
     environment:
       SECRET_KEY: "replaceinprod"
       DATABASE_URL: "postgresql://postgres:password@db/local_plans"
+      FLASK_CONFIG: "application.config.DevelopmentConfig"
 
   db:
     image: postgres:16-bullseye

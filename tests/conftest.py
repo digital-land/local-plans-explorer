@@ -63,7 +63,8 @@ class _HttpsFlaskClient(FlaskClient):
 def https_test_client():
     """Factory for test clients that make HTTPS requests, as in production.
 
-    Over plain HTTP, SSLify redirects every request before it reaches a view.
+    Over plain HTTP, SSLify redirects requests (other than the health check on
+    /) before they reach a view.
     """
 
     def make_client(app):
