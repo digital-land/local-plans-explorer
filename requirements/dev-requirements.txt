@@ -82,14 +82,11 @@ pygments==2.21.0
 pytest==9.1.1
     # via
     #   -r requirements/dev-requirements.in
-    #   pytest-base-url
     #   pytest-flask
     #   pytest-playwright
-pytest-base-url==2.1.0
-    # via pytest-playwright
 pytest-flask==1.3.0
     # via -r requirements/dev-requirements.in
-pytest-playwright==0.9.0
+pytest-playwright==0.10.0
     # via -r requirements/dev-requirements.in
 python-discovery==1.6.1
     # via virtualenv
@@ -106,7 +103,6 @@ pyyaml==6.0.2
 requests==2.33.0
     # via
     #   -c requirements/requirements.in
-    #   pytest-base-url
     #   responses
 responses==0.26.3
     # via -r requirements/dev-requirements.in
