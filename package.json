@@ -7,7 +7,7 @@
   },
   "scripts": {
     "flask": "flask run",
-    "build": "run-s copyjs copy:javascripts_shared copy:images_govuk build:stylesheets build:javascripts",
+    "build": "run-s copyjs copy:javascripts_shared copy:images_shared copy:images_govuk build:stylesheets build:javascripts",
     "build:stylesheets": "npm run nps build.stylesheets",
     "build:javascripts": "npm run nps build.javascripts",
     "watch": "npm-run-all --parallel watch:*",
@@ -16,7 +16,7 @@
     "nps": "nps -c ./node_modules/@digital-land-gov-uk/digital-land-frontend/package-scripts.js",
     "copy:javascripts_shared": "npm run nps copy.javascripts",
     "copy:images_shared": "npm run nps copy.images",
-    "copy:images_govuk": "copyfiles -u 3 \"node_modules/govuk-frontend/dist/govuk/assets/**\" application/static",
+    "copy:images_govuk": "npm run nps copy.govukAssets",
     "copy:images_local": "npx copyfiles src/images/**/*.{png,ico,svg,jpg,jpeg,webp} application/static -u 2",
     "copy:images": "run-s copy:images_*",
     "copyjs": "copyfiles -u 2 \"src/javascripts/**/*\" application/static/javascripts",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/digital-land/local-plans-explorer#readme",
   "dependencies": {
-    "@digital-land-gov-uk/digital-land-frontend": "0.8.0",
+    "@digital-land-gov-uk/digital-land-frontend": "0.8.1",
     "govuk-frontend": "5.11.1"
   },
   "devDependencies": {
