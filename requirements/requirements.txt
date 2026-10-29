@@ -65,7 +65,7 @@ geojson==3.3.0
     # via -r requirements/requirements.in
 geopandas==1.2.0
     # via -r requirements/requirements.in
-govuk-frontend-jinja==3.7.0
+govuk-frontend-jinja==3.10.0
     # via
     #   -r requirements/requirements.in
     #   digital-land-frontend
